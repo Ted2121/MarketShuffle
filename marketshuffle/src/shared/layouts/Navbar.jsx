@@ -58,61 +58,53 @@ function Navbar(props) {
     }
 
     return (
-        <Box sx={{ display: 'flex', position: 'fixed'}}>
-                <AppBar
-                    component='nav'
-                    elevation={0}
-                    className={`navbar ${navbarClass}`}
-                    sx={{
-                        backgroundColor: 'transparent',
-                        pt: { md: '5px', lg: '10px' },
-                        pl: { md: '0', lg: '10px' },
-                        display: scrolling ? 'none' : 'block',
-                    }}
+        <Box sx={{ display: 'flex', position: 'fixed' }}>
+            <AppBar
+                component='nav'
+                elevation={0}
+                className={`navbar ${navbarClass}`}
+                sx={{
+                    backgroundColor: 'transparent',
+                    pt: { md: '5px', lg: '10px' },
+                    pl: { md: '0', lg: '10px' },
+                }}
+            >
+                <Toolbar
+                    sx={{ display: 'flex', justifyContent: 'space-between' }}
+                    variant='regular'
                 >
-                    <Toolbar
-                        sx={{ display: 'flex', justifyContent: 'space-between' }}
-                        variant='regular'
+                    <Box
+                        sx={{ display: 'flex' }}
                     >
-                        <Box
-                            sx={{ display: 'flex' }}
-                        >
-                            <Box sx={{ display: { xxs: 'none', md: 'block' } }}>
-                                {logo}
-                            </Box>
-                            <Box sx={{ display: { xxs: 'none', md: 'block' } }}>
-                                {items.map((item) => (
-                                    <Link key={item.id} to={item.route} style={{ textDecoration: 'none' }}>
-                                        <Button
-                                            variant='text'
-                                            key={item.id}
-                                            onClick={item.text === 'Read' ? onReadClick : () => { }}
-                                            sx={{
-                                                color: 'black.main',
-                                                fontSize: { md: 'small', lg: 'medium' },
-                                                fontWeight: '400',
-                                                size: 'medium',
-                                                mt: '5px',
-                                                ml: { md: '20px', lg: '30px' },
-                                            }}
-                                        >
-                                            {item.text}
-                                        </Button>
-                                    </Link>
-                                ))}
-                            </Box>
+                        <Box>
+                            {logo}
                         </Box>
-                    </Toolbar>
-                </AppBar>
+                        <Box>
+                            {items.map((item) => (
+                                <Link key={item.id} to={item.route} style={{ textDecoration: 'none' }}>
+                                    <Button
+                                        variant='text'
+                                        key={item.id}
+                                        onClick={item.text === 'Read' ? onReadClick : () => { }}
+                                        sx={{
+                                            color: 'black.main',
+                                            fontSize: { md: 'small', lg: 'medium' },
+                                            fontWeight: '400',
+                                            size: 'medium',
+                                            mt: '5px',
+                                            ml: { md: '20px', lg: '30px' },
+                                        }}
+                                    >
+                                        {item.text}
+                                    </Button>
+                                </Link>
+                            ))}
+                        </Box>
+                    </Box>
+                </Toolbar>
+            </AppBar>
         </Box>
     );
 }
 export default Navbar;
 
-const FadeOutNavbar = styled('div')(({ theme }) => ({
-    opacity: 1,
-    transition: 'opacity 0.3s ease-in-out',
-    '&.navbar-hidden': {
-      opacity: 0,
-    },
-  }));

@@ -4,6 +4,7 @@ import { ColorModeContext, useMode } from './theme';
 import { Route, Routes } from 'react-router-dom';
 import RouteLayout from './shared/routing/RouteLayout';
 import Navbar from './shared/layouts/Navbar';
+import SimpleShuffle from './simple-shuffle/SimpleShuffle';
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -27,9 +28,9 @@ function App() {
             <Routes>
               <Route path='/' element={<RouteLayout />}>
                 {/* public routes */}
-                {/* <Route path='/' element={<LandingPage />} />
-                <Route path='/pricing' element={<PricingPage />} />
-                <Route path='/blog' element={<BlogPage />} /> */}
+                <Route path='/' element={<SimpleShuffle />} />
+                {/* <Route path='/pricing' element={<PricingPage />} />
+                <Route path='/blog' element={<BlogPage />} />  */}
                 {/* <Route path='login' element={<LogIn />} />
                   <Route path='signup' element={<SignUp />} />
                   <Route path='server-error' element={<ServerError />} /> */}

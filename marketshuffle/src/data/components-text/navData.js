@@ -7,7 +7,7 @@ const navData = [
   {
     id: '1',
     text: 'Simple Shuffle',
-    route: 'shuffle',
+    route: '/',
   },
 ]
 
