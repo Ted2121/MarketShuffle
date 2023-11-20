@@ -1,20 +1,17 @@
 import { Box } from '@mui/material'
 import React from 'react'
-import Favorites from './Favorites'
-import ItemTable from './ItemTable'
 
-function Items() {
+function ItemTable() {
   return (
     <Box sx={{
-        width: '100%',
+        width: '50%',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
     }}>
-        <Favorites />
-        <ItemTable />
+
     </Box>
   )
 }
 
-export default Items
+export default ItemTable

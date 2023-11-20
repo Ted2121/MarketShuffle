@@ -9,6 +9,11 @@ const navData = [
     text: 'Simple Shuffle',
     route: '/',
   },
+  {
+    id: '2',
+    text: 'Items',
+    route: 'items',
+  },
 ]
 
 export default navData;
