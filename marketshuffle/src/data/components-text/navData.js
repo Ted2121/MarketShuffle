@@ -1,13 +1,13 @@
 const navData = [
   {
     id: '0',
-    text: 'Craft and sell',
-    route: 'craft',
+    text: 'Simple Shuffle',
+    route: '/',
   },
   {
     id: '1',
-    text: 'Simple Shuffle',
-    route: '/',
+    text: 'Craft and sell',
+    route: 'craft',
   },
   {
     id: '2',
