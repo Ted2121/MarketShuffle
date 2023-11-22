@@ -7,9 +7,12 @@ function Items() {
   return (
     <Box sx={{
         width: '100%',
+        maxHeight:'70vh',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        overflow:'auto',
+        p:'32px',
     }}>
         <Favorites />
         <ItemTable />
