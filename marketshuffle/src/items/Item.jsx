@@ -9,22 +9,8 @@ import { Box, Button, IconButton, textFieldClasses } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
-function Item({ item }) {
+function Item({ item, setItem }) {
   const [isFavorite, setIsFavorite] = useState(item?.isFavorite);
-  const [expanded, setExpanded] = useState(false);
-
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
-
-  const actionButton = (text, action) => (
-    <Link to={action} style={{
-      textDecoration: 'none',
-      margin: '0 8px'
-    }}>
-      <Button variant="contained">{text}</Button>
-    </Link>
-  );
 
   const handleFavoriteToggle = async () => {
     const isSuccess = await itemService.setIsFavorite(item.id, !isFavorite)
@@ -34,11 +20,15 @@ function Item({ item }) {
     }
   }
 
+  const handleSetItem = () => {
+    setItem(item.id);
+  }
+
   const favoriteButton = (
     <IconButton onClick={handleFavoriteToggle}>
       {isFavorite ? <StarIcon
         sx={{
-          color: 'black.main',
+          color: 'white.main',
           fontSize: '1.7rem',
         }} /> : <StarOutlineIcon />}
     </IconButton>
@@ -47,18 +37,14 @@ function Item({ item }) {
   console.log(item);
   return (
     <Box sx={{ display: 'flex', gap: '16px' }}>
-      <Accordion expanded={expanded === item?.id} onChange={handleChange(item?.id)}>
-        <AccordionSummary id={item?.id} expandIcon={<ExpandMoreIcon />}>
-          <Typography sx={{ fontSize: '1.2rem' }}>{item?.name}</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Box sx={{ display: 'flex' }}>
-            {actionButton('recipe', `recipe/${item.id}`)}
-            {actionButton('history', `history/${item.id}`)}
-            {actionButton('profit', `profit/${item.id}`)}
-          </Box>
-        </AccordionDetails>
-      </Accordion>
+      <Button 
+      onClick={handleSetItem}
+      variant='contained' color='white' sx={{
+        color:'black.main',
+        width:'300px'
+      }}>
+        {item?.name}
+      </Button>
       {favoriteButton}
     </Box>
   )
