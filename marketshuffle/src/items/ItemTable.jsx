@@ -26,7 +26,6 @@ const getItemsForCategory = async (category) => {
   // await itemService.getItemsForCategory(category);
 }
 
-
   return (
     <Box sx={{
         display: 'flex',
