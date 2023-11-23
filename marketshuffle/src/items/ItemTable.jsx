@@ -1,15 +1,73 @@
-import { Box } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import React from 'react'
+import Item from './Item'
+import categoryList from '../data/components-text/itemsCategoryList'
+import item from '../data/mocks/item-mock'
 
 function ItemTable() {
+
+
+const categories = (
+  categoryList.map(category => (
+    <Button 
+    variant='contained'
+    color='white'
+    onClick={async () => await getItemsForCategory(category.name)}
+    key={category.id} sx={{
+      margin:'8px'
+    }}>
+      <img src={category.img} style={{aspectRatio:1, width:'70px'}}/>
+    </Button>
+  ))
+)
+
+const getItemsForCategory = async (category) => {
+  console.log("getting items for: ", category)
+  // await itemService.getItemsForCategory(category);
+}
+
+
   return (
     <Box sx={{
-        width: '15%',
         display: 'flex',
+        flexDirection: 'column',
+        flex:15,
         justifyContent: 'center',
         alignItems: 'center',
     }}>
+      {/* search */}
+      <Box>
 
+      </Box>
+      {/* categories */}
+      <Box>
+      {categories}
+      </Box>
+      {/* items */}
+      <Box sx={{
+         display: 'flex',
+         flex:15,
+         justifyContent: 'center',
+         flexDirection:'column',
+         gap:'16px',
+         p:'16px 0',
+      }}>
+      <Item item={item}/>
+      <Item item={item}/>
+      <Item item={item}/>
+      <Item item={item}/>
+      <Item item={item}/>
+      <Item item={item}/>
+      <Item item={item}/>
+      <Item item={item}/>
+      <Item item={item}/>
+      <Item item={item}/>
+      <Item item={item}/>
+      <Item item={item}/>
+      <Item item={item}/>
+      <Item item={item}/>
+      <Item item={item}/>
+      </Box>
     </Box>
   )
 }

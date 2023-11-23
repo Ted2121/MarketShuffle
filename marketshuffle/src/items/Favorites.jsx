@@ -6,12 +6,12 @@ import item from '../data/mocks/item-mock'
 function Favorites({items}) {
   return (
     <Box sx={{
-        width: '15%',
         display: 'flex',
+        flex:15,
         justifyContent: 'center',
         flexDirection:'column',
         gap:'16px',
-        p:'16px 0'
+        p:'16px 0',
     }}>
       
       <Item item={item}/>

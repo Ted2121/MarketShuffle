@@ -4,8 +4,8 @@ import React from 'react'
 function ActionsPanel({item}) {
   return (
     <Box sx={{
-        width: '70%',
         display: 'flex',
+        flex:70,
         justifyContent: 'center',
         alignItems: 'center',
     }}>
