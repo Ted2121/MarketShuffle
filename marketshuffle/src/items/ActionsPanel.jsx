@@ -1,5 +1,6 @@
 import { Box, Button, Card, Typography } from '@mui/material'
 import React, { useState } from 'react'
+import PositionsChart from './PositionsChart'
 
 function ActionsPanel({ item }) {
   const [currentPosition, setCurrentPosition] = useState(null);
@@ -59,7 +60,7 @@ function ActionsPanel({ item }) {
           </Card>
         </Box>
         {/* graph */}
-
+<PositionsChart />
         <Box>
         
         </Box>
