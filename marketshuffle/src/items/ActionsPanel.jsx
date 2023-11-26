@@ -62,7 +62,9 @@ function ActionsPanel({ item }) {
       display: 'flex',
       flex: 70,
       justifyContent: 'space-between',
-      alignItems: 'center',
+        p:'16px 0',
+        alignItems: 'flex-start',
+        ml:1,
     }}>
       {/* Positions */}
       <Box>

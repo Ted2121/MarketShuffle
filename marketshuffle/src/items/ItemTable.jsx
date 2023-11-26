@@ -14,7 +14,8 @@ const categories = (
     color='white'
     onClick={async () => await getItemsForCategory(category.name)}
     key={category.id} sx={{
-      margin:'8px'
+      mb:1,
+      mr: 1,
     }}>
       <img src={category.img} style={{aspectRatio:1, width:'70px'}}/>
     </Button>
@@ -32,6 +33,7 @@ const getItemsForCategory = async (category) => {
         flexDirection: 'column',
         flex:15,
         justifyContent: 'center',
+        p:'16px 0',
         alignItems: 'center',
     }}>
       {/* search */}

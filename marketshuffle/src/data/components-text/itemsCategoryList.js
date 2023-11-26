@@ -5,6 +5,8 @@ import cape from '../../assets/icons/cape.png'
 import hat from '../../assets/icons/hat.png'
 import ring from '../../assets/icons/ring.png'
 import weapon from '../../assets/icons/weapon.png'
+import resource from '../../assets/icons/resource.png'
+import rune from '../../assets/icons/rune.png'
 
 const categoryList = [
     {
@@ -41,7 +43,17 @@ const categoryList = [
         id:6,
         name:'weapon',
         img: weapon,
-    }
+    },
+    {
+        id:7,
+        name:'resource',
+        img: resource,
+    },
+    {
+        id:8,
+        name:'rune',
+        img: rune,
+    },
 ];
 
 export default categoryList;

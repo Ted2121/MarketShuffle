@@ -22,6 +22,17 @@ const item = {
             "name":"intel",
             "amount":"5"
         },
+    ],
+    "positions":[
+        {
+            "cost":"50000",
+            "date":"123564365",
+            "details":"hunter"
+        },
+        {
+            "name":"intel",
+            "amount":"5"
+        },
     ]
 }
 
