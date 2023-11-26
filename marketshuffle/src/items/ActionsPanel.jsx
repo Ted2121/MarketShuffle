@@ -6,93 +6,190 @@ import positions from '../data/mocks/positions-mock';
 function ActionsPanel({ item }) {
   const [currentPosition, setCurrentPosition] = useState(null);
 
-  const handleSetCurrentPosition = () => {
-    setCurrentPosition()
+  const formatDate = (unixTimestamp) => {
+    const date = new Date(unixTimestamp * 1000);
+  
+    const monthNames = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+  
+    const day = date.getDate().toString().padStart(2, '0');
+    const monthIndex = date.getMonth(); 
+    const month = monthNames[monthIndex];
+    const year = date.getFullYear().toString().slice(-2);
+  
+    return `${day} ${month} ${year}`;
+  };
+
+  const handleSetCurrentPosition = (position) => {
+    setCurrentPosition(position);
   }
+
   const positionList = positions.map((position) => (
-    <Button onClick={handleSetCurrentPosition}
-    sx={{
-      color:'white.main'
-    }}>
+    <Button
+      onClick={() => handleSetCurrentPosition(position)}
+      sx={{
+        color: 'black.main',
+        backgroundColor: 'white.main',
+        mb: '8px',
+        '&:hover': {
+          backgroundColor: 'secondary.main',
+        },
+      }}
+    >
       {position.cost.toLocaleString()}
     </Button>
   ))
 
+  const handleDeletePosition = () => {
+
+  }
+
   //TODO this one is the real one
   // const positionList = item?.positions.map((position) => (
-  //   <Button onClick={handleSetCurrentPosition}>
-  //     {position.cost}
-  //   </Button>
+  //   <Button onClick={handleSetCurrentPosition}
+  // sx={{
+  //   color:'white.main'
+  // }}>
+  //   {position.cost.toLocaleString()}
+  // </Button>
   // ))
 
   return (
+    // price history
     <Box sx={{
       display: 'flex',
       flex: 70,
-      justifyContent: 'center',
+      justifyContent: 'space-between',
       alignItems: 'center',
     }}>
-      {/* price history */}
+      {/* Positions */}
+      <Box>
+        <Card sx={{
+          display: 'flex',
+          flexDirection: 'column',
+        }}>
+          {positionList}
+        </Card>
+      </Box>
+      {/* main content */}
       <Box sx={{
-        display:'flex'
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px',
+        width: '100%',
+        m: '0 8px',
       }}>
-        {/* Positions */}
-        <Box>
-          <Card sx={{
-            display:'flex',
-            flexDirection:'column',
-          }}>
-            {positionList}
-          </Card>
+        {/* graph */}
+        <Box sx={{
+          display: 'flex',
+          flex: 1,
+        }}>
+          <PositionsChart positions={positions} />
         </Box>
-        {/* Position details */}
-        <Box>
-          <Card>
-            <Box>
-              <Typography>
+        <Box sx={{
+          display: 'flex',
+          gap:1,
+        }}>
+          {/* Position details */}
+          <Card sx={{
+            p: 1,
+            flex: 2,
+          }}>
+            <Box sx={{
+              display: 'flex',
+              gap: 1,
+            }}>
+              <Typography sx={{
+                fontSize: '1.1rem',
+              }}>
                 Cost:
               </Typography>
-              <Typography>
-                {currentPosition?.cost}
+              <Typography sx={{
+                fontSize: '1.1rem',
+              }}>
+                {currentPosition?.cost.toLocaleString()}
               </Typography>
             </Box>
-            <Box>
-              <Typography>
+            <Box sx={{
+              gap: 1,
+              display: 'flex',
+            }}>
+              <Typography sx={{
+                fontSize: '1.1rem',
+              }}>
                 Date:
               </Typography>
-              <Typography>
-                {currentPosition?.date}
+              <Typography sx={{
+                fontSize: '1.1rem',
+              }}>
+                {currentPosition?.date && formatDate(currentPosition?.date)}
               </Typography>
             </Box>
-            <Box>
-              <Typography>
+            <Box sx={{
+              gap: 1,
+              display: 'flex'
+            }}>
+              <Typography sx={{
+                fontSize: '1.1rem',
+              }}>
                 Details:
               </Typography>
-              <Typography>
+              <Typography sx={{
+                fontSize: '1.1rem',
+              }}>
+                {currentPosition?.details}
+              </Typography>
+            </Box>
+            <Button 
+            onClick={handleDeletePosition}
+            variant='contained'
+            color='white'
+            sx={{
+              color:'black.main',
+              mt:1,
+            }}
+            >
+              Delete position
+            </Button>
+          </Card>
+          {/* recipe */}
+          {/* Kitsou hair: 8x [   ]  = x kamas*/}
+          {/* x : 18x [   ]  = x kamas*/}
+          {/* y: 2x [   ]  = x kamas*/}
+          {/* Unmaged Item price: [   ] kamas - Profit: x kamas*/}
+          {/* Ok Item price: [   ] kamas - Profit: x kamas */}
+          {/* Perfect Item price: [   ] kamas - Profit: x kamas */}
+          <Card sx={{
+            display: 'flex',
+            p: 1,
+            flex: 4,
+          }}>
+            <Box sx={{
+              gap: 1,
+              display: 'flex'
+            }}>
+              <Typography sx={{
+                fontSize: '1.1rem',
+              }}>
+                Details:
+              </Typography>
+              <Typography sx={{
+                fontSize: '1.1rem',
+              }}>
                 {currentPosition?.details}
               </Typography>
             </Box>
           </Card>
+          {/* Add item */}
+          <Box sx={{
+            display: 'flex',
+            flex: 4,
+          }}>
+
+          </Box>
         </Box>
-        {/* graph */}
-        <PositionsChart positions={positions} />
-        <Box>
-
-        </Box>
-      </Box>
-      {/* recipe */}
-      {/* Kitsou hair: 8x [   ]  = x kamas*/}
-      {/* x : 18x [   ]  = x kamas*/}
-      {/* y: 2x [   ]  = x kamas*/}
-      {/* Unmaged Item price: [   ] kamas - Profit: x kamas*/}
-      {/* Ok Item price: [   ] kamas - Profit: x kamas */}
-      {/* Perfect Item price: [   ] kamas - Profit: x kamas */}
-      <Box>
-
-      </Box>
-      {/* Add item */}
-      <Box>
-
       </Box>
     </Box>
   )

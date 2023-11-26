@@ -2,7 +2,7 @@ const positions = [
     {
         cost: 300000,
         date: 1680045868,
-        details: "test"
+        details: "ffwefrwe"
     },
     {
         cost: 400000,
@@ -96,7 +96,7 @@ const positions = [
     },
     {
         cost: 400000,
-        date: 1680045868,
+        date: 1680545868,
         details: "test"
     },
 ];

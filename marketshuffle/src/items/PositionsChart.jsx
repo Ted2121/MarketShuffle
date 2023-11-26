@@ -22,7 +22,7 @@ const LineChartComponent = ({positions}) => {
     const formattedData = transformData(positions);
 
     return (
-        <ResponsiveContainer width={800} height={400}>
+        <ResponsiveContainer width="100%" height={400}>
             <LineChart data={formattedData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
