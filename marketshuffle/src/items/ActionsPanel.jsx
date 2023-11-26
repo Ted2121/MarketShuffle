@@ -5,11 +5,23 @@ import positions from '../data/mocks/positions-mock';
 import TextField from '@mui/material/TextField';
 import { useEffect } from 'react';
 import Divider from '@mui/material/Divider';
+import Profits from './Profits';
 
 function ActionsPanel({ item }) {
   const [currentPosition, setCurrentPosition] = useState(null);
   const [ingredientPrices, setIngredientPrices] = useState({});
-  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalCost, setTotalPrice] = useState(0);
+
+  const [profits, setProfits] = useState({
+    cheapestPrice: 0,
+    goodItemPrice: 0,
+    perfectItemPrice: 0,
+    specialItemPrice: 0,
+  });
+
+  const handleProfitsChange = (updatedProfits) => {
+    setProfits(updatedProfits);
+  };
 
   const formatDate = (unixTimestamp) => {
     const date = new Date(unixTimestamp * 1000);
@@ -90,6 +102,7 @@ function ActionsPanel({ item }) {
           <TextField
             type="number"
             label="Cost"
+            size='small'
             value={costValue}
             onChange={(event) => handleCostChange(index, event)}
           />
@@ -202,9 +215,9 @@ function ActionsPanel({ item }) {
           }}>
             {recipe}
             <Typography sx={{ fontSize: '1rem' }}>
-
-              Total: {totalPrice.toLocaleString()}
+              Total: {totalCost.toLocaleString()}
             </Typography>
+            <Profits totalCost={totalCost} onUpdateProfits={handleProfitsChange}/>
             <Divider />
           </Card>
         </Box>
