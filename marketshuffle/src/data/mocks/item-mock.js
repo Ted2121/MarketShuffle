@@ -13,25 +13,11 @@ const item = {
             "name":"resource2"
         },
     ],
-    "stats":[
-        {
-            "name":"agility",
-            "amount":"5"
-        },
-        {
-            "name":"intel",
-            "amount":"5"
-        },
-    ],
     "positions":[
         {
             "cost":"50000",
             "date":"123564365",
             "details":"hunter"
-        },
-        {
-            "name":"intel",
-            "amount":"5"
         },
     ]
 }

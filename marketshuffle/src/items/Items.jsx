@@ -3,6 +3,7 @@ import React from 'react'
 import Favorites from './Favorites'
 import ItemTable from './ItemTable'
 import ActionsPanel from './ActionsPanel'
+import item from '../data/mocks/item-mock'
 
 function Items() {
   // TODO call the get all favorites in a useEffect and pass it to favorites component
@@ -16,7 +17,7 @@ function Items() {
         p:'32px',
     }}>
         <Favorites />
-        <ActionsPanel />
+        <ActionsPanel item={item}/>
         <ItemTable />
     </Box>
   )

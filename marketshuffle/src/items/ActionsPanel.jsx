@@ -2,23 +2,25 @@ import { Box, Button, Card, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import PositionsChart from './PositionsChart'
 import positions from '../data/mocks/positions-mock';
+import TextField from '@mui/material/TextField';
 
 function ActionsPanel({ item }) {
   const [currentPosition, setCurrentPosition] = useState(null);
+  const [ingredientPrices, setIngredientPrices] = useState();
 
   const formatDate = (unixTimestamp) => {
     const date = new Date(unixTimestamp * 1000);
-  
+
     const monthNames = [
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];
-  
+
     const day = date.getDate().toString().padStart(2, '0');
-    const monthIndex = date.getMonth(); 
+    const monthIndex = date.getMonth();
     const month = monthNames[monthIndex];
     const year = date.getFullYear().toString().slice(-2);
-  
+
     return `${day} ${month} ${year}`;
   };
 
@@ -42,6 +44,34 @@ function ActionsPanel({ item }) {
     </Button>
   ))
 
+  const recipe = item?.recipe.map(ingredient => (
+    <Box 
+    sx={{
+      gap: 1,
+      display: 'flex',
+    }}>
+      <Typography sx={{
+        fontSize: '1.1rem',
+      }}>
+        {ingredient.name} -
+      </Typography>
+      <Typography sx={{
+        fontSize: '1.1rem',
+      }}>
+        {ingredient.quantity}x
+      </Typography>
+      <TextField
+        type="number"
+        label="cost"
+      />
+      <Typography sx={{
+        fontSize: '1.1rem',
+      }}>
+        k - Profit:  k
+      </Typography>
+    </Box>
+  ));
+
   const handleDeletePosition = () => {
 
   }
@@ -62,9 +92,9 @@ function ActionsPanel({ item }) {
       display: 'flex',
       flex: 70,
       justifyContent: 'space-between',
-        p:'16px 0',
-        alignItems: 'flex-start',
-        ml:1,
+      p: '16px 0',
+      alignItems: 'flex-start',
+      ml: 1,
     }}>
       {/* Positions */}
       <Box>
@@ -92,7 +122,7 @@ function ActionsPanel({ item }) {
         </Box>
         <Box sx={{
           display: 'flex',
-          gap:1,
+          gap: 1,
         }}>
           {/* Position details */}
           <Card sx={{
@@ -144,14 +174,14 @@ function ActionsPanel({ item }) {
                 {currentPosition?.details}
               </Typography>
             </Box>
-            <Button 
-            onClick={handleDeletePosition}
-            variant='contained'
-            color='white'
-            sx={{
-              color:'black.main',
-              mt:1,
-            }}
+            <Button
+              onClick={handleDeletePosition}
+              variant='contained'
+              color='white'
+              sx={{
+                color: 'black.main',
+                mt: 1,
+              }}
             >
               Delete position
             </Button>
