@@ -3,10 +3,12 @@ import React, { useState } from 'react'
 import PositionsChart from './PositionsChart'
 import positions from '../data/mocks/positions-mock';
 import TextField from '@mui/material/TextField';
+import { useEffect } from 'react';
 
 function ActionsPanel({ item }) {
   const [currentPosition, setCurrentPosition] = useState(null);
   const [ingredientPrices, setIngredientPrices] = useState({});
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const formatDate = (unixTimestamp) => {
     const date = new Date(unixTimestamp * 1000);
@@ -52,6 +54,17 @@ function ActionsPanel({ item }) {
     }));
   };
 
+  useEffect(() => {
+    let total = 0;
+    item?.recipe?.forEach((ingredient, index) => {
+      const price = ingredientPrices[index];
+      if (!isNaN(price) && !isNaN(ingredient.quantity)) {
+        total += price * parseFloat(ingredient.quantity);
+      }
+    });
+    setTotalPrice(total);
+  }, [ingredientPrices, item?.recipe]);
+
   const recipe = item?.recipe?.map((ingredient, index) => {
     const costValue = ingredientPrices[index] !== undefined ? ingredientPrices[index] : '';
   
@@ -80,7 +93,7 @@ function ActionsPanel({ item }) {
             onChange={(event) => handleCostChange(index, event)}
           />
           <Typography sx={{ fontSize: '1.1rem' }}>
-            = {ingredientPrices[index] && ingredientPrices[index] * ingredient.quantity} k
+            = {ingredientPrices[index] && (ingredientPrices[index] * ingredient.quantity).toLocaleString()} k
           </Typography>
         </Box>
       )
@@ -142,7 +155,7 @@ function ActionsPanel({ item }) {
           {/* Position details */}
           <Card sx={{
             p: 1,
-            flex: 2,
+            flex: 4
           }}>
             <Box sx={{
               display: 'flex',
@@ -214,18 +227,18 @@ function ActionsPanel({ item }) {
             flexDirection:'column',
             p: 1,
             gap: 1,
-            flex: 8,
+            flex: 6,
           }}>
             {recipe}
           </Card>
+        </Box>
           {/* Add item */}
           <Box sx={{
             display: 'flex',
             flex: 4,
           }}>
-
+{totalPrice}
           </Box>
-        </Box>
       </Box>
     </Box>
   )
