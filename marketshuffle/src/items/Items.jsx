@@ -11,7 +11,7 @@ function Items() {
         width: '100%',
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         overflow:'auto',
         p:'32px',
     }}>

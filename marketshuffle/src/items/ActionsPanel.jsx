@@ -1,6 +1,7 @@
 import { Box, Button, Card, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import PositionsChart from './PositionsChart'
+import positions from '../data/mocks/positions-mock';
 
 function ActionsPanel({ item }) {
   const [currentPosition, setCurrentPosition] = useState(null);
@@ -8,12 +9,21 @@ function ActionsPanel({ item }) {
   const handleSetCurrentPosition = () => {
     setCurrentPosition()
   }
-
-  const positionList = item?.positions.map((position) => (
-    <Button onClick={handleSetCurrentPosition}>
-      {position.cost}
+  const positionList = positions.map((position) => (
+    <Button onClick={handleSetCurrentPosition}
+    sx={{
+      color:'white.main'
+    }}>
+      {position.cost.toLocaleString()}
     </Button>
   ))
+
+  //TODO this one is the real one
+  // const positionList = item?.positions.map((position) => (
+  //   <Button onClick={handleSetCurrentPosition}>
+  //     {position.cost}
+  //   </Button>
+  // ))
 
   return (
     <Box sx={{
@@ -23,10 +33,15 @@ function ActionsPanel({ item }) {
       alignItems: 'center',
     }}>
       {/* price history */}
-      <Box>
+      <Box sx={{
+        display:'flex'
+      }}>
         {/* Positions */}
         <Box>
-          <Card>
+          <Card sx={{
+            display:'flex',
+            flexDirection:'column',
+          }}>
             {positionList}
           </Card>
         </Box>
@@ -60,9 +75,9 @@ function ActionsPanel({ item }) {
           </Card>
         </Box>
         {/* graph */}
-<PositionsChart />
+        <PositionsChart positions={positions} />
         <Box>
-        
+
         </Box>
       </Box>
       {/* recipe */}
