@@ -4,6 +4,7 @@ import PositionsChart from './PositionsChart'
 import positions from '../data/mocks/positions-mock';
 import TextField from '@mui/material/TextField';
 import { useEffect } from 'react';
+import Divider from '@mui/material/Divider';
 
 function ActionsPanel({ item }) {
   const [currentPosition, setCurrentPosition] = useState(null);
@@ -67,12 +68,12 @@ function ActionsPanel({ item }) {
 
   const recipe = item?.recipe?.map((ingredient, index) => {
     const costValue = ingredientPrices[index] !== undefined ? ingredientPrices[index] : '';
-  
+
     return (
       !item || !Array.isArray(item.positions) ? (
         <div key={index}>No positions data available</div>
       ) : (
-        <Box 
+        <Box
           key={index}
           sx={{
             gap: 1,
@@ -80,10 +81,10 @@ function ActionsPanel({ item }) {
             alignItems: 'center',
           }}
         >
-          <Typography sx={{ fontSize: '1.1rem' }}>
+          <Typography sx={{ fontSize: '1rem' }}>
             {ingredient.name} -
           </Typography>
-          <Typography sx={{ fontSize: '1.1rem' }}>
+          <Typography sx={{ fontSize: '1rem' }}>
             {ingredient.quantity}x
           </Typography>
           <TextField
@@ -92,7 +93,7 @@ function ActionsPanel({ item }) {
             value={costValue}
             onChange={(event) => handleCostChange(index, event)}
           />
-          <Typography sx={{ fontSize: '1.1rem' }}>
+          <Typography sx={{ fontSize: '1rem' }}>
             = {ingredientPrices[index] && (ingredientPrices[index] * ingredient.quantity).toLocaleString()} k
           </Typography>
         </Box>
@@ -157,51 +158,21 @@ function ActionsPanel({ item }) {
             p: 1,
             flex: 4
           }}>
-            <Box sx={{
-              display: 'flex',
-              gap: 1,
+            <Typography sx={{
+              fontSize: '1rem',
             }}>
-              <Typography sx={{
-                fontSize: '1.1rem',
-              }}>
-                Cost:
-              </Typography>
-              <Typography sx={{
-                fontSize: '1.1rem',
-              }}>
-                {currentPosition?.cost.toLocaleString()}
-              </Typography>
-            </Box>
-            <Box sx={{
-              gap: 1,
-              display: 'flex',
+              Cost: {currentPosition?.cost.toLocaleString()}
+            </Typography>
+            <Typography sx={{
+              fontSize: '1rem',
             }}>
-              <Typography sx={{
-                fontSize: '1.1rem',
-              }}>
-                Date:
-              </Typography>
-              <Typography sx={{
-                fontSize: '1.1rem',
-              }}>
-                {currentPosition?.date && formatDate(currentPosition?.date)}
-              </Typography>
-            </Box>
-            <Box sx={{
-              gap: 1,
-              display: 'flex'
+              Date: {currentPosition?.date && formatDate(currentPosition?.date)}
+            </Typography>
+            <Typography sx={{
+              fontSize: '1rem',
             }}>
-              <Typography sx={{
-                fontSize: '1.1rem',
-              }}>
-                Details:
-              </Typography>
-              <Typography sx={{
-                fontSize: '1.1rem',
-              }}>
-                {currentPosition?.details}
-              </Typography>
-            </Box>
+              Details: {currentPosition?.details}
+            </Typography>
             <Button
               onClick={handleDeletePosition}
               variant='contained'
@@ -209,7 +180,7 @@ function ActionsPanel({ item }) {
               sx={{
                 color: 'black.main',
                 mt: 1,
-                maxHeight:'50px'
+                maxHeight: '50px'
               }}
             >
               Delete position
@@ -224,21 +195,25 @@ function ActionsPanel({ item }) {
           {/* Perfect Item price: [   ] kamas - Profit: x kamas */}
           <Card sx={{
             display: 'flex',
-            flexDirection:'column',
+            flexDirection: 'column',
             p: 1,
             gap: 1,
             flex: 6,
           }}>
             {recipe}
+            <Typography sx={{ fontSize: '1rem' }}>
+
+              Total: {totalPrice.toLocaleString()}
+            </Typography>
+            <Divider />
           </Card>
         </Box>
-          {/* Add item */}
-          <Box sx={{
-            display: 'flex',
-            flex: 4,
-          }}>
-{totalPrice}
-          </Box>
+        {/* Add item */}
+        <Box sx={{
+          display: 'flex',
+          flex: 4,
+        }}>
+        </Box>
       </Box>
     </Box>
   )
