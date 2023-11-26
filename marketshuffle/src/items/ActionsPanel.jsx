@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 
 function ActionsPanel({ item }) {
   const [currentPosition, setCurrentPosition] = useState(null);
-  const [ingredientPrices, setIngredientPrices] = useState();
+  const [ingredientPrices, setIngredientPrices] = useState({});
 
   const formatDate = (unixTimestamp) => {
     const date = new Date(unixTimestamp * 1000);
@@ -44,33 +44,48 @@ function ActionsPanel({ item }) {
     </Button>
   ))
 
-  const recipe = item?.recipe.map(ingredient => (
-    <Box 
-    sx={{
-      gap: 1,
-      display: 'flex',
-    }}>
-      <Typography sx={{
-        fontSize: '1.1rem',
-      }}>
-        {ingredient.name} -
-      </Typography>
-      <Typography sx={{
-        fontSize: '1.1rem',
-      }}>
-        {ingredient.quantity}x
-      </Typography>
-      <TextField
-        type="number"
-        label="cost"
-      />
-      <Typography sx={{
-        fontSize: '1.1rem',
-      }}>
-        k - Profit:  k
-      </Typography>
-    </Box>
-  ));
+  const handleCostChange = (index, event) => {
+    const { value } = event.target;
+    setIngredientPrices(prevState => ({
+      ...prevState,
+      [index]: value !== '' ? parseInt(value) : '',
+    }));
+  };
+
+  const recipe = item?.recipe?.map((ingredient, index) => {
+    const costValue = ingredientPrices[index] !== undefined ? ingredientPrices[index] : '';
+  
+    return (
+      !item || !Array.isArray(item.positions) ? (
+        <div key={index}>No positions data available</div>
+      ) : (
+        <Box 
+          key={index}
+          sx={{
+            gap: 1,
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <Typography sx={{ fontSize: '1.1rem' }}>
+            {ingredient.name} -
+          </Typography>
+          <Typography sx={{ fontSize: '1.1rem' }}>
+            {ingredient.quantity}x
+          </Typography>
+          <TextField
+            type="number"
+            label="Cost"
+            value={costValue}
+            onChange={(event) => handleCostChange(index, event)}
+          />
+          <Typography sx={{ fontSize: '1.1rem' }}>
+            = {ingredientPrices[index] && ingredientPrices[index] * ingredient.quantity} k
+          </Typography>
+        </Box>
+      )
+    );
+  });
 
   const handleDeletePosition = () => {
 
@@ -181,6 +196,7 @@ function ActionsPanel({ item }) {
               sx={{
                 color: 'black.main',
                 mt: 1,
+                maxHeight:'50px'
               }}
             >
               Delete position
@@ -195,24 +211,12 @@ function ActionsPanel({ item }) {
           {/* Perfect Item price: [   ] kamas - Profit: x kamas */}
           <Card sx={{
             display: 'flex',
+            flexDirection:'column',
             p: 1,
-            flex: 4,
+            gap: 1,
+            flex: 8,
           }}>
-            <Box sx={{
-              gap: 1,
-              display: 'flex'
-            }}>
-              <Typography sx={{
-                fontSize: '1.1rem',
-              }}>
-                Details:
-              </Typography>
-              <Typography sx={{
-                fontSize: '1.1rem',
-              }}>
-                {currentPosition?.details}
-              </Typography>
-            </Box>
+            {recipe}
           </Card>
           {/* Add item */}
           <Box sx={{
