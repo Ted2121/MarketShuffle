@@ -68,7 +68,7 @@ function Profits({ totalCost, onUpdateProfits }) {
                     onChange={(event) => handleCheapestPriceChange(event)}>
                 </TextField>
                 <Typography>
-                   , Profit : {calculateProfits(cheapestPrice)}
+                   , Profit : {calculateProfits(cheapestPrice)} k
                 </Typography>
             </Box>
             <Box sx={{
@@ -86,7 +86,7 @@ function Profits({ totalCost, onUpdateProfits }) {
                     onChange={(event) => handleGoodItemPriceChange(event)}>
                 </TextField>
                 <Typography>
-                   , Profit : {calculateProfits(goodItemPrice)}
+                   , Profit : {calculateProfits(goodItemPrice)} k
                 </Typography>
             </Box>
             <Box sx={{
@@ -104,7 +104,7 @@ function Profits({ totalCost, onUpdateProfits }) {
                     onChange={(event) => handlePerfectItemPriceChange(event)}>
                 </TextField>
                 <Typography>
-                   , Profit : {calculateProfits(perfectItemPrice)}
+                   , Profit : {calculateProfits(perfectItemPrice)} k
                 </Typography>
             </Box>
             <Box sx={{
@@ -122,7 +122,7 @@ function Profits({ totalCost, onUpdateProfits }) {
                     onChange={(event) => handleSpecialItemPriceChange(event)}>
                 </TextField>
                 <Typography>
-                   , Profit : {calculateProfits(specialItemPrice)}
+                   , Profit : {calculateProfits(specialItemPrice)} k
                 </Typography>
             </Box>
         </>
