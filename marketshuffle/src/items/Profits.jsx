@@ -1,10 +1,7 @@
-import { Box, Button, Card, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import React, { useState } from 'react'
-import PositionsChart from './PositionsChart'
-import positions from '../data/mocks/positions-mock';
 import TextField from '@mui/material/TextField';
 import { useEffect } from 'react';
-import Divider from '@mui/material/Divider';
 import { debounce } from 'lodash';
 
 function Profits({ totalCost, onUpdateProfits }) {

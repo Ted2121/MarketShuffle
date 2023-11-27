@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import { useEffect } from 'react';
 import Divider from '@mui/material/Divider';
 import Profits from './Profits';
+import EditPositionModal from './EditPositionModal';
 
 function ActionsPanel({ item }) {
   const [currentPosition, setCurrentPosition] = useState(null);
@@ -43,8 +44,9 @@ function ActionsPanel({ item }) {
     setCurrentPosition(position);
   }
 
-  const positionList = positions.map((position) => (
+  const positionList = positions.map((position, index) => (
     <Button
+      key={index}
       onClick={() => handleSetCurrentPosition(position)}
       sx={{
         color: 'black.main',
@@ -118,6 +120,8 @@ function ActionsPanel({ item }) {
 
   }
 
+
+
   //TODO this one is the real one
   // const positionList = item?.positions.map((position) => (
   //   <Button onClick={handleSetCurrentPosition}
@@ -171,6 +175,11 @@ function ActionsPanel({ item }) {
             p: 1,
             flex: 4
           }}>
+            <Typography variant='h4' sx={{
+              textAlign: 'center'
+            }}>
+              {item?.name}
+            </Typography>
             <Typography sx={{
               fontSize: '1rem',
             }}>
@@ -186,18 +195,26 @@ function ActionsPanel({ item }) {
             }}>
               Details: {currentPosition?.details}
             </Typography>
-            <Button
-              onClick={handleDeletePosition}
-              variant='contained'
-              color='white'
-              sx={{
-                color: 'black.main',
-                mt: 1,
-                maxHeight: '50px'
-              }}
-            >
-              Delete position
-            </Button>
+            <Box sx={{
+              display: 'flex',
+              gap: 1,
+            }}>
+              <Button
+                onClick={handleDeletePosition}
+                variant='contained'
+                color='white'
+                sx={{
+                  color: 'black.main',
+                  mt: 1,
+                  maxHeight: '50px'
+                }}
+              >
+                Delete
+              </Button>
+              <EditPositionModal />
+              {/* Add position */}
+              
+            </Box>
           </Card>
           {/* recipe */}
           {/* Kitsou hair: 8x [   ]  = x kamas*/}
@@ -217,7 +234,7 @@ function ActionsPanel({ item }) {
             <Typography sx={{ fontSize: '1rem' }}>
               Total: {totalCost.toLocaleString()}
             </Typography>
-            <Profits totalCost={totalCost} onUpdateProfits={handleProfitsChange}/>
+            <Profits totalCost={totalCost} onUpdateProfits={handleProfitsChange} />
             <Divider />
           </Card>
         </Box>

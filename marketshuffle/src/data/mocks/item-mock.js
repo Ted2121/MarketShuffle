@@ -12,6 +12,30 @@ const item = {
             "quantity":"5",
             "name":"resource2"
         },
+        {
+            "quantity":"5",
+            "name":"resource2"
+        },
+        {
+            "quantity":"5",
+            "name":"resource2"
+        },
+        {
+            "quantity":"5",
+            "name":"resource2"
+        },
+        {
+            "quantity":"5",
+            "name":"resource2"
+        },
+        {
+            "quantity":"5",
+            "name":"resource2"
+        },
+        {
+            "quantity":"5",
+            "name":"resource2"
+        },
     ],
     "positions":[
         {

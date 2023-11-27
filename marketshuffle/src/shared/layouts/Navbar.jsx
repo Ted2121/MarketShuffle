@@ -15,8 +15,10 @@ function Navbar() {
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <Box sx={{ flexGrow: 1, display: 'flex' }}>
-                        {pages.map((page) => (
-                            <Link to={page.route} style={{ textDecoration: 'none' }}>
+                        {pages.map((page, index) => (
+                            <Link 
+                            key={index}
+                            to={page.route} style={{ textDecoration: 'none' }}>
                                 <Button
                                     key={page.id}
                                     sx={{
@@ -27,7 +29,6 @@ function Navbar() {
                                 >
                                     {page.text}
                                 </Button>
-
                             </Link>
                         ))}
                     </Box>

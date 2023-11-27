@@ -5,7 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 import RouteLayout from './shared/routing/RouteLayout';
 import Navbar from './shared/layouts/Navbar';
 import SimpleShuffle from './simple-shuffle/SimpleShuffle';
-import Items from './items/Items';
+import Items from './items/Craft';
 import History from './item-actions/History';
 import Profit from './item-actions/Profit';
 import Recipe from './item-actions/Recipe';
@@ -32,11 +32,7 @@ function App() {
             <Routes>
               <Route path='/' element={<RouteLayout />}>
                 {/* public routes */}
-                <Route path='/' element={<SimpleShuffle />} />
-                <Route path='/items' element={<Items />} />
-                <Route path='/items/history' element={<History />} />
-                <Route path='/items/profit' element={<Profit />} />
-                <Route path='/items/recipe' element={<Recipe />} />
+                <Route path='/' element={<Items />} />
                 
               </Route>
             </Routes>
