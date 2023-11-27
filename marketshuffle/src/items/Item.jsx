@@ -34,7 +34,6 @@ function Item({ item, setItem }) {
     </IconButton>
   )
 
-  console.log(item);
   return (
     <Box sx={{ display: 'flex', gap: '16px' }}>
       <Button 

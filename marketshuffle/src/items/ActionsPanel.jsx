@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import Divider from '@mui/material/Divider';
 import Profits from './Profits';
 import EditPositionModal from './EditPositionModal';
+import AddPositionForm from './AddPositionForm';
 
 function ActionsPanel({ item }) {
   const [currentPosition, setCurrentPosition] = useState(null);
@@ -39,6 +40,11 @@ function ActionsPanel({ item }) {
 
     return `${day} ${month} ${year}`;
   };
+
+  const handleAddPosition = (itemId, cost, details, currentUnixTime) => {
+    console.log(itemId, cost, details, currentUnixTime)
+    // TODO call add position request
+  }
 
   const handleSetCurrentPosition = (position) => {
     setCurrentPosition(position);
@@ -173,7 +179,7 @@ function ActionsPanel({ item }) {
           {/* Position details */}
           <Card sx={{
             p: 1,
-            flex: 4
+            flex: 4,
           }}>
             <Typography variant='h4' sx={{
               textAlign: 'center'
@@ -212,9 +218,12 @@ function ActionsPanel({ item }) {
                 Delete
               </Button>
               <EditPositionModal />
-              {/* Add position */}
-              
             </Box>
+            <Divider sx={{
+              mt:2
+            }}/>
+            {/* Add position */}
+            <AddPositionForm itemId={item?.id} handleAddPosition={handleAddPosition}/>
           </Card>
           {/* recipe */}
           {/* Kitsou hair: 8x [   ]  = x kamas*/}
