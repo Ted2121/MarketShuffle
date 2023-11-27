@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import { useEffect } from 'react';
 import { debounce } from 'lodash';
 
-function Profits({ totalCost, onUpdateProfits }) {
+function Profits({ totalCost, onUpdatePrice }) {
     const [cheapestPrice, setCheapestPrice] = useState('');
     const [goodItemPrice, setGoodItemPrice] = useState('');
     const [perfectItemPrice, setPerfectItemPrice] = useState('');
@@ -41,15 +41,15 @@ function Profits({ totalCost, onUpdateProfits }) {
           perfectItemPrice,
           specialItemPrice,
         };
-        onUpdateProfits(updatedProfits);
+        onUpdatePrice(updatedProfits);
       }, 1000);
 
       useEffect(() => {
         updateParentProfits();
-      }, [cheapestPrice, goodItemPrice, perfectItemPrice, specialItemPrice, onUpdateProfits]);
+      }, [cheapestPrice, goodItemPrice, perfectItemPrice, specialItemPrice, onUpdatePrice]);
 
     return (
-        <>
+        <Box>
             <Box sx={{
                 display: 'flex',
                 gap: 1,
@@ -122,7 +122,7 @@ function Profits({ totalCost, onUpdateProfits }) {
                    , Profit : {calculateProfits(specialItemPrice)} k
                 </Typography>
             </Box>
-        </>
+        </Box>
     )
 }
 

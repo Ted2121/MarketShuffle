@@ -13,6 +13,8 @@ function ActionsPanel({ item }) {
   const [currentPosition, setCurrentPosition] = useState(null);
   const [ingredientPrices, setIngredientPrices] = useState({});
   const [totalCost, setTotalPrice] = useState(0);
+  const currentUnixTime = Math.floor(Date.now() / 1000);
+  const [specialItemDetails, setSpecialItemPosition] = useState('');
 
   const [profits, setProfits] = useState({
     cheapestPrice: 0,
@@ -21,7 +23,7 @@ function ActionsPanel({ item }) {
     specialItemPrice: 0,
   });
 
-  const handleProfitsChange = (updatedProfits) => {
+  const handlePriceChange = (updatedProfits) => {
     setProfits(updatedProfits);
   };
 
@@ -45,6 +47,7 @@ function ActionsPanel({ item }) {
     console.log(itemId, cost, details, currentUnixTime)
     // TODO call add position request
   }
+
 
   const handleSetCurrentPosition = (position) => {
     setCurrentPosition(position);
@@ -74,6 +77,12 @@ function ActionsPanel({ item }) {
       [index]: value !== '' ? parseInt(value) : '',
     }));
   };
+
+  const handleSpecialItemDetailsChange = (event) => {
+    const { value } = event.target;
+
+    setSpecialItemPosition(value)
+  }
 
   useEffect(() => {
     let total = 0;
@@ -220,18 +229,12 @@ function ActionsPanel({ item }) {
               <EditPositionModal />
             </Box>
             <Divider sx={{
-              mt:2
-            }}/>
+              mt: 2
+            }} />
             {/* Add position */}
-            <AddPositionForm itemId={item?.id} handleAddPosition={handleAddPosition}/>
+            <AddPositionForm itemId={item?.id} handleAddPosition={handleAddPosition} />
           </Card>
           {/* recipe */}
-          {/* Kitsou hair: 8x [   ]  = x kamas*/}
-          {/* x : 18x [   ]  = x kamas*/}
-          {/* y: 2x [   ]  = x kamas*/}
-          {/* Unmaged Item price: [   ] kamas - Profit: x kamas*/}
-          {/* Ok Item price: [   ] kamas - Profit: x kamas */}
-          {/* Perfect Item price: [   ] kamas - Profit: x kamas */}
           <Card sx={{
             display: 'flex',
             flexDirection: 'column',
@@ -243,8 +246,67 @@ function ActionsPanel({ item }) {
             <Typography sx={{ fontSize: '1rem' }}>
               Total: {totalCost.toLocaleString()}
             </Typography>
-            <Profits totalCost={totalCost} onUpdateProfits={handleProfitsChange} />
             <Divider />
+            <Box sx={{
+              display: 'flex',
+              gap: 2
+            }}>
+              <Profits totalCost={totalCost} onUpdatePrice={handlePriceChange} />
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
+              }}>
+                <Button
+                  onClick={() => handleAddPosition(item?.id, profits.cheapestPrice, "", currentUnixTime)}
+                  variant='contained'
+                  color='white'
+                  sx={{
+                    color: 'black.main',
+                    maxHeight: '30px'
+                  }}
+                >
+                  Add
+                </Button><Button
+                  onClick={() => handleAddPosition(item?.id, profits.goodItemPrice, "", currentUnixTime)}
+                  variant='contained'
+                  color='white'
+                  sx={{
+                    color: 'black.main',
+                    maxHeight: '30px'
+                  }}
+                >
+                  Add
+                </Button><Button
+                  onClick={() => handleAddPosition(item?.id, profits.perfectItemPrice, "", currentUnixTime)}
+                  variant='contained'
+                  color='white'
+                  sx={{
+                    color: 'black.main',
+                    maxHeight: '30px'
+                  }}
+                >
+                  Add
+                </Button>
+                <Button
+                  onClick={() => handleAddPosition(item?.id, profits.specialItemPrice, specialItemDetails ?? '', currentUnixTime)}
+                  variant='contained'
+                  color='white'
+                  sx={{
+                    color: 'black.main',
+                    maxHeight: '30px'
+                  }}
+                >
+                  Add
+                </Button>
+              </Box>
+            </Box>
+            <TextField
+              label="Details"
+              size='small'
+              value={specialItemDetails}
+              onChange={(event) => handleSpecialItemDetailsChange(event)}
+            />
           </Card>
         </Box>
         {/* Add item */}
