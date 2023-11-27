@@ -49,7 +49,11 @@ function Profits({ totalCost, onUpdatePrice }) {
       }, [cheapestPrice, goodItemPrice, perfectItemPrice, specialItemPrice, onUpdatePrice]);
 
     return (
-        <Box>
+        <Box sx={{
+            display:'flex',
+            flexDirection:'column',
+            gap: 1
+        }}>
             <Box sx={{
                 display: 'flex',
                 gap: 1,

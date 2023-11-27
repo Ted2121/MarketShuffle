@@ -255,7 +255,7 @@ function ActionsPanel({ item }) {
               <Box sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 1,
+                gap: 2,
               }}>
                 <Button
                   onClick={() => handleAddPosition(item?.id, profits.cheapestPrice, "", currentUnixTime)}

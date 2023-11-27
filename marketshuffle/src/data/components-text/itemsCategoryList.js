@@ -5,7 +5,7 @@ import cape from '../../assets/icons/cape.png'
 import hat from '../../assets/icons/hat.png'
 import ring from '../../assets/icons/ring.png'
 import weapon from '../../assets/icons/weapon.png'
-import resource from '../../assets/icons/resource.png'
+import consumables from '../../assets/icons/consumables.png'
 import rune from '../../assets/icons/rune.png'
 
 const categoryList = [
@@ -46,8 +46,8 @@ const categoryList = [
     },
     {
         id:7,
-        name:'resource',
-        img: resource,
+        name:'consumables',
+        img: consumables,
     },
     {
         id:8,
