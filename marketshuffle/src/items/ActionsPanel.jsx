@@ -250,9 +250,6 @@ function ActionsPanel({ item }) {
               <Typography sx={{ fontSize: '1rem' }}>
                 Total: {totalCost.toLocaleString()}
               </Typography>
-              <Button>
-
-              </Button>
             </Box>
             <Divider />
             <Box sx={{
@@ -316,12 +313,6 @@ function ActionsPanel({ item }) {
               onChange={(event) => handleSpecialItemDetailsChange(event)}
             />
           </Card>
-        </Box>
-        {/* Add item */}
-        <Box sx={{
-          display: 'flex',
-          flex: 4,
-        }}>
         </Box>
         <Box sx={{
           display:'flex',
