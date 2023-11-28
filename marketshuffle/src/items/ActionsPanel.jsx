@@ -8,6 +8,7 @@ import Divider from '@mui/material/Divider';
 import Profits from './Profits';
 import EditPositionModal from './EditPositionModal';
 import AddPositionForm from './AddPositionForm';
+import BackToTopButton from '../shared/components/BackToTopButton';
 
 function ActionsPanel({ item }) {
   const [currentPosition, setCurrentPosition] = useState(null);
@@ -243,9 +244,17 @@ function ActionsPanel({ item }) {
             flex: 6,
           }}>
             {recipe}
-            <Typography sx={{ fontSize: '1rem' }}>
-              Total: {totalCost.toLocaleString()}
-            </Typography>
+            <Box sx={{
+              display: 'flex',
+              justifyContent: 'space-between'
+            }}>
+              <Typography sx={{ fontSize: '1rem' }}>
+                Total: {totalCost.toLocaleString()}
+              </Typography>
+              <Button>
+
+              </Button>
+            </Box>
             <Divider />
             <Box sx={{
               display: 'flex',
@@ -314,6 +323,14 @@ function ActionsPanel({ item }) {
           display: 'flex',
           flex: 4,
         }}>
+        </Box>
+        <Box sx={{
+          display:'flex',
+          width:'100%',
+          justifyContent:'center'
+        }}>
+
+        <BackToTopButton />
         </Box>
       </Box>
     </Box>

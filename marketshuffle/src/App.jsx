@@ -9,6 +9,7 @@ import Items from './items/Craft';
 import History from './item-actions/History';
 import Profit from './item-actions/Profit';
 import Recipe from './item-actions/Recipe';
+import NewItemsPage from './new-items/NewItemsPage';
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -33,6 +34,7 @@ function App() {
               <Route path='/' element={<RouteLayout />}>
                 {/* public routes */}
                 <Route path='/' element={<Items />} />
+                <Route path='/new' element={<NewItemsPage />} />
                 
               </Route>
             </Routes>
