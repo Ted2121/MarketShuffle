@@ -81,7 +81,6 @@ function ActionsPanel({ item }) {
 
   const handleSpecialItemDetailsChange = (event) => {
     const { value } = event.target;
-
     setSpecialItemPosition(value)
   }
 
@@ -329,7 +328,6 @@ function ActionsPanel({ item }) {
           width:'100%',
           justifyContent:'center'
         }}>
-
         <BackToTopButton />
         </Box>
       </Box>
