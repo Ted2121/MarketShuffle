@@ -115,7 +115,9 @@ function NewItemsPage() {
           color: 'black.main',
           mt: 2,
           maxHeight: '50px'
-        }}>Save Recipe</Button>
+        }}>
+        Save Recipe
+      </Button>
     </Box>
   )
 }

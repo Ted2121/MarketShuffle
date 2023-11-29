@@ -86,6 +86,8 @@ function ActionsPanel({ item }) {
     return `${day} ${month} ${year}`;
   }
 
+  //TODO add filtering for item quality
+
   const positionList = sortedPositions.map((position, index) => (
     <Button
       key={index}

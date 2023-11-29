@@ -3,6 +3,7 @@ const item = {
     "name":'test',
     "isFavorite": true,
     "category": "rune",
+    "quality": "cheapest",
     "recipe": [
         {
             "quantity":"3",
