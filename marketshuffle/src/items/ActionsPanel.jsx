@@ -2,32 +2,15 @@ import { Box, Button, Card, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import PositionsChart from './PositionsChart'
 import positions from '../data/mocks/positions-mock';
-import TextField from '@mui/material/TextField';
-import { useEffect } from 'react';
 import Divider from '@mui/material/Divider';
-import Profits from './Profits';
 import EditPositionModal from './EditPositionModal';
 import AddPositionForm from './AddPositionForm';
 import BackToTopButton from '../shared/components/BackToTopButton';
+import GeneralItemActions from './GeneralItemActions';
 
 function ActionsPanel({ item }) {
   const [currentPosition, setCurrentPosition] = useState(null);
-  const [ingredientPrices, setIngredientPrices] = useState({});
-  const [totalCost, setTotalPrice] = useState(0);
-  const currentUnixTime = Math.floor(Date.now() / 1000);
-  const [specialItemDetails, setSpecialItemPosition] = useState('');
-
-  const [profits, setProfits] = useState({
-    cheapestPrice: 0,
-    goodItemPrice: 0,
-    perfectItemPrice: 0,
-    specialItemPrice: 0,
-  });
-
-  const handlePriceChange = (updatedProfits) => {
-    setProfits(updatedProfits);
-  };
-
+  
   const formatDate = (unixTimestamp) => {
     const date = new Date(unixTimestamp * 1000);
 
@@ -49,6 +32,10 @@ function ActionsPanel({ item }) {
     // TODO call add position request
   }
 
+  const handleEditPosition = (newCost, newDetails) => {
+    console.log(currentPosition.id, newCost, newDetails);
+    //TODO api request with positionId, new cost, new details
+  }
 
   const handleSetCurrentPosition = (position) => {
     setCurrentPosition(position);
@@ -71,65 +58,8 @@ function ActionsPanel({ item }) {
     </Button>
   ))
 
-  const handleCostChange = (index, event) => {
-    const { value } = event.target;
-    setIngredientPrices(prevState => ({
-      ...prevState,
-      [index]: value !== '' ? parseInt(value) : '',
-    }));
-  };
 
-  const handleSpecialItemDetailsChange = (event) => {
-    const { value } = event.target;
-    setSpecialItemPosition(value)
-  }
-
-  useEffect(() => {
-    let total = 0;
-    item?.recipe?.forEach((ingredient, index) => {
-      const price = ingredientPrices[index];
-      if (!isNaN(price) && !isNaN(ingredient.quantity)) {
-        total += price * parseFloat(ingredient.quantity);
-      }
-    });
-    setTotalPrice(total);
-  }, [ingredientPrices, item?.recipe]);
-
-  const recipe = item?.recipe?.map((ingredient, index) => {
-    const costValue = ingredientPrices[index] !== undefined ? ingredientPrices[index] : '';
-
-    return (
-      !item || !Array.isArray(item.positions) ? (
-        <div key={index}>No positions data available</div>
-      ) : (
-        <Box
-          key={index}
-          sx={{
-            gap: 1,
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          <Typography sx={{ fontSize: '1rem' }}>
-            {ingredient.name} -
-          </Typography>
-          <Typography sx={{ fontSize: '1rem' }}>
-            {ingredient.quantity}x
-          </Typography>
-          <TextField
-            type="number"
-            label="Cost"
-            size='small'
-            value={costValue}
-            onChange={(event) => handleCostChange(index, event)}
-          />
-          <Typography sx={{ fontSize: '1rem' }}>
-            = {ingredientPrices[index] && (ingredientPrices[index] * ingredient.quantity).toLocaleString()} k
-          </Typography>
-        </Box>
-      )
-    );
-  });
+  
 
   const handleDeletePosition = () => {
 
@@ -226,7 +156,7 @@ function ActionsPanel({ item }) {
               >
                 Delete
               </Button>
-              <EditPositionModal />
+              <EditPositionModal handleEditPosition={handleEditPosition} currentPosition={currentPosition}/>
             </Box>
             <Divider sx={{
               mt: 2
@@ -234,85 +164,7 @@ function ActionsPanel({ item }) {
             {/* Add position */}
             <AddPositionForm itemId={item?.id} handleAddPosition={handleAddPosition} />
           </Card>
-          {/* recipe */}
-          <Card sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            p: 1,
-            gap: 1,
-            flex: 6,
-          }}>
-            {recipe}
-            <Box sx={{
-              display: 'flex',
-              justifyContent: 'space-between'
-            }}>
-              <Typography sx={{ fontSize: '1rem' }}>
-                Total: {totalCost.toLocaleString()}
-              </Typography>
-            </Box>
-            <Divider />
-            <Box sx={{
-              display: 'flex',
-              gap: 2
-            }}>
-              <Profits totalCost={totalCost} onUpdatePrice={handlePriceChange} />
-              <Box sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2,
-              }}>
-                <Button
-                  onClick={() => handleAddPosition(item?.id, profits.cheapestPrice, "", currentUnixTime)}
-                  variant='contained'
-                  color='white'
-                  sx={{
-                    color: 'black.main',
-                    maxHeight: '30px'
-                  }}
-                >
-                  Add
-                </Button><Button
-                  onClick={() => handleAddPosition(item?.id, profits.goodItemPrice, "", currentUnixTime)}
-                  variant='contained'
-                  color='white'
-                  sx={{
-                    color: 'black.main',
-                    maxHeight: '30px'
-                  }}
-                >
-                  Add
-                </Button><Button
-                  onClick={() => handleAddPosition(item?.id, profits.perfectItemPrice, "", currentUnixTime)}
-                  variant='contained'
-                  color='white'
-                  sx={{
-                    color: 'black.main',
-                    maxHeight: '30px'
-                  }}
-                >
-                  Add
-                </Button>
-                <Button
-                  onClick={() => handleAddPosition(item?.id, profits.specialItemPrice, specialItemDetails ?? '', currentUnixTime)}
-                  variant='contained'
-                  color='white'
-                  sx={{
-                    color: 'black.main',
-                    maxHeight: '30px'
-                  }}
-                >
-                  Add
-                </Button>
-              </Box>
-            </Box>
-            <TextField
-              label="Details"
-              size='small'
-              value={specialItemDetails}
-              onChange={(event) => handleSpecialItemDetailsChange(event)}
-            />
-          </Card>
+          <GeneralItemActions item={item} handleAddPosition={handleAddPosition}/>
         </Box>
         <Box sx={{
           display:'flex',

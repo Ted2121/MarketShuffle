@@ -42,7 +42,7 @@ function Profits({ totalCost, onUpdatePrice }) {
           specialItemPrice,
         };
         onUpdatePrice(updatedProfits);
-      }, 1000);
+      }, 500);
 
       useEffect(() => {
         updateParentProfits();
