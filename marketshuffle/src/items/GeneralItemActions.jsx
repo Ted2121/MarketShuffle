@@ -87,13 +87,7 @@ function GeneralItemActions({ item, handleAddPosition }) {
         );
     });
     return (
-        <Card sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            p: 1,
-            gap: 1,
-            flex: 6,
-        }}>
+        <>
             {recipe}
             <Box sx={{
                 display: 'flex',
@@ -164,7 +158,7 @@ function GeneralItemActions({ item, handleAddPosition }) {
                 value={specialItemDetails}
                 onChange={(event) => handleSpecialItemDetailsChange(event)}
             />
-        </Card>
+        </>
     )
 }
 

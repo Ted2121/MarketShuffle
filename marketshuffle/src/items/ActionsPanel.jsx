@@ -7,24 +7,27 @@ import EditPositionModal from './EditPositionModal';
 import AddPositionForm from './AddPositionForm';
 import BackToTopButton from '../shared/components/BackToTopButton';
 import GeneralItemActions from './GeneralItemActions';
+import RuneActions from './RuneActions';
+import MiscActions from './MiscActions';
 
-function ActionsPanel({ item }) {
+function ActionsPanel({ item, rune, misc }) {
   const [sortBy, setSortBy] = useState('date_desc');
   const [currentPosition, setCurrentPosition] = useState(null);
-  
+  const isRune = item?.category == "rune"
+
   const formatDate = (unixTimestamp) => {
     const date = new Date(unixTimestamp * 1000);
-    
+
     const monthNames = [
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];
-    
+
     const day = date.getDate().toString().padStart(2, '0');
     const monthIndex = date.getMonth();
     const month = monthNames[monthIndex];
     const year = date.getFullYear().toString().slice(-2);
-    
+
     return `${day} ${month} ${year}`;
   };
 
@@ -92,11 +95,11 @@ function ActionsPanel({ item }) {
   });
 
   function formatDateWithDays(unixTimestamp) {
-    const date = new Date(unixTimestamp * 1000); // Convert seconds to milliseconds
+    const date = new Date(unixTimestamp * 1000);
     const year = date.getFullYear().toString().slice(-2);
     const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(date);
     const day = date.getDate().toString().padStart(2, '0');
-  
+
     return `${day} ${month} ${year}`;
   }
 
@@ -108,31 +111,16 @@ function ActionsPanel({ item }) {
         color: 'black.main',
         backgroundColor: 'white.main',
         mb: '8px',
-        width:'80px',
+        width: '80px',
       }}
     >
-    {console.log(position.cost)}
       {formatDateWithDays(position.date)} {position.cost.toLocaleString()}
     </Button>
   ));
 
-
-
   const handleDeletePosition = () => {
 
   }
-
-
-
-  //TODO this one is the real one
-  // const positionList = item?.positions.map((position) => (
-  //   <Button onClick={handleSetCurrentPosition}
-  // sx={{
-  //   color:'white.main'
-  // }}>
-  //   {position.cost.toLocaleString()}
-  // </Button>
-  // ))
 
   return (
     // price history
@@ -151,17 +139,18 @@ function ActionsPanel({ item }) {
           flexDirection: 'column',
         }}>
           <Box sx={{
-      display: 'flex',
-      flexDirection: 'column',
-    }}>
-      <Button onClick={() => sortPositions('date_asc')}>
-        Sort by Date {sortIcon('date_asc')}
-      </Button>
-      <Button onClick={() => sortPositions('cost_asc')}>
-        Sort by Cost {sortIcon('cost_asc')}
-      </Button>
-      {positionList}
-    </Box>
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}>
+            <Button onClick={() => sortPositions('date_asc')}>
+              Sort by Date {sortIcon('date_asc')}
+            </Button>
+            <Button onClick={() => sortPositions('cost_asc')}>
+              Sort by Cost {sortIcon('cost_asc')}
+            </Button>
+            {positionList}
+          </Box>
         </Card>
       </Box>
       {/* main content */}
@@ -176,7 +165,7 @@ function ActionsPanel({ item }) {
         <Box sx={{
           display: 'flex',
           flex: 1,
-          justifyContent:'flex-end'
+          justifyContent: 'flex-end'
         }}>
           <PositionsChart positions={positions} />
         </Box>
@@ -225,7 +214,7 @@ function ActionsPanel({ item }) {
               >
                 Delete
               </Button>
-              <EditPositionModal handleEditPosition={handleEditPosition} currentPosition={currentPosition}/>
+              <EditPositionModal handleEditPosition={handleEditPosition} currentPosition={currentPosition} />
             </Box>
             <Divider sx={{
               mt: 2
@@ -233,14 +222,24 @@ function ActionsPanel({ item }) {
             {/* Add position */}
             <AddPositionForm itemId={item?.id} handleAddPosition={handleAddPosition} />
           </Card>
-          <GeneralItemActions item={item} handleAddPosition={handleAddPosition}/>
+          <Card sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            p: 1,
+            gap: 1,
+            flex: 6,
+          }}>
+              {rune && <RuneActions rune={rune}/>}
+              {item && <GeneralItemActions item={item} handleAddPosition={handleAddPosition} />}
+              {misc && <MiscActions misc={misc}/>}
+          </Card >
         </Box>
         <Box sx={{
-          display:'flex',
-          width:'100%',
-          justifyContent:'center'
+          display: 'flex',
+          width: '100%',
+          justifyContent: 'center'
         }}>
-        <BackToTopButton />
+          <BackToTopButton />
         </Box>
       </Box>
     </Box>

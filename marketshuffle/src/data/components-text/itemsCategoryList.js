@@ -7,6 +7,7 @@ import ring from '../../assets/icons/ring.png'
 import weapon from '../../assets/icons/weapon.png'
 import consumables from '../../assets/icons/consumables.png'
 import rune from '../../assets/icons/rune.png'
+import misc from '../../assets/icons/misc.png'
 
 const categoryList = [
     {
@@ -53,6 +54,11 @@ const categoryList = [
         id:8,
         name:'rune',
         img: rune,
+    },
+    {
+        id:9,
+        name:'misc',
+        img: misc,
     },
 ];
 

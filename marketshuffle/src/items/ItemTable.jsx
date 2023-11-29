@@ -2,9 +2,10 @@ import { Box, Button } from '@mui/material'
 import React from 'react'
 import Item from './Item'
 import categoryList from '../data/components-text/itemsCategoryList'
-import item from '../data/mocks/item-mock'
+import item from '../data/mocks/item-mock';
+import rune from '../data/mocks/rune-mock';
 
-function ItemTable() {
+function ItemTable({handleSetSelectedItem}) {
 
 
 const categories = (
@@ -23,7 +24,10 @@ const categories = (
 )
 
 const getItemsForCategory = async (category) => {
+// TODO use a switch to call the right api method because runes and misc are on different controller
+
   console.log("getting items for: ", category)
+  return rune;
   // await itemService.getItemsForCategory(category);
 }
 

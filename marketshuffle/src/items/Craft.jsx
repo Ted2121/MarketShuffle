@@ -1,11 +1,16 @@
 import { Box } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import Favorites from './Favorites'
 import ItemTable from './ItemTable'
 import ActionsPanel from './ActionsPanel'
 import item from '../data/mocks/item-mock'
 
 function Items() {
+  const [selectedItem, setSelectedItem] = useState();
+
+  const handleSetSelectedItem = (item) => {
+    setSelectedItem(item);
+  }
   // TODO call the get all favorites in a useEffect and pass it to favorites component
   return (
     <Box sx={{
@@ -17,7 +22,7 @@ function Items() {
         p:'32px',
     }}>
         <Favorites />
-        <ActionsPanel item={item}/>
+        <ActionsPanel item={selectedItem}/>
         <ItemTable />
     </Box>
   )
