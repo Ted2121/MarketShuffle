@@ -9,7 +9,7 @@ import { Box, Button, IconButton, textFieldClasses } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
-function Item({ item, setItem }) {
+function Item({ item, handleSetItem }) {
   const [isFavorite, setIsFavorite] = useState(item?.isFavorite);
 
   const handleFavoriteToggle = async () => {
@@ -20,8 +20,8 @@ function Item({ item, setItem }) {
     }
   }
 
-  const handleSetItem = () => {
-    setItem(item.id);
+  const onSetItem = () => {
+    item && handleSetItem(item);
   }
 
   const favoriteButton = (
@@ -37,7 +37,7 @@ function Item({ item, setItem }) {
   return (
     <Box sx={{ display: 'flex', gap: '16px' }}>
       <Button 
-      onClick={handleSetItem}
+      onClick={onSetItem}
       variant='contained' color='white' sx={{
         color:'black.main',
         width:'300px'

@@ -1,11 +1,22 @@
 import { Box, Button } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import Item from './Item'
 import categoryList from '../data/components-text/itemsCategoryList'
 import item from '../data/mocks/item-mock';
 import rune from '../data/mocks/rune-mock';
 
 function ItemTable({handleSetSelectedItem}) {
+const [itemList, setItemList] = useState([]);
+
+const onSetItem = (item) => {
+  handleSetSelectedItem(item);
+}
+
+const items = (
+  itemList.map(item => (
+    <Item key={item.id} item={item} handleSetItem={onSetItem}/>
+  ))
+);
 
 
 const categories = (
@@ -27,8 +38,8 @@ const getItemsForCategory = async (category) => {
 // TODO use a switch to call the right api method because runes and misc are on different controller
 
   console.log("getting items for: ", category)
-  return rune;
   // await itemService.getItemsForCategory(category);
+  setItemList([rune])
 }
 
   return (
@@ -57,6 +68,8 @@ const getItemsForCategory = async (category) => {
          gap:'16px',
          p:'16px 0',
       }}>
+        {items}
+      {/* <Item item={item}/>
       <Item item={item}/>
       <Item item={item}/>
       <Item item={item}/>
@@ -70,8 +83,7 @@ const getItemsForCategory = async (category) => {
       <Item item={item}/>
       <Item item={item}/>
       <Item item={item}/>
-      <Item item={item}/>
-      <Item item={item}/>
+      <Item item={item}/> */}
       </Box>
     </Box>
   )

@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 function RuneActions({rune}) {
   return (
     <>
-    
+    test
     </>
   )
 }
