@@ -9,21 +9,22 @@ import BackToTopButton from '../shared/components/BackToTopButton';
 import GeneralItemActions from './GeneralItemActions';
 
 function ActionsPanel({ item }) {
+  const [sortBy, setSortBy] = useState('date_desc');
   const [currentPosition, setCurrentPosition] = useState(null);
   
   const formatDate = (unixTimestamp) => {
     const date = new Date(unixTimestamp * 1000);
-
+    
     const monthNames = [
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];
-
+    
     const day = date.getDate().toString().padStart(2, '0');
     const monthIndex = date.getMonth();
     const month = monthNames[monthIndex];
     const year = date.getFullYear().toString().slice(-2);
-
+    
     return `${day} ${month} ${year}`;
   };
 
@@ -41,7 +42,65 @@ function ActionsPanel({ item }) {
     setCurrentPosition(position);
   }
 
-  const positionList = positions.map((position, index) => (
+  // const positionList = positions.map((position, index) => (
+  //   <Button
+  //     key={index}
+  //     onClick={() => handleSetCurrentPosition(position)}
+  //     sx={{
+  //       color: 'black.main',
+  //       backgroundColor: 'white.main',
+  //       mb: '8px',
+  //       '&:hover': {
+  //         backgroundColor: 'secondary.main',
+  //       },
+  //     }}
+  //   >
+  //     {position.cost.toLocaleString()}
+  //   </Button>
+  // ))
+
+  const sortPositions = (sortType) => {
+    if (sortBy === sortType) {
+      // Toggle the order if clicked again on the same sort type
+      setSortBy(sortType.endsWith('_asc') ? sortType.replace('_asc', '_desc') : sortType.replace('_desc', '_asc'));
+    } else {
+      // Set the sort type if it's different from the current sort type
+      setSortBy(sortType);
+    }
+  };
+
+  const sortIcon = (sortType) => {
+    if (sortBy === sortType || sortBy === sortType.replace('_asc', '_desc') || sortBy === sortType.replace('_desc', '_asc')) {
+      return sortBy.endsWith('_asc') ? '▲' : '▼';
+    }
+    return '';
+  };
+
+  const sortedPositions = [...positions].sort((a, b) => {
+    switch (sortBy) {
+      case 'date_asc':
+        return a.date - b.date;
+      case 'date_desc':
+        return b.date - a.date;
+      case 'cost_asc':
+        return a.cost - b.cost;
+      case 'cost_desc':
+        return b.cost - a.cost;
+      default:
+        return 0;
+    }
+  });
+
+  function formatDateWithDays(unixTimestamp) {
+    const date = new Date(unixTimestamp * 1000); // Convert seconds to milliseconds
+    const year = date.getFullYear().toString().slice(-2);
+    const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(date);
+    const day = date.getDate().toString().padStart(2, '0');
+  
+    return `${day} ${month} ${year}`;
+  }
+
+  const positionList = sortedPositions.map((position, index) => (
     <Button
       key={index}
       onClick={() => handleSetCurrentPosition(position)}
@@ -49,17 +108,15 @@ function ActionsPanel({ item }) {
         color: 'black.main',
         backgroundColor: 'white.main',
         mb: '8px',
-        '&:hover': {
-          backgroundColor: 'secondary.main',
-        },
+        width:'80px',
       }}
     >
-      {position.cost.toLocaleString()}
+    {console.log(position.cost)}
+      {formatDateWithDays(position.date)} {position.cost.toLocaleString()}
     </Button>
-  ))
+  ));
 
 
-  
 
   const handleDeletePosition = () => {
 
@@ -93,7 +150,18 @@ function ActionsPanel({ item }) {
           display: 'flex',
           flexDirection: 'column',
         }}>
-          {positionList}
+          <Box sx={{
+      display: 'flex',
+      flexDirection: 'column',
+    }}>
+      <Button onClick={() => sortPositions('date_asc')}>
+        Sort by Date {sortIcon('date_asc')}
+      </Button>
+      <Button onClick={() => sortPositions('cost_asc')}>
+        Sort by Cost {sortIcon('cost_asc')}
+      </Button>
+      {positionList}
+    </Box>
         </Card>
       </Box>
       {/* main content */}
@@ -108,6 +176,7 @@ function ActionsPanel({ item }) {
         <Box sx={{
           display: 'flex',
           flex: 1,
+          justifyContent:'flex-end'
         }}>
           <PositionsChart positions={positions} />
         </Box>
