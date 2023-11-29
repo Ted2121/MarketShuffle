@@ -10,10 +10,12 @@ import GeneralItemActions from './GeneralItemActions';
 import RuneActions from './RuneActions';
 import MiscActions from './MiscActions';
 
-function ActionsPanel({ item, rune, misc }) {
+function ActionsPanel({ item }) {
   const [sortBy, setSortBy] = useState('date_desc');
   const [currentPosition, setCurrentPosition] = useState(null);
   const isRune = item?.category == "rune"
+  const isMisc = item?.category == "misc"
+  const isGeneral = !isMisc && !isRune;
 
   const formatDate = (unixTimestamp) => {
     const date = new Date(unixTimestamp * 1000);
@@ -45,29 +47,10 @@ function ActionsPanel({ item, rune, misc }) {
     setCurrentPosition(position);
   }
 
-  // const positionList = positions.map((position, index) => (
-  //   <Button
-  //     key={index}
-  //     onClick={() => handleSetCurrentPosition(position)}
-  //     sx={{
-  //       color: 'black.main',
-  //       backgroundColor: 'white.main',
-  //       mb: '8px',
-  //       '&:hover': {
-  //         backgroundColor: 'secondary.main',
-  //       },
-  //     }}
-  //   >
-  //     {position.cost.toLocaleString()}
-  //   </Button>
-  // ))
-
   const sortPositions = (sortType) => {
     if (sortBy === sortType) {
-      // Toggle the order if clicked again on the same sort type
       setSortBy(sortType.endsWith('_asc') ? sortType.replace('_asc', '_desc') : sortType.replace('_desc', '_asc'));
     } else {
-      // Set the sort type if it's different from the current sort type
       setSortBy(sortType);
     }
   };
@@ -229,9 +212,9 @@ function ActionsPanel({ item, rune, misc }) {
             gap: 1,
             flex: 6,
           }}>
-              {rune && <RuneActions rune={rune}/>}
-              {item && <GeneralItemActions item={item} handleAddPosition={handleAddPosition} />}
-              {misc && <MiscActions misc={misc}/>}
+              {isRune && <RuneActions rune={item}/>}
+              {isGeneral && <GeneralItemActions item={item} handleAddPosition={handleAddPosition} />}
+              {isMisc && <MiscActions misc={item}/>}
           </Card >
         </Box>
         <Box sx={{

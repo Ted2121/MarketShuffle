@@ -22,7 +22,7 @@ function Items() {
         p:'32px',
     }}>
         <Favorites />
-        <ActionsPanel rune={selectedItem} />
+        <ActionsPanel item={selectedItem} />
         <ItemTable handleSetSelectedItem={handleSetSelectedItem}/>
     </Box>
   )
