@@ -102,7 +102,7 @@ function ActionsPanel({ item }) {
   ));
 
   const handleDeletePosition = () => {
-
+    // TODO api call to delete position and then remove the position from the list
   }
 
   return (
