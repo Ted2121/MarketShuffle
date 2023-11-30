@@ -2,7 +2,7 @@ const item = {
     "id":'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX',
     "name":'test',
     "isFavorite": true,
-    "category": "rune",
+    "category": "weapon",
     "quality": "cheapest",
     "recipe": [
         {

@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField';
 import Divider from '@mui/material/Divider';
 import Profits from './Profits';
 import { useEffect } from 'react';
+import RecipeList from './RecipeList';
 
 function GeneralItemActions({ item, handleAddPosition }) {
     const [ingredientPrices, setIngredientPrices] = useState({});
@@ -51,44 +52,44 @@ function GeneralItemActions({ item, handleAddPosition }) {
         setTotalPrice(total);
     }, [ingredientPrices, item?.recipe]);
 
-    const recipe = item?.recipe?.map((ingredient, index) => {
-        const costValue = ingredientPrices[index] !== undefined ? ingredientPrices[index] : '';
+    // const recipe = item?.recipe?.map((ingredient, index) => {
+    //     const costValue = ingredientPrices[index] !== undefined ? ingredientPrices[index] : '';
 
-        return (
-            !item || !Array.isArray(item.positions) ? (
-                <div key={index}>No positions data available</div>
-            ) : (
-                <Box
-                    key={index}
-                    sx={{
-                        gap: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Typography sx={{ fontSize: '1rem' }}>
-                        {ingredient.name} -
-                    </Typography>
-                    <Typography sx={{ fontSize: '1rem' }}>
-                        {ingredient.quantity}x
-                    </Typography>
-                    <TextField
-                        type="number"
-                        label="Cost"
-                        size='small'
-                        value={costValue}
-                        onChange={(event) => handleCostChange(index, event)}
-                    />
-                    <Typography sx={{ fontSize: '1rem' }}>
-                        = {ingredientPrices[index] && (ingredientPrices[index] * ingredient.quantity).toLocaleString()} k
-                    </Typography>
-                </Box>
-            )
-        );
-    });
+    //     return (
+    //         !item || !Array.isArray(item.positions) ? (
+    //             <div key={index}>No positions data available</div>
+    //         ) : (
+    //             <Box
+    //                 key={index}
+    //                 sx={{
+    //                     gap: 1,
+    //                     display: 'flex',
+    //                     alignItems: 'center',
+    //                 }}
+    //             >
+    //                 <Typography sx={{ fontSize: '1rem' }}>
+    //                     {ingredient.name} -
+    //                 </Typography>
+    //                 <Typography sx={{ fontSize: '1rem' }}>
+    //                     {ingredient.quantity}x
+    //                 </Typography>
+    //                 <TextField
+    //                     type="number"
+    //                     label="Cost"
+    //                     size='small'
+    //                     value={costValue}
+    //                     onChange={(event) => handleCostChange(index, event)}
+    //                 />
+    //                 <Typography sx={{ fontSize: '1rem' }}>
+    //                     = {ingredientPrices[index] && (ingredientPrices[index] * ingredient.quantity).toLocaleString()} k
+    //                 </Typography>
+    //             </Box>
+    //         )
+    //     );
+    // });
     return (
         <>
-            {recipe}
+            <RecipeList item={item}/>
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'space-between'
