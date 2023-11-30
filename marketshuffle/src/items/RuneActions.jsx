@@ -4,11 +4,16 @@ import TextField from '@mui/material/TextField';
 import Divider from '@mui/material/Divider';
 import Profits from './Profits';
 import { useEffect } from 'react';
+import RecipeList from './RecipeList';
 
 function RuneActions({rune}) {
+    const [item, setItem] = useState();
+
+
   return (
     <>
-    test
+
+        <RecipeList item={item}/>
     </>
   )
 }
