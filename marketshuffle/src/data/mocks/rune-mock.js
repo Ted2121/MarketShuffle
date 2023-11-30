@@ -18,6 +18,11 @@ const rune = {
             "date":"163564365",
             "details":""
         },
+        {
+            "cost":"5000",
+            "date":"163564365",
+            "details":""
+        },
     ],
     "crushChance":[
         {

@@ -1,6 +1,6 @@
 import React from 'react'
 
-function RecipeList() {
+function RecipeList({item}) {
     const recipe = item?.recipe?.map((ingredient, index) => {
         const costValue = ingredientPrices[index] !== undefined ? ingredientPrices[index] : '';
 

@@ -13,7 +13,7 @@ function RuneActions({rune}) {
   return (
     <>
 
-        <RecipeList item={item}/>
+        <RecipeList item={rune}/>
     </>
   )
 }
