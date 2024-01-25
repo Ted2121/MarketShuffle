@@ -9,6 +9,11 @@ const navData = [
     text: 'New Items',
     route: '/new',
   },
+  {
+    id: '3',
+    text: 'Crafting Tree',
+    route: '/craft',
+  },
 ]
 
 export default navData;
