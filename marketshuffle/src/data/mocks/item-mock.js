@@ -1,41 +1,29 @@
 const item = {
     "id":'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX',
-    "name":'test',
+    "name":'crackler amulet',
     "isFavorite": true,
-    "category": "rune",
+    "category": "",
     "quality": "cheapest",
     "recipe": [
         {
-            "quantity":"3",
-            "name":"resource1"
+            "quantity":"4",
+            "name":"Gold crackler tooth"
         },
         {
-            "quantity":"5",
-            "name":"resource2"
+            "quantity":"1",
+            "name":"Flint"
         },
         {
-            "quantity":"5",
-            "name":"resource2"
+            "quantity":"1",
+            "name":"Granite"
         },
         {
-            "quantity":"5",
-            "name":"resource2"
+            "quantity":"1",
+            "name":"Crackler Stone"
         },
         {
-            "quantity":"5",
-            "name":"resource2"
-        },
-        {
-            "quantity":"5",
-            "name":"resource2"
-        },
-        {
-            "quantity":"5",
-            "name":"resource2"
-        },
-        {
-            "quantity":"5",
-            "name":"resource2"
+            "quantity":"1",
+            "name":"Coal"
         },
     ],
     "positions":[

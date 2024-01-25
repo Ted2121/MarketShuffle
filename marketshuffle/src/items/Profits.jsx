@@ -11,7 +11,7 @@ function Profits({ totalCost, onUpdatePrice }) {
     const [specialItemPrice, setSpecialItemPrice] = useState('');
 
     const calculateProfits = (price) => {
-        return Math.floor((price * .99) - totalCost).toLocaleString();
+        return Math.floor((price * .98) - totalCost).toLocaleString();
     }
 
     const handleCheapestPriceChange = (event) => {

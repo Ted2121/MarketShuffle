@@ -39,7 +39,7 @@ const getItemsForCategory = async (category) => {
 
   console.log("getting items for: ", category)
   // await itemService.getItemsForCategory(category);
-  setItemList([rune])
+  setItemList([item])
 }
 
   return (
