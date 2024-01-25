@@ -6,6 +6,7 @@ import RouteLayout from './shared/routing/RouteLayout';
 import Navbar from './shared/layouts/Navbar';
 import Items from './items/Craft';
 import NewItemsPage from './new-items/NewItemsPage';
+import CraftingTreePage from './crafting-tree/CraftingTreePage';
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -31,7 +32,8 @@ function App() {
                 {/* public routes */}
                 <Route path='/' element={<Items />} />
                 <Route path='/new' element={<NewItemsPage />} />
-                
+                <Route path='/craft' element={<CraftingTreePage />} />
+
               </Route>
             </Routes>
           </Box>
