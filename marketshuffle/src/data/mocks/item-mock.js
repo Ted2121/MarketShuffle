@@ -23,7 +23,17 @@ const item = {
         },
         {
             "quantity":"1",
-            "name":"Coal"
+            "name":"Coal",
+            "recipe": [
+                {
+                    "quantity":"7",
+                    "name":"Gold"
+                },
+                {
+                    "quantity":"8",
+                    "name":"silver"
+                },
+            ]
         },
     ],
     "positions":[
