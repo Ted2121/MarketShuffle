@@ -9,6 +9,7 @@ import BackToTopButton from '../shared/components/BackToTopButton';
 import GeneralItemActions from './GeneralItemActions';
 import RuneActions from './RuneActions';
 import MiscActions from './MiscActions';
+import CraftingTree from '../crafting-tree/CraftingTree';
 
 function ActionsPanel({ item }) {
   const [sortBy, setSortBy] = useState('date_desc');
@@ -158,6 +159,11 @@ function ActionsPanel({ item }) {
           display: 'flex',
           gap: 1,
         }}>
+          <Box sx={{
+          display: 'flex',
+          gap: 1,
+          flexDirection:'column'
+        }}>
           {/* Position details */}
           <Card sx={{
             p: 1,
@@ -207,6 +213,11 @@ function ActionsPanel({ item }) {
             {/* Add position */}
             <AddPositionForm itemId={item?.id} handleAddPosition={handleAddPosition} />
           </Card>
+            <Card>
+              <CraftingTree recipe={item?.recipe}/>
+            </Card>
+          </Box>
+          {/* Price Calculations */}
           <Card sx={{
             display: 'flex',
             flexDirection: 'column',
@@ -219,6 +230,7 @@ function ActionsPanel({ item }) {
               {isMisc && <MiscActions misc={item}/>}
           </Card >
         </Box>
+        {/* Back to top */}
         <Box sx={{
           display: 'flex',
           width: '100%',

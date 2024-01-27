@@ -1,21 +1,17 @@
 import { Box, Checkbox, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React from 'react'
 
-function RecipeNode({name}) {
-  const [recipe, setRecipe] = useState({});
-  console.log(name)
+function RecipeNode({ name }) {
   return (
     <Box sx={{
-        display: 'flex',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        p: 2,
-        mt: 2
+      display: 'flex',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
     }}>
-        <Typography sx={{
-          fontSize:"1.5rem"
-        }}>{name}:</Typography>
-        <Checkbox size='large'/>
+      <Typography sx={{
+        fontSize: "1.2rem"
+      }}>{name}:</Typography>
+      <Checkbox size='large' />
     </Box>
   )
 }

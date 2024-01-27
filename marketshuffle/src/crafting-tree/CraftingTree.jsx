@@ -1,21 +1,19 @@
 import React from 'react';
-import { Box, Checkbox, Typography } from '@mui/material';
-import item from '../data/mocks/item-mock';
+import { Box } from '@mui/material';
 import RecipeNode from './RecipeNode';
 
-function CraftingTree({ }) {
+function CraftingTree({ recipe }) {
 
-const data = item.recipe;
-  const renderTree = (items) => {
-    return Array.isArray(items) && items.map((item, index) => (
-      <Box key={index} sx={{ml: 10 }}>
-        <RecipeNode name={item.name}/>
+  const renderTree = (recipe) => {
+    return Array.isArray(recipe) && recipe.map((item, index) => (
+      <Box key={index} sx={{ ml: 6 }}>
+        <RecipeNode name={item.name} />
         {item.recipe && renderTree(item.recipe)}
       </Box>
     ));
   };
 
-  return <div>{renderTree(data)}</div>;
+  return <div>{renderTree(recipe)}</div>;
 }
 
 export default CraftingTree;

@@ -43,7 +43,7 @@ const item = {
                             "recipe": [
                                 {
                                     "quantity":"7",
-                                    "name":"Gold"
+                                    "name":"Gold32df3qff fwef eqw"
                                 },
                                 {
                                     "quantity":"8",
