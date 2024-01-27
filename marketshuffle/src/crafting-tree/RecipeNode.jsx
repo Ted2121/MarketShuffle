@@ -7,10 +7,10 @@ function RecipeNode({name}) {
   return (
     <Box sx={{
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        border:'2px solid black',
-        p: 2
+        p: 2,
+        mt: 2
     }}>
         <Typography sx={{
           fontSize:"1.5rem"

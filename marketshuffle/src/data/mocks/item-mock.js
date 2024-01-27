@@ -31,7 +31,27 @@ const item = {
                 },
                 {
                     "quantity":"8",
-                    "name":"silver"
+                    "name":"silver",
+                    "recipe": [
+                        {
+                            "quantity":"7",
+                            "name":"Gold"
+                        },
+                        {
+                            "quantity":"8",
+                            "name":"silver",
+                            "recipe": [
+                                {
+                                    "quantity":"7",
+                                    "name":"Gold"
+                                },
+                                {
+                                    "quantity":"8",
+                                    "name":"silver"
+                                },
+                            ]
+                        },
+                    ]
                 },
             ]
         },
