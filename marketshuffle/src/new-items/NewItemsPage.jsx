@@ -1,13 +1,20 @@
-import { Box, Button, TextField, Typography } from '@mui/material'
+import { Box, Button, FormControlLabel, Radio, RadioGroup, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 
 function NewItemsPage() {
-  const [name, setName] = useState('');
-  const handleNameChange = (event) => {
-    const { value } = event.target;
-    setSpecialItemPosition(value)
-  }
+  const [itemName, setItemName] = useState('');
+  const [itemCategory, setItemCategory] = useState('');
+  const [itemQuality, setItemQuality] = useState('n');
+  const [itemFavorite, setItemFavorite] = useState('');
   const [recipe, setRecipe] = useState(Array(8).fill({ name: '', quantity: '' }));
+  const [item, setItem] = useState(
+    {
+      name: "",
+      category: "",
+      quality: "",
+      isFavorite: false
+    });
+
 
   const handleRecipeNameChange = (index, event) => {
     const { value } = event.target;
@@ -23,10 +30,38 @@ function NewItemsPage() {
     setRecipe(updatedRecipe);
   };
 
-  const saveRecipe = () => {
+  const handleItemNameChange = (index, event) => {
+    const { value } = event.target;
+    setItemName(value)
+  }
+
+  const handleItemCategoryChange = (index, event) => {
+    const { value } = event.target;
+    setItemCategory(value);
+  };
+
+  const handleItemQualityChange = (event) => {
+    setItemQuality(event.target.value);
+  };
+
+  const handleItemFavoriteChange = (index, event) => {
+    const { value } = event.target;
+    setItemFavorite(value);
+  };
+
+  const saveItem = () => {
     const filteredRecipe = recipe.filter(
       (ingredient) => ingredient.name !== '' && ingredient.quantity !== ''
     );
+
+    setItem = {
+      name: itemName,
+      category: itemCategory,
+      quality: itemQuality,
+      isFavorite: itemFavorite,
+      recipe: recipe
+    }
+
     // Logic to save the recipe array or use it as needed
     console.log(filteredRecipe);
   };
@@ -85,7 +120,7 @@ function NewItemsPage() {
           <TextField
             label="Name"
             size='small'
-            value={name}
+            value={itemName}
             onChange={(event) => handleNameChange(event)}>
           </TextField>
         </Box>
@@ -101,14 +136,56 @@ function NewItemsPage() {
           <TextField
             label="Name"
             size='small'
-            value={name}
+            value={itemCategory}
+            onChange={(event) => handleNameChange(event)}>
+          </TextField>
+        </Box>
+        {/* Quality */}
+        <Box sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2
+        }}>
+          <Typography variant='h4'>
+            Item quality:
+          </Typography>
+          <RadioGroup
+            defaultValue="n"
+            name="quality"
+            value={itemQuality}
+            onChange={handleItemQualityChange}
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              gap: 2
+            }}>
+            <FormControlLabel value="c" control={<Radio />} label="c" />
+            <FormControlLabel value="n" control={<Radio />} label="n" />
+            <FormControlLabel value="g" control={<Radio />} label="g" />
+            <FormControlLabel value="p" control={<Radio />} label="p" />
+            <FormControlLabel value="s" control={<Radio />} label="s" />
+          </RadioGroup>
+        </Box>
+        {/* Favorite */}
+        <Box sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2
+        }}>
+          <Typography variant='h4'>
+            favorite:
+          </Typography>
+          <TextField
+            label="Name"
+            size='small'
+            value={itemCategory}
             onChange={(event) => handleNameChange(event)}>
           </TextField>
         </Box>
       </Box>
       {renderRecipeFields()}
       {/* Button to save */}
-      <Button onClick={saveRecipe}
+      <Button onClick={saveItem}
         variant='contained'
         color='white'
         sx={{

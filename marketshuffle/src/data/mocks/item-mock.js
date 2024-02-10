@@ -1,17 +1,41 @@
 const item = {
     "id":'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX',
-    "name":'wooden wings',
+    "name":'powerful dazzling belt',
     "isFavorite": true,
     "category": "",
     "quality": "cheapest",
     "recipe": [
         {
-            "quantity":"4",
-            "name":"ash plank"
+            "quantity":"50",
+            "name":"dopple stone"
         },
         {
-            "quantity":"10",
-            "name":"Flax string"
+            "quantity":"20",
+            "name":"Lousy pig leather"
+        },
+        {
+            "quantity":"20",
+            "name":"boar leather"
+        },
+        {
+            "quantity":"20",
+            "name":"gobball war chief leather"
+        },
+        {
+            "quantity":"20",
+            "name":"white gobbly leather"
+        },
+        {
+            "quantity":"20",
+            "name":"gobball leather"
+        },
+        {
+            "quantity":"20",
+            "name":"black gobbly leather"
+        },
+        {
+            "quantity":"20",
+            "name":"plain boar leather"
         },
     ],
     "positions":[
