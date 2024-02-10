@@ -29,6 +29,22 @@ export async function createItem(item) {
         throw new Error(errorMessage);
     }
 
-    // Extract JSON response body and return
     return await response.text();
 }
+
+export async function setFavorite(id, value) {
+    const url = `${baseUrl}api/item/favorite/${id}/${value}`;
+    const headers = {
+        "Content-Type": "application/json"
+    };
+
+    const response = await fetch(url, { method: "POST", headers });
+
+    if (!response.ok) {
+        const errorMessage = `Failed to create item: ${response.status} ${response.statusText}`;
+        throw new Error(errorMessage);
+    }
+
+    return await response.text();
+}
+
