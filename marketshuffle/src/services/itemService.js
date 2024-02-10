@@ -16,8 +16,8 @@ export async function setIsFavorite(id, value) {
 }
 
 export async function createItem(item) {
-    const url = `${baseUrl}api/item/${id}`;
-    const body = JSON.stringify(value);
+    const url = `${baseUrl}api/item`;
+    const body = JSON.stringify(item);
     const headers = {
         "Content-Type": "application/json"
     };
@@ -25,8 +25,10 @@ export async function createItem(item) {
     const response = await fetch(url, { method: "POST", body, headers });
 
     if (!response.ok) {
-        throw new Error(`Failed to set favorite to: ${value}`);
+        const errorMessage = `Failed to create item: ${response.status} ${response.statusText}`;
+        throw new Error(errorMessage);
     }
 
-    return response;
+    // Extract JSON response body and return
+    return await response.json();
 }

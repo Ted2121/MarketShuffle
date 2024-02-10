@@ -1,26 +1,31 @@
 import { Box, Button, FormControlLabel, Radio, RadioGroup, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
+import debounce from 'lodash/debounce';
+import { createItem } from '../services/itemService';
 
 function NewItemsPage() {
   const [itemName, setItemName] = useState('');
   const [itemCategory, setItemCategory] = useState('');
   const [itemQuality, setItemQuality] = useState('n');
-  const [itemFavorite, setItemFavorite] = useState('');
-  const [recipe, setRecipe] = useState(Array(8).fill({ name: '', quantity: '' }));
+  const [itemFavorite, setItemFavorite] = useState('false');
+  const [recipe, setRecipe] = useState(Array(8).fill({ name: '', quantity: '', parentId: '' }));
   const [item, setItem] = useState(
     {
+      id: "",
       name: "",
       category: "",
-      quality: "",
+      quality: "n",
       isFavorite: false
     });
 
+  const debounceSetItem = debounce(setItem, 500);
 
   const handleRecipeNameChange = (index, event) => {
     const { value } = event.target;
     const updatedRecipe = [...recipe];
     updatedRecipe[index] = { ...updatedRecipe[index], name: value };
     setRecipe(updatedRecipe);
+    debounceSetItem(prevState => ({ ...prevState, recipe: updatedRecipe }));
   };
 
   const handleRecipeQuantityChange = (index, event) => {
@@ -28,42 +33,41 @@ function NewItemsPage() {
     const updatedRecipe = [...recipe];
     updatedRecipe[index] = { ...updatedRecipe[index], quantity: value };
     setRecipe(updatedRecipe);
+    debounceSetItem(prevState => ({ ...prevState, recipe: updatedRecipe }));
   };
 
-  const handleItemNameChange = (index, event) => {
+  const handleItemNameChange = (event) => {
     const { value } = event.target;
-    setItemName(value)
-  }
+    setItemName(value);
+    debounceSetItem(prevState => ({ ...prevState, name: value }));
+}
 
-  const handleItemCategoryChange = (index, event) => {
+  const handleItemCategoryChange = (event) => {
     const { value } = event.target;
     setItemCategory(value);
+    debounceSetItem(prevState => ({ ...prevState, category: value }));
   };
 
   const handleItemQualityChange = (event) => {
     setItemQuality(event.target.value);
+    debounceSetItem(prevState => ({ ...prevState, quality: event.target.value }));
   };
 
-  const handleItemFavoriteChange = (index, event) => {
-    const { value } = event.target;
-    setItemFavorite(value);
+  const handleItemFavoriteChange = (event) => {
+    setItemFavorite(event.target.value);
+    debounceSetItem(prevState => ({ ...prevState, isFavorite: event.target.value }));
   };
 
-  const saveItem = () => {
-    const filteredRecipe = recipe.filter(
+  const saveItem = async () => {
+    item.recipe = recipe.filter(
       (ingredient) => ingredient.name !== '' && ingredient.quantity !== ''
     );
 
-    setItem = {
-      name: itemName,
-      category: itemCategory,
-      quality: itemQuality,
-      isFavorite: itemFavorite,
-      recipe: recipe
-    }
-
     // Logic to save the recipe array or use it as needed
-    console.log(filteredRecipe);
+    console.log(item);
+    const itemId = await createItem(item);
+
+    await createRecipe(recipe)
   };
 
   const renderRecipeFields = () => {
@@ -121,7 +125,7 @@ function NewItemsPage() {
             label="Name"
             size='small'
             value={itemName}
-            onChange={(event) => handleNameChange(event)}>
+            onChange={(event) => handleItemNameChange(event)}>
           </TextField>
         </Box>
         {/* Category */}
@@ -137,7 +141,7 @@ function NewItemsPage() {
             label="Name"
             size='small'
             value={itemCategory}
-            onChange={(event) => handleNameChange(event)}>
+            onChange={(event) => handleItemCategoryChange(event)}>
           </TextField>
         </Box>
         {/* Quality */}
@@ -175,12 +179,19 @@ function NewItemsPage() {
           <Typography variant='h4'>
             favorite:
           </Typography>
-          <TextField
-            label="Name"
-            size='small'
-            value={itemCategory}
-            onChange={(event) => handleNameChange(event)}>
-          </TextField>
+          <RadioGroup
+            defaultValue="false"
+            name="isFavorite"
+            value={itemFavorite}
+            onChange={handleItemFavoriteChange}
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              gap: 2
+            }}>
+            <FormControlLabel value="false" control={<Radio />} label="no" />
+            <FormControlLabel value="true" control={<Radio />} label="yes" />
+          </RadioGroup>
         </Box>
       </Box>
       {renderRecipeFields()}
