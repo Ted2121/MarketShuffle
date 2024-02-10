@@ -4,7 +4,7 @@ import { ColorModeContext, useMode } from './theme';
 import { Route, Routes } from 'react-router-dom';
 import RouteLayout from './shared/routing/RouteLayout';
 import Navbar from './shared/layouts/Navbar';
-import Items from './items/Craft';
+import ItemsPage from './items/ItemsPage';
 import NewItemsPage from './new-items/NewItemsPage';
 
 function App() {
@@ -29,9 +29,8 @@ function App() {
             <Routes>
               <Route path='/' element={<RouteLayout />}>
                 {/* public routes */}
-                <Route path='/' element={<Items />} />
+                <Route path='/' element={<ItemsPage />} />
                 <Route path='/new' element={<NewItemsPage />} />
-                
               </Route>
             </Routes>
           </Box>

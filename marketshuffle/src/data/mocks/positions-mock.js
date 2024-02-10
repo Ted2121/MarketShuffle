@@ -79,13 +79,13 @@ const positions = [
     },
     {
         id: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX',
-        cost: 400000,
+        cost: 60000,
         date: 1680045858,
         details: "test"
     },
     {
         id: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX',
-        cost: 400000,
+        cost: 500000,
         date: 1640045878,
         details: "test"
     },
@@ -103,7 +103,7 @@ const positions = [
     },
     {
         id: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX',
-        cost: 4000000000,
+        cost: 2000000,
         date: 1670045868,
         details: "test"
     },

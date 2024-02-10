@@ -5,7 +5,7 @@ import ItemTable from './ItemTable'
 import ActionsPanel from './ActionsPanel'
 import item from '../data/mocks/item-mock'
 
-function Items() {
+function ItemsPage() {
   const [selectedItem, setSelectedItem] = useState();
 
   const handleSetSelectedItem = (item) => {
@@ -28,4 +28,4 @@ function Items() {
   )
 }
 
-export default Items
+export default ItemsPage;

@@ -1,29 +1,41 @@
 const item = {
     "id":'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX',
-    "name":'crackler amulet',
+    "name":'powerful dazzling belt',
     "isFavorite": true,
     "category": "",
     "quality": "cheapest",
     "recipe": [
         {
-            "quantity":"4",
-            "name":"Gold crackler tooth"
+            "quantity":"50",
+            "name":"dopple stone"
         },
         {
-            "quantity":"1",
-            "name":"Flint"
+            "quantity":"20",
+            "name":"Lousy pig leather"
         },
         {
-            "quantity":"1",
-            "name":"Granite"
+            "quantity":"20",
+            "name":"boar leather"
         },
         {
-            "quantity":"1",
-            "name":"Crackler Stone"
+            "quantity":"20",
+            "name":"gobball war chief leather"
         },
         {
-            "quantity":"1",
-            "name":"Coal"
+            "quantity":"20",
+            "name":"white gobbly leather"
+        },
+        {
+            "quantity":"20",
+            "name":"gobball leather"
+        },
+        {
+            "quantity":"20",
+            "name":"black gobbly leather"
+        },
+        {
+            "quantity":"20",
+            "name":"plain boar leather"
         },
     ],
     "positions":[

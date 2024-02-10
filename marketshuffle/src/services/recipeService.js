@@ -1,0 +1,19 @@
+import { baseUrl } from "../utility/serverAddress";
+
+export async function createRecipe(recipe) {
+    const url = `${baseUrl}api/recipeItem`;
+    const body = JSON.stringify(recipe);
+    const headers = {
+        "Content-Type": "application/json"
+    };
+
+    const response = await fetch(url, { method: "POST", body, headers });
+
+    if (!response.ok) {
+        const errorMessage = `Failed to create recipe: ${response.status} ${response.statusText}`;
+        throw new Error(errorMessage);
+    }
+
+    // Extract JSON response body and return
+    return await response.json();
+}
