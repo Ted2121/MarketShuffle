@@ -26,7 +26,6 @@ function NewItemsPage() {
     const updatedRecipe = [...recipe];
     updatedRecipe[index] = { ...updatedRecipe[index], name: value };
     setRecipe(updatedRecipe);
-    // debounceSetItem(prevState => ({ ...prevState, recipe: updatedRecipe }));
   };
 
   const handleRecipeQuantityChange = (index, event) => {
@@ -34,7 +33,6 @@ function NewItemsPage() {
     const updatedRecipe = [...recipe];
     updatedRecipe[index] = { ...updatedRecipe[index], quantity: value };
     setRecipe(updatedRecipe);
-    // debounceSetItem(prevState => ({ ...prevState, recipe: updatedRecipe }));
   };
 
   const handleItemNameChange = (event) => {
