@@ -2,13 +2,14 @@ import { Box, Button, FormControlLabel, Radio, RadioGroup, TextField, Typography
 import React, { useState } from 'react'
 import debounce from 'lodash/debounce';
 import { createItem } from '../services/itemService';
+import { createRecipe } from '../services/recipeService';
 
 function NewItemsPage() {
   const [itemName, setItemName] = useState('');
   const [itemCategory, setItemCategory] = useState('');
   const [itemQuality, setItemQuality] = useState('n');
   const [itemFavorite, setItemFavorite] = useState('false');
-  const [recipe, setRecipe] = useState(Array(8).fill({ name: '', quantity: '', parentId: '' }));
+  const [recipe, setRecipe] = useState(Array(8).fill({ name: '', quantity: '', parentItemId: '' }));
   const [item, setItem] = useState(
     {
       id: "",
@@ -25,7 +26,7 @@ function NewItemsPage() {
     const updatedRecipe = [...recipe];
     updatedRecipe[index] = { ...updatedRecipe[index], name: value };
     setRecipe(updatedRecipe);
-    debounceSetItem(prevState => ({ ...prevState, recipe: updatedRecipe }));
+    // debounceSetItem(prevState => ({ ...prevState, recipe: updatedRecipe }));
   };
 
   const handleRecipeQuantityChange = (index, event) => {
@@ -33,14 +34,14 @@ function NewItemsPage() {
     const updatedRecipe = [...recipe];
     updatedRecipe[index] = { ...updatedRecipe[index], quantity: value };
     setRecipe(updatedRecipe);
-    debounceSetItem(prevState => ({ ...prevState, recipe: updatedRecipe }));
+    // debounceSetItem(prevState => ({ ...prevState, recipe: updatedRecipe }));
   };
 
   const handleItemNameChange = (event) => {
     const { value } = event.target;
     setItemName(value);
     debounceSetItem(prevState => ({ ...prevState, name: value }));
-}
+  }
 
   const handleItemCategoryChange = (event) => {
     const { value } = event.target;
@@ -59,15 +60,19 @@ function NewItemsPage() {
   };
 
   const saveItem = async () => {
-    item.recipe = recipe.filter(
-      (ingredient) => ingredient.name !== '' && ingredient.quantity !== ''
+    const filteredRecipe = recipe.filter(
+      (ingredient) => ingredient.name !== "" && ingredient.quantity !== ""
     );
 
-    // Logic to save the recipe array or use it as needed
-    console.log(item);
     const itemId = await createItem(item);
 
-    await createRecipe(recipe)
+    const updatedRecipe = filteredRecipe.map((ingredient) => ({
+      ...ingredient,
+      parentItemId: itemId 
+    }));
+
+    console.log(updatedRecipe);
+    await createRecipe({ recipe: updatedRecipe });
   };
 
   const renderRecipeFields = () => {

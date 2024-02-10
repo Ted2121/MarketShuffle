@@ -1,4 +1,4 @@
-import {baseUrl} from '../utility/serverAddress';
+import { baseUrl } from '../utility/serverAddress';
 
 
 export async function setIsFavorite(id, value) {
@@ -30,5 +30,5 @@ export async function createItem(item) {
     }
 
     // Extract JSON response body and return
-    return await response.json();
+    return await response.text();
 }
