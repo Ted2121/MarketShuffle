@@ -96,6 +96,7 @@ function NewItemsPage() {
         <Typography variant="h4">x</Typography>
         <TextField
           label="Quantity"
+          type='number'
           size="small"
           value={ingredient.quantity}
           onChange={(event) => handleRecipeQuantityChange(index, event)}
