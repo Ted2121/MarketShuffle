@@ -39,7 +39,7 @@ export async function setFavorite(id, value) {
         throw new Error(errorMessage);
     }
 
-    return await response.json();
+    return true;
 }
 
 

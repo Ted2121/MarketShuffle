@@ -15,8 +15,9 @@ function Item({ item, handleSetItem }) {
 
   const handleFavoriteToggle = async () => {
     const isSuccess = await setFavorite(item?.id, !isFavorite)
-    
+
     if (isSuccess) {
+      console.log("test")
       setIsFavorite((prevState) => !prevState);
     }
   }
@@ -40,12 +41,12 @@ function Item({ item, handleSetItem }) {
 
   return (
     <Box sx={{ display: 'flex', gap: '16px' }}>
-      <Button 
-      onClick={onSetItem}
-      variant='contained' color='white' sx={{
-        color:'black.main',
-        width:'300px'
-      }}>
+      <Button
+        onClick={onSetItem}
+        variant='contained' color='white' sx={{
+          color: 'black.main',
+          width: '300px'
+        }}>
         {item?.name}
       </Button>
       {favoriteButton}
