@@ -3,14 +3,14 @@ import React, { useState } from 'react'
 import TextField from '@mui/material/TextField';
 import Divider from '@mui/material/Divider';
 import Profits from './Profits';
-import { useEffect } from 'react';
+import { useEffect, useCallback, useMemo } from 'react';
 
 function GeneralItemActions({ item, handleAddPosition }) {
-    const [ingredientPrices, setIngredientPrices] = useState({});
+  const [ingredientPrices, setIngredientPrices] = useState({});
     const [totalCost, setTotalPrice] = useState(0);
-    const currentUnixTime = Math.floor(Date.now() / 1000);
     const [specialItemDetails, setSpecialItemPosition] = useState('');
-
+    const [selectedItemId, setSelectedItemId] = useState(null);
+    const currentUnixTime = useMemo(() => Math.floor(Date.now() / 1000), []);
 
     const [costs, setCosts] = useState({
         cheapestPrice: 0,
@@ -19,28 +19,25 @@ function GeneralItemActions({ item, handleAddPosition }) {
         specialItemPrice: 0,
     });
 
-    const onAddPosition = (itemId, cost, details, time) => {
+    const onAddPosition = useCallback((itemId, cost, details, time) => {
         handleAddPosition(itemId, cost, details, time);
-    }
+    }, [handleAddPosition]);
 
-    const handleSpecialItemDetailsChange = (event) => {
-        const { value } = event.target;
-        setSpecialItemPosition(value)
-    }
+    const handleSpecialItemDetailsChange = useCallback((event) => {
+        setSpecialItemPosition(event.target.value);
+    }, []);
 
-    const handleCostChange = (index, event) => {
+    const handleCostChange = useCallback((index, event) => {
         const { value } = event.target;
         setIngredientPrices(prevState => ({
             ...prevState,
             [index]: value !== '' ? parseInt(value) : '',
         }));
-    };
+    }, []);
 
-    const handlePriceChange = (updatedProfits) => {
+    const handlePriceChange = useCallback((updatedProfits) => {
         setCosts(updatedProfits);
-    };
-
-    useEffect(() => {
+        // Recalculate total cost when prices change
         let total = 0;
         item?.recipe?.forEach((ingredient, index) => {
             const price = ingredientPrices[index];
@@ -51,9 +48,24 @@ function GeneralItemActions({ item, handleAddPosition }) {
         setTotalPrice(total);
     }, [ingredientPrices, item?.recipe]);
 
-    const recipe = item?.recipe?.map((ingredient, index) => {
-        const costValue = ingredientPrices[index] !== undefined ? ingredientPrices[index] : '';
+    const handleItemSelection = useCallback((item) => {
+        if (item.id !== selectedItemId) {
+            // Reset state when a new item is selected
+            setIngredientPrices({});
+            setTotalPrice(0);
+            setSpecialItemPosition('');
+            setSelectedItemId(item.id);
+        }
+    }, [selectedItemId]);
 
+    const handleAddButtonClick = useCallback((cost) => {
+        onAddPosition(item.id, cost, specialItemDetails, currentUnixTime);
+    }, [item?.id, onAddPosition, specialItemDetails, currentUnixTime]);
+
+    const recipe = useMemo(() => {
+        return Array.isArray(item?.recipe) && item?.recipe?.map((ingredient, index) => {
+            const costValue = ingredientPrices[index] !== undefined ? ingredientPrices[index] : '';
+        console.log(item?.recipe)
         return (
             !item || !Array.isArray(item.positions) ? (
                 <div key={index}>No positions data available</div>
@@ -86,6 +98,8 @@ function GeneralItemActions({ item, handleAddPosition }) {
             )
         );
     });
+}, [ingredientPrices, item?.recipe]);
+
     return (
         <>
             {recipe}

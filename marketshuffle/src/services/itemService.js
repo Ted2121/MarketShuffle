@@ -1,20 +1,6 @@
 import { baseUrl } from '../utility/serverAddress';
 
 
-export async function setIsFavorite(id, value) {
-    const url = `${baseUrl}api/item/${id}`;
-    const body = JSON.stringify(value);
-    const headers = {
-        "Content-Type": "application/json"
-    };
-
-    const response = await fetch(url, { method: "PUT", body, headers });
-
-    if (!response.ok) {
-        throw new Error(`Failed to set favorite to: ${value}`);
-    }
-}
-
 export async function createItem(item) {
     const url = `${baseUrl}api/item`;
     const body = JSON.stringify(item);
@@ -38,13 +24,45 @@ export async function setFavorite(id, value) {
         "Content-Type": "application/json"
     };
 
-    const response = await fetch(url, { method: "POST", headers });
+    const response = await fetch(url, { method: "PUT", headers });
 
     if (!response.ok) {
         const errorMessage = `Failed to create item: ${response.status} ${response.statusText}`;
         throw new Error(errorMessage);
     }
 
-    return await response.text();
+    return await response.json();
 }
 
+
+export async function getAllItems() {
+    const url = `${baseUrl}api/item/`;
+    const headers = {
+        "Content-Type": "application/json"
+    };
+
+    const response = await fetch(url, { method: "GET", headers });
+
+    if (!response.ok) {
+        const errorMessage = `Failed to get items: ${response.status} ${response.statusText}`;
+        throw new Error(errorMessage);
+    }
+
+    return await response.json();
+}
+
+export async function getAllItemsByCategory(category) {
+    const url = `${baseUrl}api/item/category/${category}`;
+    const headers = {
+        "Content-Type": "application/json"
+    };
+
+    const response = await fetch(url, { method: "GET", headers });
+
+    if (!response.ok) {
+        const errorMessage = `Failed to get items: ${response.status} ${response.statusText}`;
+        throw new Error(errorMessage);
+    }
+
+    return await response.json();
+}
