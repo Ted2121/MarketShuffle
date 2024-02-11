@@ -19,12 +19,20 @@ export async function createItem(item) {
 }
 
 export async function setFavorite(id, value) {
-    const url = `${baseUrl}api/item/favorite/${id}/${value}`;
+    if (!id) {
+        throw new Error("The id parameter is required.");
+    }
+
+    console.log(value)
+
+    const url = `${baseUrl}api/item/favorite/${id}`;
     const headers = {
         "Content-Type": "application/json"
     };
 
-    const response = await fetch(url, { method: "PUT", headers });
+    const body = JSON.stringify(value);
+
+    const response = await fetch(url, { method: "PUT", body, headers });
 
     if (!response.ok) {
         const errorMessage = `Failed to create item: ${response.status} ${response.statusText}`;

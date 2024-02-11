@@ -14,8 +14,8 @@ function Item({ item, handleSetItem }) {
   const [isFavorite, setIsFavorite] = useState(item?.isFavorite);
 
   const handleFavoriteToggle = async () => {
-    const isSuccess = await setFavorite(item.id, !isFavorite)
-
+    const isSuccess = await setFavorite(item?.id, !isFavorite)
+    
     if (isSuccess) {
       setIsFavorite((prevState) => !prevState);
     }
