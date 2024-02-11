@@ -13,7 +13,4 @@ export async function createRecipe(recipe) {
         const errorMessage = `Failed to create recipe: ${response.status} ${response.statusText}`;
         throw new Error(errorMessage);
     }
-
-    // Extract JSON response body and return
-    return await response.json();
 }
