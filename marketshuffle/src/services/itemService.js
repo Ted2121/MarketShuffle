@@ -92,12 +92,12 @@ export async function deleteItemById(id) {
 }
 
 export async function getItemsBySearchString(search) {
-    const url = `${baseUrl}api/item/${search}`;
+    const url = `${baseUrl}api/item/search/${search}`;
     const headers = {
         "Content-Type": "application/json"
     };
 
-    const response = await fetch(url, { method: "GET", headers });
+    const response = search && await fetch(url, { method: "GET", headers });
 
     if (!response.ok) {
         const errorMessage = `Failed to get items by search string: ${response.status} ${response.statusText}`;
