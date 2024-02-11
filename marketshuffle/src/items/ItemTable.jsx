@@ -4,10 +4,10 @@ import Item from './Item'
 import categoryList from '../data/components-text/itemsCategoryList'
 import item from '../data/mocks/item-mock';
 import rune from '../data/mocks/rune-mock';
-import {getAllItemsByCategory} from '../services/itemService';
+import { getAllItemsByCategory } from '../services/itemService';
 
-function ItemTable({handleSetSelectedItem}) {
-  
+function ItemTable({ handleSetSelectedItem }) {
+
   const [itemList, setItemList] = useState([]);
 
   const onSetItem = (item) => {
@@ -15,9 +15,8 @@ function ItemTable({handleSetSelectedItem}) {
   }
 
   const getItemsForCategory = async (category) => {
-    console.log("getting items for: ", category);
-    const items = category && await getAllItemsByCategory(category); // Pass the category to the function
-    setItemList([item]); // Ensure to update itemList with retrieved items
+    const items = category && await getAllItemsByCategory(category);
+    setItemList(items); 
   }
 
   const items = (
