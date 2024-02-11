@@ -10,6 +10,7 @@ import GeneralItemActions from './GeneralItemActions';
 import RuneActions from './RuneActions';
 import MiscActions from './MiscActions';
 import CraftingTree from '../crafting-tree/CraftingTree';
+import { deleteItemById } from '../services/itemService';
 
 function ActionsPanel({ item }) {
   const [sortBy, setSortBy] = useState('date_desc');
@@ -108,6 +109,18 @@ function ActionsPanel({ item }) {
     // TODO api call to delete position and then remove the position from the list
   }
 
+  const handleDeleteItem = async () => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this item?");
+
+    if (isConfirmed) {
+      await deleteItemById(item?.id);
+      window.location.reload();
+    } else {
+      console.log("Delete action canceled by user.");
+    }
+  }
+
+
   return (
     // price history
     <Box sx={{
@@ -160,61 +173,75 @@ function ActionsPanel({ item }) {
           gap: 1,
         }}>
           <Box sx={{
-          display: 'flex',
-          gap: 1,
-          flexDirection:'column'
-        }}>
-          {/* Position details */}
-          <Card sx={{
-            p: 1,
-            flex: 4,
+            display: 'flex',
+            gap: 1,
+            flexDirection: 'column'
           }}>
-            <Typography variant='h4' sx={{
-              textAlign: 'center'
+            {/* Position details */}
+            <Card sx={{
+              p: 1,
+              flex: 4,
             }}>
-              {item?.name}
-            </Typography>
-            <Typography sx={{
-              fontSize: '1rem',
-            }}>
-              Cost: {currentPosition?.cost.toLocaleString()}
-            </Typography>
-            <Typography sx={{
-              fontSize: '1rem',
-            }}>
-              Date: {currentPosition?.date && formatDate(currentPosition?.date)}
-            </Typography>
-            <Typography sx={{
-              fontSize: '1rem',
-            }}>
-              Details: {currentPosition?.details}
-            </Typography>
-            <Box sx={{
-              display: 'flex',
-              gap: 1,
-            }}>
-              <Button
-                onClick={handleDeletePosition}
-                variant='contained'
-                color='white'
-                sx={{
-                  color: 'black.main',
-                  mt: 1,
-                  maxHeight: '50px'
-                }}
-              >
-                Delete
-              </Button>
-              <EditPositionModal handleEditPosition={handleEditPosition} currentPosition={currentPosition} />
-            </Box>
-            <Divider sx={{
-              mt: 2
-            }} />
-            {/* Add position */}
-            <AddPositionForm itemId={item?.id} handleAddPosition={handleAddPosition} />
-          </Card>
+              {item && (
+                <>
+                  <Typography variant='h4' sx={{ textAlign: 'center' }}>
+                    {item?.name}
+                  </Typography>
+                  <Button
+                    onClick={handleDeleteItem}
+                    variant='contained'
+                    color='white'
+                    sx={{
+                      color: 'black.main',
+                      mt: 1,
+                      maxHeight: '50px'
+                    }}
+                  >
+                    Delete Item
+                  </Button>
+                </>
+              )}
+              <Typography sx={{
+                fontSize: '1rem',
+              }}>
+                Cost: {currentPosition?.cost.toLocaleString()}
+              </Typography>
+              <Typography sx={{
+                fontSize: '1rem',
+              }}>
+                Date: {currentPosition?.date && formatDate(currentPosition?.date)}
+              </Typography>
+              <Typography sx={{
+                fontSize: '1rem',
+              }}>
+                Details: {currentPosition?.details}
+              </Typography>
+              <Box sx={{
+                display: 'flex',
+                gap: 1,
+              }}>
+                <Button
+                  onClick={handleDeletePosition}
+                  variant='contained'
+                  color='white'
+                  sx={{
+                    color: 'black.main',
+                    mt: 1,
+                    maxHeight: '50px'
+                  }}
+                >
+                  Delete Position
+                </Button>
+                <EditPositionModal handleEditPosition={handleEditPosition} currentPosition={currentPosition} />
+              </Box>
+              <Divider sx={{
+                mt: 2
+              }} />
+              {/* Add position */}
+              <AddPositionForm itemId={item?.id} handleAddPosition={handleAddPosition} />
+            </Card>
             <Card>
-              <CraftingTree recipe={item?.recipe}/>
+              <CraftingTree recipe={item?.recipe} />
             </Card>
           </Box>
           {/* Price Calculations */}
@@ -225,9 +252,9 @@ function ActionsPanel({ item }) {
             gap: 1,
             flex: 6,
           }}>
-              {isRune && <RuneActions rune={item}/>}
-              {isGeneral && <GeneralItemActions item={item} handleAddPosition={handleAddPosition} />}
-              {isMisc && <MiscActions misc={item}/>}
+            {isRune && <RuneActions rune={item} />}
+            {isGeneral && <GeneralItemActions item={item} handleAddPosition={handleAddPosition} />}
+            {isMisc && <MiscActions misc={item} />}
           </Card >
         </Box>
         {/* Back to top */}

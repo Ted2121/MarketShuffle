@@ -13,7 +13,6 @@ function ItemsPage() {
     const { recipe } = await getRecipeByParentId(item.id);
     item.recipe = recipe;
     setSelectedItem(item);
-    // console.log(item)
   }
   // TODO call the get all favorites in a useEffect and pass it to favorites component
   return (

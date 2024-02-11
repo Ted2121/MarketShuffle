@@ -74,3 +74,19 @@ export async function getAllItemsByCategory(category) {
 
     return await response.json();
 }
+
+export async function deleteItemById(id) {
+    const url = `${baseUrl}api/item/${id}`;
+    const headers = {
+        "Content-Type": "application/json"
+    };
+
+    const response = await fetch(url, { method: "DELETE", headers });
+
+    if (!response.ok) {
+        const errorMessage = `Failed to delete item: ${response.status} ${response.statusText}`;
+        throw new Error(errorMessage);
+    }
+
+    return true;
+}
