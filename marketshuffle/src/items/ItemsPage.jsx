@@ -4,12 +4,16 @@ import Favorites from './Favorites'
 import ItemTable from './ItemTable'
 import ActionsPanel from './ActionsPanel'
 import item from '../data/mocks/item-mock'
+import { getRecipeByParentId } from '../services/recipeService'
 
 function ItemsPage() {
   const [selectedItem, setSelectedItem] = useState();
 
-  const handleSetSelectedItem = (item) => {
+  const handleSetSelectedItem = async (item) => {
+    const { recipe } = await getRecipeByParentId(item.id);
+    item.recipe = recipe;
     setSelectedItem(item);
+    // console.log(item)
   }
   // TODO call the get all favorites in a useEffect and pass it to favorites component
   return (

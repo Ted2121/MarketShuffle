@@ -10,7 +10,7 @@ function GeneralItemActions({ item, handleAddPosition }) {
     const [totalCost, setTotalPrice] = useState(0);
     const currentUnixTime = Math.floor(Date.now() / 1000);
     const [specialItemDetails, setSpecialItemPosition] = useState('');
-
+    const [selectedItemId, setSelectedItemId] = useState(null);
 
     const [costs, setCosts] = useState({
         cheapestPrice: 0,
@@ -41,6 +41,8 @@ function GeneralItemActions({ item, handleAddPosition }) {
     };
 
     useEffect(() => {
+        if (!item || !Array.isArray(item.recipe)) return;
+
         let total = 0;
         item?.recipe?.forEach((ingredient, index) => {
             const price = ingredientPrices[index];
@@ -49,11 +51,22 @@ function GeneralItemActions({ item, handleAddPosition }) {
             }
         });
         setTotalPrice(total);
+        console.log(item);
     }, [ingredientPrices, item?.recipe]);
 
-    const recipe = item?.recipe?.map((ingredient, index) => {
-        const costValue = ingredientPrices[index] !== undefined ? ingredientPrices[index] : '';
+    useEffect(() => {
+        if (item && item.id !== selectedItemId) {
+            // Reset state when a new item is selected
+            setIngredientPrices({});
+            setTotalPrice(0);
+            setSpecialItemPosition('');
+            setSelectedItemId(item.id);
+        }
+    }, [item, selectedItemId]);
 
+    const recipe = Array.isArray(item?.recipe) && item?.recipe?.map((ingredient, index) => {
+        const costValue = ingredientPrices[index] !== undefined ? ingredientPrices[index] : '';
+        console.log(item?.recipe)
         return (
             !item || !Array.isArray(item.positions) ? (
                 <div key={index}>No positions data available</div>
@@ -86,6 +99,8 @@ function GeneralItemActions({ item, handleAddPosition }) {
             )
         );
     });
+
+
     return (
         <>
             {recipe}

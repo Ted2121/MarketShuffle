@@ -14,3 +14,19 @@ export async function createRecipe(recipe) {
         throw new Error(errorMessage);
     }
 }
+
+export async function getRecipeByParentId(id) {
+    const url = `${baseUrl}api/recipeItem/parent/${id}`;
+    const headers = {
+        "Content-Type": "application/json"
+    };
+
+    const response = await fetch(url, { method: "GET", headers });
+
+    if (!response.ok) {
+        const errorMessage = `Failed to create recipe: ${response.status} ${response.statusText}`;
+        throw new Error(errorMessage);
+    }
+
+    return await response.json();
+}

@@ -8,12 +8,13 @@ import { Link } from 'react-router-dom';
 import { Box, Button, IconButton, textFieldClasses } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import { setFavorite } from '../services/itemService';
 
 function Item({ item, handleSetItem }) {
   const [isFavorite, setIsFavorite] = useState(item?.isFavorite);
 
   const handleFavoriteToggle = async () => {
-    const isSuccess = await itemService.setIsFavorite(item.id, !isFavorite)
+    const isSuccess = await setFavorite(item.id, !isFavorite)
 
     if (isSuccess) {
       setIsFavorite((prevState) => !prevState);
@@ -30,7 +31,10 @@ function Item({ item, handleSetItem }) {
         sx={{
           color: 'white.main',
           fontSize: '1.7rem',
-        }} /> : <StarOutlineIcon />}
+        }} /> : <StarOutlineIcon sx={{
+          color: 'white.main',
+          fontSize: '1.7rem',
+        }} />}
     </IconButton>
   )
 
