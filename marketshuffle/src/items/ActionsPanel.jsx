@@ -1,7 +1,7 @@
-import { Box, Button, Card, Typography } from '@mui/material'
+import { Box, Button, Card, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import PositionsChart from './PositionsChart'
-import positions from '../data/mocks/positions-mock';
+// import positions from '../data/mocks/positions-mock';
 import Divider from '@mui/material/Divider';
 import EditPositionModal from './EditPositionModal';
 import AddPositionForm from './AddPositionForm';
@@ -18,7 +18,8 @@ function ActionsPanel({ item }) {
   const isRune = item?.category == "rune"
   const isMisc = item?.category == "misc"
   const isGeneral = !isMisc && !isRune;
-
+  const positions = item?.positions;
+console.log(item)
   const formatDate = (unixTimestamp) => {
     const date = new Date(unixTimestamp * 1000);
 
@@ -35,13 +36,13 @@ function ActionsPanel({ item }) {
     return `${day} ${month} ${year}`;
   };
 
-  const handleAddPosition = (itemId, cost, details, currentUnixTime) => {
-    console.log(itemId, cost, details, currentUnixTime)
+  const handleAddPosition = (itemId, one, ten, hundred, details, currentUnixTime) => {
+    console.log(currentPosition)
     // TODO call add position request
   }
 
-  const handleEditPosition = (newCost, newDetails) => {
-    console.log(currentPosition.id, newCost, newDetails);
+  const handleEditPosition = (newCost, newDetails, newQuality) => {
+    console.log(currentPosition.id, newCost, newDetails, newQuality);
     //TODO api request with positionId, new cost, new details
   }
 
@@ -64,7 +65,7 @@ function ActionsPanel({ item }) {
     return '';
   };
 
-  const sortedPositions = [...positions].sort((a, b) => {
+  const sortedPositions = positions && [...positions]?.sort((a, b) => {
     switch (sortBy) {
       case 'date_asc':
         return a.date - b.date;
@@ -90,7 +91,7 @@ function ActionsPanel({ item }) {
 
   //TODO add filtering for item quality
 
-  const positionList = sortedPositions.map((position, index) => (
+  const positionList = sortedPositions?.map((position, index) => (
     <Button
       key={index}
       onClick={() => handleSetCurrentPosition(position)}
@@ -101,7 +102,7 @@ function ActionsPanel({ item }) {
         width: '80px',
       }}
     >
-      {formatDateWithDays(position.date)} {position.cost.toLocaleString()}
+      {formatDateWithDays(position.date)} {position.one?.toLocaleString()} {position.ten?.toLocaleString()} {position.hundred?.toLocaleString()}
     </Button>
   ));
 
@@ -204,7 +205,17 @@ function ActionsPanel({ item }) {
               <Typography sx={{
                 fontSize: '1rem',
               }}>
-                Cost: {currentPosition?.cost.toLocaleString()}
+                Cost x1: {currentPosition?.one.toLocaleString()}
+              </Typography>
+              <Typography sx={{
+                fontSize: '1rem',
+              }}>
+                Cost x10: {currentPosition?.ten.toLocaleString()}
+              </Typography>
+              <Typography sx={{
+                fontSize: '1rem',
+              }}>
+                Cost x100: {currentPosition?.hundred.toLocaleString()}
               </Typography>
               <Typography sx={{
                 fontSize: '1rem',
@@ -216,6 +227,7 @@ function ActionsPanel({ item }) {
               }}>
                 Details: {currentPosition?.details}
               </Typography>
+              
               <Box sx={{
                 display: 'flex',
                 gap: 1,

@@ -3,11 +3,12 @@ import React, { useState } from 'react'
 import debounce from 'lodash/debounce';
 import { createItem } from '../services/itemService';
 import { createRecipe } from '../services/recipeService';
+import DoneIcon from '@mui/icons-material/Done';
 
 function NewItemsPage() {
   const [itemName, setItemName] = useState('');
   const [itemCategory, setItemCategory] = useState('');
-  const [itemQuality, setItemQuality] = useState('n');
+  // const [itemQuality, setItemQuality] = useState('n');
   const [itemFavorite, setItemFavorite] = useState('false');
   const [recipe, setRecipe] = useState(Array(8).fill({ name: '', quantity: '', parentItemId: '' }));
   const [item, setItem] = useState(
@@ -18,6 +19,7 @@ function NewItemsPage() {
       quality: "n",
       isFavorite: false
     });
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const debounceSetItem = debounce(setItem, 500);
 
@@ -47,10 +49,10 @@ function NewItemsPage() {
     debounceSetItem(prevState => ({ ...prevState, category: value }));
   };
 
-  const handleItemQualityChange = (event) => {
-    setItemQuality(event.target.value);
-    debounceSetItem(prevState => ({ ...prevState, quality: event.target.value }));
-  };
+  // const handleItemQualityChange = (event) => {
+  //   setItemQuality(event.target.value);
+  //   debounceSetItem(prevState => ({ ...prevState, quality: event.target.value }));
+  // };
 
   const handleItemFavoriteChange = (event) => {
     setItemFavorite(event.target.value);
@@ -68,11 +70,13 @@ function NewItemsPage() {
 
     const updatedRecipe = filteredRecipe.map((ingredient) => ({
       ...ingredient,
-      parentItemId: itemId 
+      parentItemId: itemId
     }));
 
     console.log(updatedRecipe);
-    await createRecipe({ recipe: updatedRecipe });
+    const recipeCreated = await createRecipe({ recipe: updatedRecipe });
+
+    setIsSuccess(!!itemId && recipeCreated);
   };
 
   const renderRecipeFields = () => {
@@ -151,7 +155,7 @@ function NewItemsPage() {
           </TextField>
         </Box>
         {/* Quality */}
-        <Box sx={{
+        {/* <Box sx={{
           display: 'flex',
           alignItems: 'center',
           gap: 2
@@ -175,7 +179,7 @@ function NewItemsPage() {
             <FormControlLabel value="p" control={<Radio />} label="p" />
             <FormControlLabel value="s" control={<Radio />} label="s" />
           </RadioGroup>
-        </Box>
+        </Box> */}
         {/* Favorite */}
         <Box sx={{
           display: 'flex',
@@ -202,16 +206,25 @@ function NewItemsPage() {
       </Box>
       {renderRecipeFields()}
       {/* Button to save */}
-      <Button onClick={saveItem}
-        variant='contained'
-        color='white'
-        sx={{
-          color: 'black.main',
-          mt: 2,
-          maxHeight: '50px'
-        }}>
-        Save Recipe
-      </Button>
+      <Box sx={{
+        display: 'flex',
+        justifyContent:"center",
+        alignItems:'center'
+      }}>
+        <Button onClick={saveItem}
+          variant='contained'
+          color='white'
+          sx={{
+            color: 'black.main',
+            mt: 2,
+            maxHeight: '50px'
+          }}>
+          Save Recipe
+        </Button>
+        {isSuccess && <DoneIcon size="large" sx={{
+          color: "green"
+        }} />}
+      </Box>
     </Box>
   )
 }
