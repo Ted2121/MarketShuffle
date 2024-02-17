@@ -36,8 +36,8 @@ function AddPositionForm({ itemId, handleAddPosition }) {
     const onAddPosition = () => {
         oneRef.current.focus();
         const currentUnixTime = Math.floor(Date.now() / 1000);
-        handleAddPosition(itemId, one, ten, hundred, details, currentUnixTime);
-        console.log("test")
+        handleAddPosition(itemId, one, ten, hundred, details, currentUnixTime, positionQuality);
+        console.log(itemId, one, ten, hundred, details, currentUnixTime, positionQuality)
     }
 
     const handleKeyPress = (event) => {

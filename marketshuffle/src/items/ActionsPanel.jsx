@@ -11,6 +11,7 @@ import RuneActions from './RuneActions';
 import MiscActions from './MiscActions';
 import CraftingTree from '../crafting-tree/CraftingTree';
 import { deleteItemById } from '../services/itemService';
+import { createPositionForItem } from '../services/positionsService';
 
 function ActionsPanel({ item }) {
   const [sortBy, setSortBy] = useState('date_desc');
@@ -19,7 +20,6 @@ function ActionsPanel({ item }) {
   const isMisc = item?.category == "misc"
   const isGeneral = !isMisc && !isRune;
   const positions = item?.positions;
-console.log(item)
   const formatDate = (unixTimestamp) => {
     const date = new Date(unixTimestamp * 1000);
 
@@ -36,9 +36,18 @@ console.log(item)
     return `${day} ${month} ${year}`;
   };
 
-  const handleAddPosition = (itemId, one, ten, hundred, details, currentUnixTime) => {
-    console.log(currentPosition)
-    // TODO call add position request
+  const handleAddPosition = async (itemId, one, ten, hundred, details, currentUnixTime, positionQuality) => {
+    const itemPositionDto = {
+      parentItemId: itemId,
+      one: one,
+      ten: ten,
+      hundred: hundred,
+      details: details,
+      date: currentUnixTime,
+      quality: positionQuality
+    }
+    
+    await createPositionForItem(itemPositionDto);
   }
 
   const handleEditPosition = (newCost, newDetails, newQuality) => {
@@ -244,13 +253,13 @@ console.log(item)
                 >
                   Delete Position
                 </Button>
-                <EditPositionModal handleEditPosition={handleEditPosition} currentPosition={currentPosition} />
+                {item && <EditPositionModal handleEditPosition={handleEditPosition} currentPosition={currentPosition} />}
               </Box>
               <Divider sx={{
                 mt: 2
               }} />
               {/* Add position */}
-              <AddPositionForm itemId={item?.id} handleAddPosition={handleAddPosition} />
+              {item && <AddPositionForm itemId={item?.id} handleAddPosition={handleAddPosition} />}
             </Card>
             <Card>
               <CraftingTree recipe={item?.recipe} />

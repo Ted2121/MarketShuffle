@@ -70,10 +70,26 @@ function EditPositionModal({ handleEditPosition, currentPosition }) {
         <Box sx={style}>
           <TextField
             type="number"
-            label="Cost"
+            label="One"
             size='small'
             value={newCost}
-            placeholder={currentPosition?.cost.toString()}
+            placeholder={currentPosition?.one?.toString()}
+            onChange={(event) => handleCostChange(event)}
+          />
+          <TextField
+            type="number"
+            label="Ten"
+            size='small'
+            value={newCost}
+            placeholder={currentPosition?.ten?.toString()}
+            onChange={(event) => handleCostChange(event)}
+          />
+          <TextField
+            type="number"
+            label="Hundred"
+            size='small'
+            value={newCost}
+            placeholder={currentPosition?.hundred?.toString()}
             onChange={(event) => handleCostChange(event)}
           />
           <TextField
