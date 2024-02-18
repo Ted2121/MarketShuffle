@@ -4,6 +4,12 @@ import debounce from 'lodash/debounce';
 import { createItem } from '../services/itemService';
 import { createRecipe } from '../services/recipeService';
 import DoneIcon from '@mui/icons-material/Done';
+import categoryList from '../data/components-text//itemsCategoryList'
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
 
 function NewItemsPage() {
   const [itemName, setItemName] = useState('');
@@ -22,7 +28,7 @@ function NewItemsPage() {
       isFavorite: false
     });
   const [isSuccess, setIsSuccess] = useState(false);
-
+  const categories = categoryList.map(x => x.name);
   const debounceSetItem = debounce(setItem, 500);
 
   const handleRecipeNameChange = (index, event) => {
@@ -65,12 +71,12 @@ function NewItemsPage() {
 
   const handleItemSellAtChange = (event) => {
     setItemSellAt(event.target.value);
-    debounceSetItem(prevState => ({ ...prevState, Buy: event.target.value }));
+    debounceSetItem(prevState => ({ ...prevState, sell: event.target.value }));
   }
 
   const handleItemBuyAtChange = (event) => {
     setItemBuyAt(event.target.value);
-    debounceSetItem(prevState => ({ ...prevState, Sell: event.target.value }));
+    debounceSetItem(prevState => ({ ...prevState, buy: event.target.value }));
   }
 
   const saveItem = async () => {
@@ -85,10 +91,10 @@ function NewItemsPage() {
       parentItemId: itemId
     }));
 
-    console.log(updatedRecipe);
     const recipeCreated = await createRecipe({ recipe: updatedRecipe });
 
     setIsSuccess(!!itemId && recipeCreated);
+    window.location.reload();
   };
 
   const renderRecipeFields = () => {
@@ -157,14 +163,22 @@ function NewItemsPage() {
           gap: 2
         }}>
           <Typography variant='h4'>
-            Item category:
+            Category:
           </Typography>
-          <TextField
-            label="Name"
-            size='small'
-            value={itemCategory}
-            onChange={(event) => handleItemCategoryChange(event)}>
-          </TextField>
+          <FormControl fullWidth>
+            <InputLabel id="category">Category:</InputLabel>
+            <Select
+              labelId="category"
+              id="category-select"
+              value={itemCategory}
+              label="Category"
+              onChange={handleItemCategoryChange}
+            >
+              {categories.map(x => (
+                <MenuItem value={x}>{x}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Box>
         {/* price targets */}
         <Box sx={{

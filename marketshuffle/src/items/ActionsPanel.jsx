@@ -38,14 +38,14 @@ function ActionsPanel({ item }) {
   const handleAddPosition = async (itemId, one, ten, hundred, details, currentUnixTime, positionQuality) => {
     const itemPositionDto = {
       parentItemId: itemId,
-      one: one,
-      ten: ten,
-      hundred: hundred,
+      one: one ? one : 0,
+      ten: ten ? ten : 0,
+      hundred: hundred ? hundred : 0,
       details: details,
       date: currentUnixTime,
       quality: positionQuality
     }
-
+ console.log(one)
     await createPositionForItem(itemPositionDto);
   }
 
@@ -260,13 +260,11 @@ function ActionsPanel({ item }) {
                   Delete Position
                 </Button>
                 {item && <EditPositionModal handleEditPosition={handleEditPosition} currentPosition={currentPosition} />}
-                {item && <EditPositionModal handleEditPosition={handleEditPosition} currentPosition={currentPosition} />}
               </Box>
               <Divider sx={{
                 mt: 2
               }} />
               {/* Add position */}
-              {item && <AddPositionForm itemId={item?.id} handleAddPosition={handleAddPosition} />}
               {item && <AddPositionForm itemId={item?.id} handleAddPosition={handleAddPosition} />}
             </Card>
             <Card>
