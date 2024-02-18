@@ -1,7 +1,7 @@
-import { Box, Button, Card, Typography } from '@mui/material'
+import { Box, Button, Card, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import PositionsChart from './PositionsChart'
-import positions from '../data/mocks/positions-mock';
+// import positions from '../data/mocks/positions-mock';
 import Divider from '@mui/material/Divider';
 import EditPositionModal from './EditPositionModal';
 import AddPositionForm from './AddPositionForm';
@@ -11,6 +11,7 @@ import RuneActions from './RuneActions';
 import MiscActions from './MiscActions';
 import CraftingTree from '../crafting-tree/CraftingTree';
 import { deleteItemById } from '../services/itemService';
+import { createPositionForItem } from '../services/positionsService';
 
 function ActionsPanel({ item }) {
   const [sortBy, setSortBy] = useState('date_desc');
@@ -18,7 +19,7 @@ function ActionsPanel({ item }) {
   const isRune = item?.category == "rune"
   const isMisc = item?.category == "misc"
   const isGeneral = !isMisc && !isRune;
-
+  const positions = item?.positions;
   const formatDate = (unixTimestamp) => {
     const date = new Date(unixTimestamp * 1000);
 
@@ -35,13 +36,22 @@ function ActionsPanel({ item }) {
     return `${day} ${month} ${year}`;
   };
 
-  const handleAddPosition = (itemId, cost, details, currentUnixTime) => {
-    console.log(itemId, cost, details, currentUnixTime)
-    // TODO call add position request
+  const handleAddPosition = async (itemId, one, ten, hundred, details, currentUnixTime, positionQuality) => {
+    const itemPositionDto = {
+      parentItemId: itemId,
+      one: one,
+      ten: ten,
+      hundred: hundred,
+      details: details,
+      date: currentUnixTime,
+      quality: positionQuality
+    }
+    
+    await createPositionForItem(itemPositionDto);
   }
 
-  const handleEditPosition = (newCost, newDetails) => {
-    console.log(currentPosition.id, newCost, newDetails);
+  const handleEditPosition = (newCost, newDetails, newQuality) => {
+    console.log(currentPosition.id, newCost, newDetails, newQuality);
     //TODO api request with positionId, new cost, new details
   }
 
@@ -64,7 +74,7 @@ function ActionsPanel({ item }) {
     return '';
   };
 
-  const sortedPositions = [...positions].sort((a, b) => {
+  const sortedPositions = positions && [...positions]?.sort((a, b) => {
     switch (sortBy) {
       case 'date_asc':
         return a.date - b.date;
@@ -90,7 +100,7 @@ function ActionsPanel({ item }) {
 
   //TODO add filtering for item quality
 
-  const positionList = sortedPositions.map((position, index) => (
+  const positionList = sortedPositions?.map((position, index) => (
     <Button
       key={index}
       onClick={() => handleSetCurrentPosition(position)}
@@ -101,7 +111,7 @@ function ActionsPanel({ item }) {
         width: '80px',
       }}
     >
-      {formatDateWithDays(position.date)} {position.cost.toLocaleString()}
+      {formatDateWithDays(position.date)} {position.one?.toLocaleString()} {position.ten?.toLocaleString()} {position.hundred?.toLocaleString()}
     </Button>
   ));
 
@@ -204,7 +214,17 @@ function ActionsPanel({ item }) {
               <Typography sx={{
                 fontSize: '1rem',
               }}>
-                Cost: {currentPosition?.cost.toLocaleString()}
+                Cost x1: {currentPosition?.one.toLocaleString()}
+              </Typography>
+              <Typography sx={{
+                fontSize: '1rem',
+              }}>
+                Cost x10: {currentPosition?.ten.toLocaleString()}
+              </Typography>
+              <Typography sx={{
+                fontSize: '1rem',
+              }}>
+                Cost x100: {currentPosition?.hundred.toLocaleString()}
               </Typography>
               <Typography sx={{
                 fontSize: '1rem',
@@ -216,6 +236,7 @@ function ActionsPanel({ item }) {
               }}>
                 Details: {currentPosition?.details}
               </Typography>
+              
               <Box sx={{
                 display: 'flex',
                 gap: 1,
@@ -232,13 +253,15 @@ function ActionsPanel({ item }) {
                 >
                   Delete Position
                 </Button>
-                <EditPositionModal handleEditPosition={handleEditPosition} currentPosition={currentPosition} />
+                {item && <EditPositionModal handleEditPosition={handleEditPosition} currentPosition={currentPosition} />}
+                {item && <EditPositionModal handleEditPosition={handleEditPosition} currentPosition={currentPosition} />}
               </Box>
               <Divider sx={{
                 mt: 2
               }} />
               {/* Add position */}
-              <AddPositionForm itemId={item?.id} handleAddPosition={handleAddPosition} />
+              {item && <AddPositionForm itemId={item?.id} handleAddPosition={handleAddPosition} />}
+              {item && <AddPositionForm itemId={item?.id} handleAddPosition={handleAddPosition} />}
             </Card>
             <Card>
               <CraftingTree recipe={item?.recipe} />

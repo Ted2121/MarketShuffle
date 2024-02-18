@@ -13,6 +13,8 @@ export async function createRecipe(recipe) {
         const errorMessage = `Failed to create recipe: ${response.status} ${response.statusText}`;
         throw new Error(errorMessage);
     }
+
+    return true;
 }
 
 export async function getRecipeByParentId(id) {

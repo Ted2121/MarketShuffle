@@ -1,22 +1,40 @@
-import { Box, Button } from '@mui/material'
+import { Box, Button, TextField } from '@mui/material'
 import React, { useState } from 'react'
 import Item from './Item'
 import categoryList from '../data/components-text/itemsCategoryList'
 import item from '../data/mocks/item-mock';
 import rune from '../data/mocks/rune-mock';
-import { getAllItemsByCategory } from '../services/itemService';
+import { getAllItemsByCategory, getItemsBySearchString } from '../services/itemService';
 
 function ItemTable({ handleSetSelectedItem }) {
-
+  const [searchQuery, setSearchQuery] = useState('');
   const [itemList, setItemList] = useState([]);
+  const [timeoutId, setTimeoutId] = useState(null);
 
-  const onSetItem = (item) => {
-    handleSetSelectedItem(item);
-  }
+  const onSearchChange = (event) => {
+    const { value } = event.target;
+    setSearchQuery(value);
+    
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    const newTimeoutId = setTimeout(async () => {
+      const items = await getItemsBySearchString(value);
+      setItemList(items || []);
+    }, 1000);
+
+    setTimeoutId(newTimeoutId);
+  };
 
   const getItemsForCategory = async (category) => {
     const items = category && await getAllItemsByCategory(category);
-    setItemList(items); 
+    setItemList(items);
+  }
+
+  const onSetItem = (item) => {
+    console.log(item)
+    handleSetSelectedItem(item);
   }
 
   const items = (
@@ -30,7 +48,7 @@ function ItemTable({ handleSetSelectedItem }) {
       <Button
         variant='contained'
         color='white'
-        onClick={() => getItemsForCategory(category.name)} // Use an arrow function here
+        onClick={() => getItemsForCategory(category.name)}
         key={category.id} sx={{
           mb: 1,
           mr: 1,
@@ -65,7 +83,23 @@ function ItemTable({ handleSetSelectedItem }) {
         flexDirection: 'column',
         gap: '16px',
         p: '16px 0',
+        width: '100%',
       }}>
+        {/* search */}
+        <Box sx={{
+          width: '100%'
+        }}>
+          <TextField
+            label="Search"
+            variant="outlined"
+            value={searchQuery}
+            onChange={onSearchChange}
+            sx={{
+              mb: 1,
+              width: '100%'
+            }}
+          />
+        </Box>
         {items}
       </Box>
     </Box>
