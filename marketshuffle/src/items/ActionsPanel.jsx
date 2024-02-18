@@ -12,6 +12,7 @@ import MiscActions from './MiscActions';
 import CraftingTree from '../crafting-tree/CraftingTree';
 import { deleteItemById } from '../services/itemService';
 import { createPositionForItem } from '../services/positionsService';
+import { createPositionForItem } from '../services/positionsService';
 
 function ActionsPanel({ item }) {
   const [sortBy, setSortBy] = useState('date_desc');
@@ -254,11 +255,13 @@ function ActionsPanel({ item }) {
                   Delete Position
                 </Button>
                 {item && <EditPositionModal handleEditPosition={handleEditPosition} currentPosition={currentPosition} />}
+                {item && <EditPositionModal handleEditPosition={handleEditPosition} currentPosition={currentPosition} />}
               </Box>
               <Divider sx={{
                 mt: 2
               }} />
               {/* Add position */}
+              {item && <AddPositionForm itemId={item?.id} handleAddPosition={handleAddPosition} />}
               {item && <AddPositionForm itemId={item?.id} handleAddPosition={handleAddPosition} />}
             </Card>
             <Card>
