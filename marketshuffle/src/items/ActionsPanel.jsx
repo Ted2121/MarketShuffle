@@ -11,6 +11,7 @@ import MiscActions from './MiscActions';
 import CraftingTree from '../crafting-tree/CraftingTree';
 import { deleteItemById } from '../services/itemService';
 import { createPositionForItem } from '../services/positionsService';
+import EditItemModal from './EditItemModal';
 
 function ActionsPanel({ item }) {
   const [sortBy, setSortBy] = useState('date_desc');
@@ -52,6 +53,22 @@ function ActionsPanel({ item }) {
   const handleEditPosition = (newCost, newDetails, newQuality) => {
     console.log(currentPosition.id, newCost, newDetails, newQuality);
     //TODO api request with positionId, new cost, new details
+  }
+
+  const handleEditItem = (newName, newCategory, newBuyAt, newSellAt, newFavorite) => {
+    const itemToEdit = {
+      id: item?.id,
+      name: newName ? newName : item?.name,
+      category: newCategory ? newCategory : item?.category,
+      buy: newBuyAt ? newBuyAt : item?.buy,
+      sell: newSellAt ? newSellAt : item?.sell,
+      isFavorite: newFavorite ? newFavorite : item?.isFavorite,
+      recipe: item?.recipe,
+      positions: item?.positions
+  }
+
+
+  console.log(itemToEdit)
   }
 
   const handleSetCurrentPosition = (position) => {
@@ -128,6 +145,7 @@ function ActionsPanel({ item }) {
       console.log("Delete action canceled by user.");
     }
   }
+
   return (
     // price history
     <Box sx={{
@@ -215,6 +233,7 @@ function ActionsPanel({ item }) {
                   >
                     Delete Item
                   </Button>
+                  {item && <EditItemModal handleEditItem={handleEditItem} currentItem={item} />}
                 </Box>
               )}
               <Typography sx={{
