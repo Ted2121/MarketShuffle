@@ -20,7 +20,6 @@ const transformData = (data) => {
 
 const LineChartComponent = ({ positions }) => {
     const formattedData = transformData(positions);
-    console.log(formattedData)
     return (
         <ResponsiveContainer width="100%" height={400}>
             <LineChart data={formattedData} margin={{ left: 30, right: 20 }}>

@@ -32,9 +32,6 @@ function EditItemModal({ handleEditItem, currentItem }) {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    console.log(currentItem);
-
-    
     const resetFields = () => {
         setNewName('');
         setNewBuyAt('');

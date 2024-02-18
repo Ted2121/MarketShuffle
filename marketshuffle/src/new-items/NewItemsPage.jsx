@@ -65,7 +65,6 @@ function NewItemsPage() {
   const handleItemFavoriteChange = (event) => {
     setItemFavorite(event.target.value);
     const isFavoriteAsBool = event.target.value = event.target.value === "true";
-    console.log(typeof isFavoriteAsBool)
     debounceSetItem(prevState => ({ ...prevState, isFavorite: isFavoriteAsBool }));
   };
 

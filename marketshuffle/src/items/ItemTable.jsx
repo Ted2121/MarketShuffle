@@ -31,7 +31,6 @@ function ItemTable({ handleSetSelectedItem }) {
   }
 
   const onSetItem = (item) => {
-    console.log(item)
     handleSetSelectedItem(item);
   }
 

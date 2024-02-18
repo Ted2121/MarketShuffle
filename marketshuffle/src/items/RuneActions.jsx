@@ -17,7 +17,6 @@ function RuneActions({ rune }) {
 
   const itemList = async () => {
     // TODO: Fetch the items using rune.crush[].ids
-    console.log(rune);
     setItems([item]);
   };
 

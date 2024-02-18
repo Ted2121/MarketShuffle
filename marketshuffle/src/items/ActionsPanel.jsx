@@ -46,12 +46,10 @@ function ActionsPanel({ item }) {
       date: currentUnixTime,
       quality: positionQuality
     }
- console.log(one)
     await createPositionForItem(itemPositionDto);
   }
 
   const handleEditPosition = (newCost, newDetails, newQuality) => {
-    console.log(currentPosition.id, newCost, newDetails, newQuality);
     //TODO api request with positionId, new cost, new details
   }
 
@@ -68,7 +66,6 @@ function ActionsPanel({ item }) {
   }
 
   await updateItem(itemToEdit);
-  console.log(itemToEdit)
   }
 
   const handleSetCurrentPosition = (position) => {
@@ -142,7 +139,6 @@ function ActionsPanel({ item }) {
       await deleteItemById(item?.id);
       window.location.reload();
     } else {
-      console.log("Delete action canceled by user.");
     }
   }
 
