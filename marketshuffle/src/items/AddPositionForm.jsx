@@ -33,10 +33,19 @@ function AddPositionForm({ itemId, handleAddPosition }) {
         setDetails(value);
     }
 
+    const resetFields = () => {
+        setOne('');
+        setTen('');
+        setHundred('');
+        setDetails('');
+        setPositionQuality('');
+    }
+
     const onAddPosition = () => {
         oneRef.current.focus();
         const currentUnixTime = Math.floor(Date.now() / 1000);
         handleAddPosition(itemId, one, ten, hundred, details, currentUnixTime, positionQuality);
+        resetFields();
     }
 
     const handleKeyPress = (event) => {
