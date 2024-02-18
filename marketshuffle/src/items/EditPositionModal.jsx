@@ -89,7 +89,7 @@ function EditPositionModal({ handleEditPosition, currentPosition }) {
             label="Hundred"
             size='small'
             value={newCost}
-            placeholder={currentPosition?.hundred?.toString()}
+            placeholder={currentPosition?.hundred.toString()}
             onChange={(event) => handleCostChange(event)}
           />
           <TextField
