@@ -9,7 +9,7 @@ import GeneralItemActions from './GeneralItemActions';
 import RuneActions from './RuneActions';
 import MiscActions from './MiscActions';
 import CraftingTree from '../crafting-tree/CraftingTree';
-import { deleteItemById } from '../services/itemService';
+import { deleteItemById, updateItem } from '../services/itemService';
 import { createPositionForItem } from '../services/positionsService';
 import EditItemModal from './EditItemModal';
 
@@ -55,7 +55,7 @@ function ActionsPanel({ item }) {
     //TODO api request with positionId, new cost, new details
   }
 
-  const handleEditItem = (newName, newCategory, newBuyAt, newSellAt, newFavorite) => {
+  const handleEditItem = async (newName, newCategory, newBuyAt, newSellAt, newFavorite) => {
     const itemToEdit = {
       id: item?.id,
       name: newName ? newName : item?.name,
@@ -67,7 +67,7 @@ function ActionsPanel({ item }) {
       positions: item?.positions
   }
 
-
+  await updateItem(itemToEdit);
   console.log(itemToEdit)
   }
 
