@@ -12,7 +12,6 @@ import MiscActions from './MiscActions';
 import CraftingTree from '../crafting-tree/CraftingTree';
 import { deleteItemById } from '../services/itemService';
 import { createPositionForItem } from '../services/positionsService';
-import { createPositionForItem } from '../services/positionsService';
 
 function ActionsPanel({ item }) {
   const [sortBy, setSortBy] = useState('date_desc');
