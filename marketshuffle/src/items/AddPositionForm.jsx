@@ -16,17 +16,17 @@ function AddPositionForm({ itemId, handleAddPosition }) {
 
     const handleOneChange = (event) => {
         const { value } = event.target;
-        setOne(value !== '' ? parseInt(value) : '');
+        setOne(value);
     }
 
     const handleTenChange = (event) => {
         const { value } = event.target;
-        setTen(value !== '' ? parseInt(value) : '');
+        setTen(value);
     }
 
     const handleHundredChange = (event) => {
         const { value } = event.target;
-        setHundred(value !== '' ? parseInt(value) : '');
+        setHundred(value);
     }
     const handleDetailsChange = (event) => {
         const { value } = event.target;
