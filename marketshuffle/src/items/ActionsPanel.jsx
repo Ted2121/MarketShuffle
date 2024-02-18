@@ -45,7 +45,7 @@ function ActionsPanel({ item }) {
       date: currentUnixTime,
       quality: positionQuality
     }
-    
+
     await createPositionForItem(itemPositionDto);
   }
 
@@ -191,8 +191,8 @@ function ActionsPanel({ item }) {
             }}>
               {item && (
                 <Box sx={{
-                  display:'flex',
-                  flexDirection:'column'
+                  display: 'flex',
+                  flexDirection: 'column'
                 }}>
                   <Typography variant='h4' sx={{ textAlign: 'center' }}>
                     {item?.name}
@@ -220,17 +220,17 @@ function ActionsPanel({ item }) {
               <Typography sx={{
                 fontSize: '1rem',
               }}>
-                Cost x1: {currentPosition?.one.toLocaleString()}
+                x1 Cost : {currentPosition?.one.toLocaleString()}
               </Typography>
               <Typography sx={{
                 fontSize: '1rem',
               }}>
-                Cost x10: {currentPosition?.ten.toLocaleString()}
+                x10 Cost : {currentPosition?.ten.toLocaleString()}
               </Typography>
               <Typography sx={{
                 fontSize: '1rem',
               }}>
-                Cost x100: {currentPosition?.hundred.toLocaleString()}
+                x100 Cost : {currentPosition?.hundred.toLocaleString()}
               </Typography>
               <Typography sx={{
                 fontSize: '1rem',
@@ -242,7 +242,7 @@ function ActionsPanel({ item }) {
               }}>
                 Details: {currentPosition?.details}
               </Typography>
-              
+
               <Box sx={{
                 display: 'flex',
                 gap: 1,
