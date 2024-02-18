@@ -11,6 +11,8 @@ function NewItemsPage() {
   // const [itemQuality, setItemQuality] = useState('n');
   const [itemFavorite, setItemFavorite] = useState('false');
   const [recipe, setRecipe] = useState(Array(8).fill({ name: '', quantity: '', parentItemId: '' }));
+  const [itemBuyAt, setItemBuyAt] = useState("");
+  const [itemSellAt, setItemSellAt] = useState("");
   const [item, setItem] = useState(
     {
       id: "",
@@ -60,6 +62,16 @@ function NewItemsPage() {
     console.log(typeof isFavoriteAsBool)
     debounceSetItem(prevState => ({ ...prevState, isFavorite: isFavoriteAsBool }));
   };
+
+  const handleItemSellAtChange = (event) => {
+    setItemSellAt(event.target.value);
+    debounceSetItem(prevState => ({ ...prevState, Buy: event.target.value }));
+  }
+
+  const handleItemBuyAtChange = (event) => {
+    setItemBuyAt(event.target.value);
+    debounceSetItem(prevState => ({ ...prevState, Sell: event.target.value }));
+  }
 
   const saveItem = async () => {
     const filteredRecipe = recipe.filter(
@@ -154,6 +166,37 @@ function NewItemsPage() {
             onChange={(event) => handleItemCategoryChange(event)}>
           </TextField>
         </Box>
+        {/* price targets */}
+        <Box sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2
+        }}>
+          <Typography variant='h4'>
+            Buy at:
+          </Typography>
+          <TextField
+            label="Buy at:"
+            size='small'
+            value={itemBuyAt}
+            onChange={(event) => handleItemBuyAtChange(event)}>
+          </TextField>
+        </Box>
+        <Box sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2
+        }}>
+          <Typography variant='h4'>
+            Sell at:
+          </Typography>
+          <TextField
+            label="Sell at:"
+            size='small'
+            value={itemSellAt}
+            onChange={(event) => handleItemSellAtChange(event)}>
+          </TextField>
+        </Box>
         {/* Quality */}
         {/* <Box sx={{
           display: 'flex',
@@ -208,8 +251,8 @@ function NewItemsPage() {
       {/* Button to save */}
       <Box sx={{
         display: 'flex',
-        justifyContent:"center",
-        alignItems:'center'
+        justifyContent: "center",
+        alignItems: 'center'
       }}>
         <Button onClick={saveItem}
           variant='contained'

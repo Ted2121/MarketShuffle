@@ -1,7 +1,6 @@
 import { Box, Button, Card, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import PositionsChart from './PositionsChart'
-// import positions from '../data/mocks/positions-mock';
 import Divider from '@mui/material/Divider';
 import EditPositionModal from './EditPositionModal';
 import AddPositionForm from './AddPositionForm';
@@ -129,8 +128,6 @@ function ActionsPanel({ item }) {
       console.log("Delete action canceled by user.");
     }
   }
-
-
   return (
     // price history
     <Box sx={{
@@ -193,9 +190,18 @@ function ActionsPanel({ item }) {
               flex: 4,
             }}>
               {item && (
-                <>
+                <Box sx={{
+                  display:'flex',
+                  flexDirection:'column'
+                }}>
                   <Typography variant='h4' sx={{ textAlign: 'center' }}>
                     {item?.name}
+                  </Typography>
+                  <Typography variant='h4' sx={{ textAlign: 'center' }}>
+                    Buy at: {item?.buy?.toLocaleString()}
+                  </Typography>
+                  <Typography variant='h4' sx={{ textAlign: 'center' }}>
+                    Sell at: {item?.sell?.toLocaleString()}
                   </Typography>
                   <Button
                     onClick={handleDeleteItem}
@@ -209,7 +215,7 @@ function ActionsPanel({ item }) {
                   >
                     Delete Item
                   </Button>
-                </>
+                </Box>
               )}
               <Typography sx={{
                 fontSize: '1rem',
