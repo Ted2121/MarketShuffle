@@ -17,8 +17,8 @@ function NewItemsPage() {
   // const [itemQuality, setItemQuality] = useState('n');
   const [itemFavorite, setItemFavorite] = useState('false');
   const [recipe, setRecipe] = useState(Array(8).fill({ name: '', quantity: '', parentItemId: '' }));
-  const [itemBuyAt, setItemBuyAt] = useState("");
-  const [itemSellAt, setItemSellAt] = useState("");
+  const [itemBuyAt, setItemBuyAt] = useState(0);
+  const [itemSellAt, setItemSellAt] = useState(0);
   const [item, setItem] = useState(
     {
       id: "",

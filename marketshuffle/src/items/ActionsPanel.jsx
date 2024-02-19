@@ -16,9 +16,9 @@ import EditItemModal from './EditItemModal';
 function ActionsPanel({ item }) {
   const [sortBy, setSortBy] = useState('date_desc');
   const [currentPosition, setCurrentPosition] = useState(null);
-  const isRune = item?.category == "rune"
-  const isMisc = item?.category == "misc"
-  const isGeneral = !isMisc && !isRune;
+  // const isRune = item?.category == "rune"
+  // const isMisc = item?.category == "misc"
+  // const isGeneral = !isMisc && !isRune;
   const positions = item?.positions;
   const formatDate = (unixTimestamp) => {
     const date = new Date(unixTimestamp * 1000);
@@ -294,9 +294,9 @@ function ActionsPanel({ item }) {
             gap: 1,
             flex: 6,
           }}>
-            {isRune && <RuneActions rune={item} />}
-            {isGeneral && <GeneralItemActions item={item} handleAddPosition={handleAddPosition} />}
-            {isMisc && <MiscActions misc={item} />}
+            {/* {isRune && <RuneActions rune={item} />} */}
+            <GeneralItemActions item={item} handleAddPosition={handleAddPosition} />
+            {/* {isMisc && <MiscActions misc={item} />} */}
           </Card >
         </Box>
         {/* Back to top */}
