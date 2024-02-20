@@ -10,7 +10,7 @@ import RuneActions from './RuneActions';
 import MiscActions from './MiscActions';
 import CraftingTree from '../crafting-tree/CraftingTree';
 import { deleteItemById, updateItem } from '../services/itemService';
-import { createPositionForItem } from '../services/positionsService';
+import { createPositionForItem, deletePositionById } from '../services/positionsService';
 import EditItemModal from './EditItemModal';
 
 function ActionsPanel({ item }) {
@@ -128,8 +128,12 @@ function ActionsPanel({ item }) {
     </Button>
   ));
 
-  const handleDeletePosition = () => {
-    // TODO api call to delete position and then remove the position from the list
+  const handleDeletePosition = async () => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this position?");
+
+    if (isConfirmed) {
+      await deletePositionById(currentPosition?.id);
+    }
   }
 
   const handleDeleteItem = async () => {
