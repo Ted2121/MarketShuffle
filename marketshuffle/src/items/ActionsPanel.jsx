@@ -1,7 +1,6 @@
 import { Box, Button, Card, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import PositionsChart from './PositionsChart'
-// import positions from '../data/mocks/positions-mock';
 import Divider from '@mui/material/Divider';
 import EditPositionModal from './EditPositionModal';
 import AddPositionForm from './AddPositionForm';
@@ -10,15 +9,16 @@ import GeneralItemActions from './GeneralItemActions';
 import RuneActions from './RuneActions';
 import MiscActions from './MiscActions';
 import CraftingTree from '../crafting-tree/CraftingTree';
-import { deleteItemById } from '../services/itemService';
-import { createPositionForItem } from '../services/positionsService';
+import { deleteItemById, updateItem } from '../services/itemService';
+import { createPositionForItem, deletePositionById } from '../services/positionsService';
+import EditItemModal from './EditItemModal';
 
 function ActionsPanel({ item }) {
   const [sortBy, setSortBy] = useState('date_desc');
   const [currentPosition, setCurrentPosition] = useState(null);
-  const isRune = item?.category == "rune"
-  const isMisc = item?.category == "misc"
-  const isGeneral = !isMisc && !isRune;
+  // const isRune = item?.category == "rune"
+  // const isMisc = item?.category == "misc"
+  // const isGeneral = !isMisc && !isRune;
   const positions = item?.positions;
   const formatDate = (unixTimestamp) => {
     const date = new Date(unixTimestamp * 1000);
@@ -39,20 +39,33 @@ function ActionsPanel({ item }) {
   const handleAddPosition = async (itemId, one, ten, hundred, details, currentUnixTime, positionQuality) => {
     const itemPositionDto = {
       parentItemId: itemId,
-      one: one,
-      ten: ten,
-      hundred: hundred,
+      one: one ? one : 0,
+      ten: ten ? ten : 0,
+      hundred: hundred ? hundred : 0,
       details: details,
       date: currentUnixTime,
       quality: positionQuality
     }
-    
     await createPositionForItem(itemPositionDto);
   }
 
   const handleEditPosition = (newCost, newDetails, newQuality) => {
-    console.log(currentPosition.id, newCost, newDetails, newQuality);
     //TODO api request with positionId, new cost, new details
+  }
+
+  const handleEditItem = async (newName, newCategory, newBuyAt, newSellAt, newFavorite) => {
+    const itemToEdit = {
+      id: item?.id,
+      name: newName ? newName : item?.name,
+      category: newCategory ? newCategory : item?.category,
+      buy: newBuyAt ? newBuyAt : item?.buy,
+      sell: newSellAt ? newSellAt : item?.sell,
+      isFavorite: newFavorite ? newFavorite : item?.isFavorite,
+      recipe: item?.recipe,
+      positions: item?.positions
+  }
+
+  await updateItem(itemToEdit);
   }
 
   const handleSetCurrentPosition = (position) => {
@@ -115,8 +128,12 @@ function ActionsPanel({ item }) {
     </Button>
   ));
 
-  const handleDeletePosition = () => {
-    // TODO api call to delete position and then remove the position from the list
+  const handleDeletePosition = async () => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this position?");
+
+    if (isConfirmed) {
+      await deletePositionById(currentPosition?.id);
+    }
   }
 
   const handleDeleteItem = async () => {
@@ -126,10 +143,8 @@ function ActionsPanel({ item }) {
       await deleteItemById(item?.id);
       window.location.reload();
     } else {
-      console.log("Delete action canceled by user.");
     }
   }
-
 
   return (
     // price history
@@ -193,9 +208,18 @@ function ActionsPanel({ item }) {
               flex: 4,
             }}>
               {item && (
-                <>
+                <Box sx={{
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}>
                   <Typography variant='h4' sx={{ textAlign: 'center' }}>
                     {item?.name}
+                  </Typography>
+                  <Typography variant='h4' sx={{ textAlign: 'center' }}>
+                    Buy at: {item?.buy?.toLocaleString()}
+                  </Typography>
+                  <Typography variant='h4' sx={{ textAlign: 'center' }}>
+                    Sell at: {item?.sell?.toLocaleString()}
                   </Typography>
                   <Button
                     onClick={handleDeleteItem}
@@ -209,22 +233,23 @@ function ActionsPanel({ item }) {
                   >
                     Delete Item
                   </Button>
-                </>
+                  {item && <EditItemModal handleEditItem={handleEditItem} currentItem={item} />}
+                </Box>
               )}
               <Typography sx={{
                 fontSize: '1rem',
               }}>
-                Cost x1: {currentPosition?.one.toLocaleString()}
+                x1 Cost : {currentPosition?.one.toLocaleString()}
               </Typography>
               <Typography sx={{
                 fontSize: '1rem',
               }}>
-                Cost x10: {currentPosition?.ten.toLocaleString()}
+                x10 Cost : {currentPosition?.ten.toLocaleString()}
               </Typography>
               <Typography sx={{
                 fontSize: '1rem',
               }}>
-                Cost x100: {currentPosition?.hundred.toLocaleString()}
+                x100 Cost : {currentPosition?.hundred.toLocaleString()}
               </Typography>
               <Typography sx={{
                 fontSize: '1rem',
@@ -236,7 +261,7 @@ function ActionsPanel({ item }) {
               }}>
                 Details: {currentPosition?.details}
               </Typography>
-              
+
               <Box sx={{
                 display: 'flex',
                 gap: 1,
@@ -254,13 +279,11 @@ function ActionsPanel({ item }) {
                   Delete Position
                 </Button>
                 {item && <EditPositionModal handleEditPosition={handleEditPosition} currentPosition={currentPosition} />}
-                {item && <EditPositionModal handleEditPosition={handleEditPosition} currentPosition={currentPosition} />}
               </Box>
               <Divider sx={{
                 mt: 2
               }} />
               {/* Add position */}
-              {item && <AddPositionForm itemId={item?.id} handleAddPosition={handleAddPosition} />}
               {item && <AddPositionForm itemId={item?.id} handleAddPosition={handleAddPosition} />}
             </Card>
             <Card>
@@ -275,9 +298,9 @@ function ActionsPanel({ item }) {
             gap: 1,
             flex: 6,
           }}>
-            {isRune && <RuneActions rune={item} />}
-            {isGeneral && <GeneralItemActions item={item} handleAddPosition={handleAddPosition} />}
-            {isMisc && <MiscActions misc={item} />}
+            {/* {isRune && <RuneActions rune={item} />} */}
+            <GeneralItemActions item={item} handleAddPosition={handleAddPosition} />
+            {/* {isMisc && <MiscActions misc={item} />} */}
           </Card >
         </Box>
         {/* Back to top */}

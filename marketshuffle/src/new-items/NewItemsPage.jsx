@@ -4,6 +4,12 @@ import debounce from 'lodash/debounce';
 import { createItem } from '../services/itemService';
 import { createRecipe } from '../services/recipeService';
 import DoneIcon from '@mui/icons-material/Done';
+import categoryList from '../data/components-text//itemsCategoryList'
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
 
 function NewItemsPage() {
   const [itemName, setItemName] = useState('');
@@ -11,6 +17,8 @@ function NewItemsPage() {
   // const [itemQuality, setItemQuality] = useState('n');
   const [itemFavorite, setItemFavorite] = useState('false');
   const [recipe, setRecipe] = useState(Array(8).fill({ name: '', quantity: '', parentItemId: '' }));
+  const [itemBuyAt, setItemBuyAt] = useState(0);
+  const [itemSellAt, setItemSellAt] = useState(0);
   const [item, setItem] = useState(
     {
       id: "",
@@ -20,7 +28,7 @@ function NewItemsPage() {
       isFavorite: false
     });
   const [isSuccess, setIsSuccess] = useState(false);
-
+  const categories = categoryList.map(x => x.name);
   const debounceSetItem = debounce(setItem, 500);
 
   const handleRecipeNameChange = (index, event) => {
@@ -57,9 +65,18 @@ function NewItemsPage() {
   const handleItemFavoriteChange = (event) => {
     setItemFavorite(event.target.value);
     const isFavoriteAsBool = event.target.value = event.target.value === "true";
-    console.log(typeof isFavoriteAsBool)
     debounceSetItem(prevState => ({ ...prevState, isFavorite: isFavoriteAsBool }));
   };
+
+  const handleItemSellAtChange = (event) => {
+    setItemSellAt(event.target.value);
+    debounceSetItem(prevState => ({ ...prevState, sell: event.target.value }));
+  }
+
+  const handleItemBuyAtChange = (event) => {
+    setItemBuyAt(event.target.value);
+    debounceSetItem(prevState => ({ ...prevState, buy: event.target.value }));
+  }
 
   const saveItem = async () => {
     const filteredRecipe = recipe.filter(
@@ -73,10 +90,10 @@ function NewItemsPage() {
       parentItemId: itemId
     }));
 
-    console.log(updatedRecipe);
     const recipeCreated = await createRecipe({ recipe: updatedRecipe });
 
     setIsSuccess(!!itemId && recipeCreated);
+    window.location.reload();
   };
 
   const renderRecipeFields = () => {
@@ -145,13 +162,52 @@ function NewItemsPage() {
           gap: 2
         }}>
           <Typography variant='h4'>
-            Item category:
+            Category:
+          </Typography>
+          <FormControl fullWidth>
+            <InputLabel id="category">Category:</InputLabel>
+            <Select
+              labelId="category"
+              id="category-select"
+              value={itemCategory}
+              label="Category"
+              onChange={handleItemCategoryChange}
+            >
+              {categories.map(x => (
+                <MenuItem value={x}>{x}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+        {/* price targets */}
+        <Box sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2
+        }}>
+          <Typography variant='h4'>
+            Buy at:
           </Typography>
           <TextField
-            label="Name"
+            label="Buy at:"
             size='small'
-            value={itemCategory}
-            onChange={(event) => handleItemCategoryChange(event)}>
+            value={itemBuyAt}
+            onChange={(event) => handleItemBuyAtChange(event)}>
+          </TextField>
+        </Box>
+        <Box sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2
+        }}>
+          <Typography variant='h4'>
+            Sell at:
+          </Typography>
+          <TextField
+            label="Sell at:"
+            size='small'
+            value={itemSellAt}
+            onChange={(event) => handleItemSellAtChange(event)}>
           </TextField>
         </Box>
         {/* Quality */}
@@ -208,8 +264,8 @@ function NewItemsPage() {
       {/* Button to save */}
       <Box sx={{
         display: 'flex',
-        justifyContent:"center",
-        alignItems:'center'
+        justifyContent: "center",
+        alignItems: 'center'
       }}>
         <Button onClick={saveItem}
           variant='contained'

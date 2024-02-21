@@ -26,22 +26,30 @@ function EditPositionModal({ handleEditPosition, currentPosition }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [newCost, setNewCost] = useState('');
+  const [newOne, setNewOne] = useState('');
+  const [newTen, setNewTen] = useState('');
+  const [newHundred, setNewHundred] = useState('');
   const [newDetails, setNewDetails] = useState('');
 
   const onEditPosition = () => {
-    handleEditPosition(newCost, newDetails);
+    handleEditPosition(newOne, newDetails);
     handleClose();
     resetFields();
   }
 
   const resetFields = () => {
-    setNewCost('');
+    setNewOne('');
     setNewDetails('');
   }
 
-  const handleCostChange = (event) => {
-    setNewCost(event.target.value);
+  const handleOneChange = (event) => {
+    setNewOne(event.target.value);
+  };
+  const handleTenChange = (event) => {
+    setNewTen(event.target.value);
+  };
+  const handleHundredChange = (event) => {
+    setNewHundred(event.target.value);
   };
 
   const handleDetailsChange = (event) => {
@@ -72,25 +80,25 @@ function EditPositionModal({ handleEditPosition, currentPosition }) {
             type="number"
             label="One"
             size='small'
-            value={newCost}
+            value={newOne}
             placeholder={currentPosition?.one?.toString()}
-            onChange={(event) => handleCostChange(event)}
+            onChange={(event) => handleOneChange(event)}
           />
           <TextField
             type="number"
             label="Ten"
             size='small'
-            value={newCost}
+            value={newOne}
             placeholder={currentPosition?.ten?.toString()}
-            onChange={(event) => handleCostChange(event)}
+            onChange={(event) => handleTenChange(event)}
           />
           <TextField
             type="number"
             label="Hundred"
             size='small'
-            value={newCost}
+            value={newOne}
             placeholder={currentPosition?.hundred.toString()}
-            onChange={(event) => handleCostChange(event)}
+            onChange={(event) => handleHundredChange(event)}
           />
           <TextField
             label="Details"

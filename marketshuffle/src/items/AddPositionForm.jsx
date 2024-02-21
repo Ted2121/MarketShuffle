@@ -16,28 +16,36 @@ function AddPositionForm({ itemId, handleAddPosition }) {
 
     const handleOneChange = (event) => {
         const { value } = event.target;
-        setOne(value !== '' ? parseInt(value) : '');
+        setOne(value);
     }
 
     const handleTenChange = (event) => {
         const { value } = event.target;
-        setTen(value !== '' ? parseInt(value) : '');
+        setTen(value);
     }
 
     const handleHundredChange = (event) => {
         const { value } = event.target;
-        setHundred(value !== '' ? parseInt(value) : '');
+        setHundred(value);
     }
     const handleDetailsChange = (event) => {
         const { value } = event.target;
         setDetails(value);
     }
 
+    const resetFields = () => {
+        setOne('');
+        setTen('');
+        setHundred('');
+        setDetails('');
+        setPositionQuality('');
+    }
+
     const onAddPosition = () => {
         oneRef.current.focus();
         const currentUnixTime = Math.floor(Date.now() / 1000);
         handleAddPosition(itemId, one, ten, hundred, details, currentUnixTime, positionQuality);
-        console.log(itemId, one, ten, hundred, details, currentUnixTime, positionQuality)
+        resetFields();
     }
 
     const handleKeyPress = (event) => {

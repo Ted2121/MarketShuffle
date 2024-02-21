@@ -17,7 +17,6 @@ function Item({ item, handleSetItem }) {
     const isSuccess = await setFavorite(item?.id, !isFavorite)
 
     if (isSuccess) {
-      console.log("test")
       setIsFavorite((prevState) => !prevState);
     }
   }

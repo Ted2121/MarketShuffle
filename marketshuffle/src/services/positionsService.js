@@ -31,3 +31,19 @@ export async function createPositionForItem(itemPositionDto) {
 
     return response.text();
 }
+
+export async function deletePositionById(id) {
+    const url = `${baseUrl}api/itemPosition/${id}`;
+    const headers = {
+        "Content-Type": "application/json"
+    };
+
+    const response = await fetch(url, { method: "DELETE", headers });
+
+    if (!response.ok) {
+        const errorMessage = `Failed to delete position: ${response.status} ${response.statusText}`;
+        throw new Error(errorMessage);
+    }
+
+    return true;
+}

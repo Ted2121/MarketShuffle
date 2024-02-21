@@ -2,8 +2,6 @@ import { Box, Button, TextField } from '@mui/material'
 import React, { useState } from 'react'
 import Item from './Item'
 import categoryList from '../data/components-text/itemsCategoryList'
-import item from '../data/mocks/item-mock';
-import rune from '../data/mocks/rune-mock';
 import { getAllItemsByCategory, getItemsBySearchString } from '../services/itemService';
 
 function ItemTable({ handleSetSelectedItem }) {
@@ -33,7 +31,6 @@ function ItemTable({ handleSetSelectedItem }) {
   }
 
   const onSetItem = (item) => {
-    console.log(item)
     handleSetSelectedItem(item);
   }
 

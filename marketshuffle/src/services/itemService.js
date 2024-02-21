@@ -23,8 +23,6 @@ export async function setFavorite(id, value) {
         throw new Error("The id parameter is required.");
     }
 
-    console.log(value)
-
     const url = `${baseUrl}api/item/favorite/${id}`;
     const headers = {
         "Content-Type": "application/json"
@@ -35,7 +33,7 @@ export async function setFavorite(id, value) {
     const response = await fetch(url, { method: "PUT", body, headers });
 
     if (!response.ok) {
-        const errorMessage = `Failed to create item: ${response.status} ${response.statusText}`;
+        const errorMessage = `Failed to set new favorite for item: ${response.status} ${response.statusText}`;
         throw new Error(errorMessage);
     }
 
@@ -105,4 +103,26 @@ export async function getItemsBySearchString(search) {
     }
 
     return await response.json();
+}
+
+export async function updateItem(itemDto) {
+    if (!itemDto.id) {
+        throw new Error("The id parameter is required.");
+    }
+
+    const url = `${baseUrl}api/item`;
+    const headers = {
+        "Content-Type": "application/json"
+    };
+
+    const body = JSON.stringify(itemDto);
+
+    const response = await fetch(url, { method: "PUT", body, headers });
+
+    if (!response.ok) {
+        const errorMessage = `Failed to update item: ${response.status} ${response.statusText}`;
+        throw new Error(errorMessage);
+    }
+
+    return true;
 }
