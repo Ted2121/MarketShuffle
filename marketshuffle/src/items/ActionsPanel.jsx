@@ -112,7 +112,6 @@ function ActionsPanel({ item }) {
   }
 
   //TODO add filtering for item quality
-
   const positionList = sortedPositions?.map((position, index) => (
     <Button
       key={index}
@@ -260,6 +259,11 @@ function ActionsPanel({ item }) {
                 fontSize: '1rem',
               }}>
                 Details: {currentPosition?.details}
+              </Typography>
+              <Typography sx={{
+                fontSize: '1rem',
+              }}>
+                Quality: {currentPosition?.quality}
               </Typography>
 
               <Box sx={{

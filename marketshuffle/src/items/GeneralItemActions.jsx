@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField';
 import Divider from '@mui/material/Divider';
 import Profits from './Profits';
 import { useEffect, useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function GeneralItemActions({ item, handleAddPosition }) {
     const [ingredientPrices, setIngredientPrices] = useState({});
@@ -11,6 +12,7 @@ function GeneralItemActions({ item, handleAddPosition }) {
     const [specialItemDetails, setSpecialItemPosition] = useState('');
     const [selectedItemId, setSelectedItemId] = useState(null);
     const currentUnixTime = useMemo(() => Math.floor(Date.now() / 1000), []);
+    const navigate = useNavigate();
 
     const [costs, setCosts] = useState({
         cheapestPrice: 0,
@@ -48,6 +50,10 @@ function GeneralItemActions({ item, handleAddPosition }) {
         setTotalPrice(total);
     }, [ingredientPrices, item?.recipe]);
 
+    const onAddRecipe = (id) => {
+        navigate('/update-recipe', { state: { id: id } });
+    }
+
     const handleItemSelection = useCallback((item) => {
         if (item.id !== selectedItemId) {
             // Reset state when a new item is selected
@@ -65,7 +71,7 @@ function GeneralItemActions({ item, handleAddPosition }) {
     const recipe = useMemo(() => {
         return Array.isArray(item?.recipe) && item?.recipe?.map((ingredient, index) => {
             const costValue = ingredientPrices[index] !== undefined ? ingredientPrices[index] : '';
-            
+
             return (
                 !item || !Array.isArray(item.positions) ? (
                     <div key={index}>No positions data available</div>
@@ -172,6 +178,17 @@ function GeneralItemActions({ item, handleAddPosition }) {
                 value={specialItemDetails}
                 onChange={(event) => handleSpecialItemDetailsChange(event)}
             />
+           {item?.id && <Button
+                onClick={() => onAddRecipe(item?.id)}
+                variant='contained'
+                color='white'
+                sx={{
+                    color: 'black.main',
+                    maxHeight: '30px'
+                }}
+            >
+                Add Recipe
+            </Button>}
         </>
     )
 }

@@ -6,6 +6,7 @@ import RouteLayout from './shared/routing/RouteLayout';
 import Navbar from './shared/layouts/Navbar';
 import ItemsPage from './items/ItemsPage';
 import NewItemsPage from './new-items/NewItemsPage';
+import UpdateRecipePage from './items/UpdateRecipePage';
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -31,6 +32,7 @@ function App() {
                 {/* public routes */}
                 <Route path='/' element={<ItemsPage />} />
                 <Route path='/new' element={<NewItemsPage />} />
+                <Route path='/update-recipe' element={<UpdateRecipePage />} />
               </Route>
             </Routes>
           </Box>
