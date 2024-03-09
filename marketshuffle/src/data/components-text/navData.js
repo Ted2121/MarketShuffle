@@ -11,9 +11,14 @@ const navData = [
   },
   {
     id: '3',
-    text: 'Crafting Tree',
-    route: '/craft',
+    text: 'Guilds',
+    route: '/guilds',
   },
+  // {
+  //   id: '3',
+  //   text: 'Crafting Tree',
+  //   route: '/craft',
+  // },
 ]
 
 export default navData;
