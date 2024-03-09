@@ -13,7 +13,7 @@ import { deleteItemById, updateItem } from '../services/itemService';
 import { createPositionForItem, deletePositionById } from '../services/positionsService';
 import EditItemModal from './EditItemModal';
 
-function ActionsPanel({ item }) {
+function ActionsPanel({ item, handleResetPosition }) {
   const [sortBy, setSortBy] = useState('date_desc');
   const [currentPosition, setCurrentPosition] = useState(null);
   // const isRune = item?.category == "rune"
@@ -63,10 +63,15 @@ function ActionsPanel({ item }) {
       isFavorite: newFavorite ? newFavorite : item?.isFavorite,
       recipe: item?.recipe,
       positions: item?.positions
+    }
+
+    await updateItem(itemToEdit);
   }
 
-  await updateItem(itemToEdit);
+  const onResetPosition = () => {
+    handleResetPosition(item);
   }
+
 
   const handleSetCurrentPosition = (position) => {
     setCurrentPosition(position);
@@ -112,7 +117,6 @@ function ActionsPanel({ item }) {
   }
 
   //TODO add filtering for item quality
-
   const positionList = sortedPositions?.map((position, index) => (
     <Button
       key={index}
@@ -261,6 +265,11 @@ function ActionsPanel({ item }) {
               }}>
                 Details: {currentPosition?.details}
               </Typography>
+              <Typography sx={{
+                fontSize: '1rem',
+              }}>
+                Quality: {currentPosition?.quality}
+              </Typography>
 
               <Box sx={{
                 display: 'flex',
@@ -277,6 +286,18 @@ function ActionsPanel({ item }) {
                   }}
                 >
                   Delete Position
+                </Button>
+                <Button
+                  onClick={onResetPosition}
+                  variant='contained'
+                  color='white'
+                  sx={{
+                    color: 'black.main',
+                    mt: 1,
+                    maxHeight: '50px'
+                  }}
+                >
+                  Reset Position
                 </Button>
                 {item && <EditPositionModal handleEditPosition={handleEditPosition} currentPosition={currentPosition} />}
               </Box>

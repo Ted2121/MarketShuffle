@@ -139,6 +139,7 @@ function AddPositionForm({ itemId, handleAddPosition }) {
                         value={details}
                         tabIndex="-1"
                         onChange={(event) => handleDetailsChange(event)}
+                        onKeyDown={handleKeyPress}
                     />
                 </Box>
                 {/* Quality */}
