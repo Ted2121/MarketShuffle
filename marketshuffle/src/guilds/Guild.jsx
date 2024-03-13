@@ -3,13 +3,8 @@ import React from 'react'
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-function Guild() {
+function Guild({guild}) {
     const { id } = useParams();
-    const navigate = useNavigate();
-
-    const handleGuildClick = (guildId) => {
-        navigate(`/guild/${guildId}`);
-    };
 
     return (
        <Box>

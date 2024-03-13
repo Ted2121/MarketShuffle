@@ -1,6 +1,5 @@
 import { Box } from '@mui/material'
 import React from 'react'
-import Guild from './Guild';
 
 function AllGuildsPage() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -25,7 +24,7 @@ function AllGuildsPage() {
 
     const guilds = (
         guildList.map(guild => (
-          <Guild key={guild?.id} guild={guild}/>
+          <GuildCard key={guild?.id} guild={guild}/>
         ))
       );
 
