@@ -5,6 +5,7 @@ import ItemTable from './ItemTable'
 import ActionsPanel from './ActionsPanel'
 import { getRecipeByParentId } from '../services/recipeService'
 import { getAllPositionsByItemId } from '../services/positionsService'
+import Markets from './Markets'
 
 function ItemsPage() {
   const [selectedItem, setSelectedItem] = useState();
@@ -32,6 +33,7 @@ function ItemsPage() {
         p:'32px',
     }}>
         {/* <Favorites /> */}
+        <Markets handleSetSelectedItem={handleSetSelectedItem}></Markets>
         <ActionsPanel item={selectedItem} handleResetPosition={onHandleResetPosition}/>
         <ItemTable handleSetSelectedItem={handleSetSelectedItem}/>
     </Box>

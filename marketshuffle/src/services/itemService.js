@@ -73,6 +73,38 @@ export async function getAllItemsByCategory(category) {
     return await response.json();
 }
 
+export async function getAllFavoriteItems() {
+    const url = `${baseUrl}api/item/favorites`;
+    const headers = {
+        "Content-Type": "application/json"
+    };
+
+    const response = await fetch(url, { method: "GET", headers });
+
+    if (!response.ok) {
+        const errorMessage = `Failed to get items: ${response.status} ${response.statusText}`;
+        throw new Error(errorMessage);
+    }
+
+    return await response.json();
+}
+
+export async function getAllProfessionsItems() {
+    const url = `${baseUrl}api/item/professions`;
+    const headers = {
+        "Content-Type": "application/json"
+    };
+
+    const response = await fetch(url, { method: "GET", headers });
+
+    if (!response.ok) {
+        const errorMessage = `Failed to get items: ${response.status} ${response.statusText}`;
+        throw new Error(errorMessage);
+    }
+
+    return await response.json();
+}
+
 export async function deleteItemById(id) {
     const url = `${baseUrl}api/item/${id}`;
     const headers = {
