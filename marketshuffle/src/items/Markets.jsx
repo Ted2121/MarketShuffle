@@ -14,13 +14,10 @@ function Markets({ handleSetSelectedItem }) {
     setOrderingLocked((prev) => !prev);
   };
 
-  const handleMoveItem = (category, itemId, direction) => {
-    // Find the category by name
+  const handleMoveItem = (category, itemId, direction, currentIndex) => {
     const foundCategory = markets.flatMap(market => market.categories).find(cat => cat.name?.toLowerCase() === category.name.toLowerCase());
-    console.log('Category:', foundCategory);
-    console.log('ItemId:', itemId);
-    // Find the index of the item
     const itemIndex = foundCategory.items?.findIndex(item => item.id === itemId);
+
     if (itemIndex === -1) return; // Item not found
 
     // Calculate the new index for the item
@@ -34,9 +31,12 @@ function Markets({ handleSetSelectedItem }) {
     }
 
     // Remove the item from its current position
-    const [movedItem] = foundCategory.items.splice(itemIndex, 1);
+    const movedItem = foundCategory.items.splice(itemIndex, 1)[0];
     // Insert the item into the new position
     foundCategory.items.splice(newIndex, 0, movedItem);
+
+    // Update the state to trigger a re-render and reflect the changes in the UI
+    setItemList([...itemList]);
   };
 
   const handleSaveOrder = async () => {
