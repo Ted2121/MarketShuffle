@@ -26,6 +26,7 @@ function Markets({ handleSetSelectedItem }) {
       markets.map(async (market) => {
         await Promise.all(
           market.categories.map(async (category) => {
+            category.items = [];
             const itemsForCategory = items.filter(
               (item) => item?.category.toLowerCase() === category.name.toLowerCase()
             );
