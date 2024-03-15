@@ -4,12 +4,11 @@ import { getAllFavoriteItems, updateItem } from '../services/itemService';
 import Item from './Item';
 import { markets } from '../data/components-text/shoppingStructure';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import categoryList from '../data/components-text/itemsCategoryList';
 
 function Markets({ handleSetSelectedItem }) {
   const [itemList, setItemList] = useState([]);
   const [showMarkets, setShowMarkets] = useState(false);
-  const [orderingLocked, setOrderingLocked] = useState(false);
+  const [orderingLocked, setOrderingLocked] = useState(true);
 
   const handleOrderingLockToggle = () => {
     setOrderingLocked((prev) => !prev);
