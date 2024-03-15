@@ -330,7 +330,6 @@ function ActionsPanel({ item, handleResetPosition }) {
           width: '100%',
           justifyContent: 'center'
         }}>
-          <BackToTopButton />
         </Box>
       </Box>
     </Box>

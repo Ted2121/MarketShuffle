@@ -10,7 +10,7 @@ import StarIcon from '@mui/icons-material/Star';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import { setFavorite } from '../services/itemService';
 
-function Item({ item, handleSetItem }) {
+function Item({ item, handleSetItem, showFavoriteButton = true }) {
   const [isFavorite, setIsFavorite] = useState(item?.isFavorite);
 
   const handleFavoriteToggle = async () => {
@@ -48,7 +48,7 @@ function Item({ item, handleSetItem }) {
         }}>
         {item?.name}
       </Button>
-      {favoriteButton}
+      {showFavoriteButton && favoriteButton}
     </Box>
   )
 }
