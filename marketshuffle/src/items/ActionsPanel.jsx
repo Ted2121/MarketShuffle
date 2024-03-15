@@ -4,10 +4,7 @@ import PositionsChart from './PositionsChart'
 import Divider from '@mui/material/Divider';
 import EditPositionModal from './EditPositionModal';
 import AddPositionForm from './AddPositionForm';
-import BackToTopButton from '../shared/components/BackToTopButton';
 import GeneralItemActions from './GeneralItemActions';
-import RuneActions from './RuneActions';
-import MiscActions from './MiscActions';
 import CraftingTree from '../crafting-tree/CraftingTree';
 import { deleteItemById, updateItem } from '../services/itemService';
 import { createPositionForItem, deletePositionById } from '../services/positionsService';
@@ -64,7 +61,6 @@ function ActionsPanel({ item, handleResetPosition }) {
       recipe: item?.recipe,
       positions: item?.positions
     }
-
     await updateItem(itemToEdit);
   }
 
@@ -330,7 +326,6 @@ function ActionsPanel({ item, handleResetPosition }) {
           width: '100%',
           justifyContent: 'center'
         }}>
-          <BackToTopButton />
         </Box>
       </Box>
     </Box>
