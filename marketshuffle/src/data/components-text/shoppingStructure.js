@@ -2,6 +2,7 @@ export const markets = [
     {
         id: 0,
         name: "Resources",
+        image:"",
         categories: [
             {
                 id: 0,
@@ -453,6 +454,17 @@ export const markets = [
             {
                 id: 4,
                 name: "Sword",
+                items: []
+            },
+        ]
+    },
+    {
+        id: 17,
+        name: "None",
+        categories: [
+            {
+                id: 0,
+                name: "None",
                 items: []
             },
         ]

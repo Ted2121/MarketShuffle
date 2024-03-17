@@ -50,7 +50,7 @@ function ActionsPanel({ item, handleResetPosition }) {
     //TODO api request with positionId, new cost, new details
   }
 
-  const handleEditItem = async (newName, newCategory, newBuyAt, newSellAt, newFavorite) => {
+  const handleEditItem = async (newName, newCategory, newBuyAt, newSellAt, newFavorite, newProfession, newUseFor) => {
     const itemToEdit = {
       id: item?.id,
       name: newName ? newName : item?.name,
@@ -59,7 +59,9 @@ function ActionsPanel({ item, handleResetPosition }) {
       sell: newSellAt ? newSellAt : item?.sell,
       isFavorite: newFavorite ? newFavorite : item?.isFavorite,
       recipe: item?.recipe,
-      positions: item?.positions
+      positions: item?.positions,
+      profession: newProfession ? newProfession : item?.newProfession,
+      useFor: newUseFor ? newUseFor : item?.newUseFor,
     }
     await updateItem(itemToEdit);
   }
@@ -148,7 +150,7 @@ function ActionsPanel({ item, handleResetPosition }) {
 
   return (
     // price history
-    <Box sx={{
+    <Box id="actions-panel" sx={{
       display: 'flex',
       flex: 70,
       justifyContent: 'space-between',
@@ -220,6 +222,9 @@ function ActionsPanel({ item, handleResetPosition }) {
                   </Typography>
                   <Typography variant='h4' sx={{ textAlign: 'center' }}>
                     Sell at: {item?.sell?.toLocaleString()}
+                  </Typography>
+                  <Typography variant='h4' sx={{ textAlign: 'center' }}>
+                    Use for: {item?.useFor?.toLocaleString()}
                   </Typography>
                   <Button
                     onClick={handleDeleteItem}
