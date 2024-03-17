@@ -4,6 +4,7 @@ import { getAllFavoriteItems, updateItem } from '../services/itemService';
 import Item from './Item';
 import { markets } from '../data/components-text/shoppingStructure';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import MarketQuickAccess from './MarketQuickAccess';
 
 function Markets({ handleSetSelectedItem }) {
   const [itemList, setItemList] = useState([]);
@@ -124,9 +125,11 @@ function Markets({ handleSetSelectedItem }) {
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
+        maxWidth: '22vw'
       }}
     >
       <Button onClick={handleMarketClick}>Markets</Button>
+      <MarketQuickAccess />
       <Box sx={{ textAlign: 'center' }}>
         <Button onClick={handleOrderingLockToggle}>
           {orderingLocked ? 'Unlock Ordering' : 'Lock Ordering'}
@@ -148,7 +151,7 @@ function Markets({ handleSetSelectedItem }) {
               mb: 2,
             }}
           >
-            <Typography variant="h3">{market.name}</Typography>
+            <Typography id={market?.name} variant="h3">{market?.name}</Typography>
             {market.categories.map((category) => (
               <Box
                 key={category.id}

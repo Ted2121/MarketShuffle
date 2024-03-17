@@ -2,7 +2,7 @@ export const markets = [
     {
         id: 0,
         name: "Resources",
-        image:"",
+        image:"/images/markets/resource.png",
         categories: [
             {
                 id: 0,
@@ -125,6 +125,7 @@ export const markets = [
     {
         id: 1,
         name: "Runes",
+        image:"/images/markets/rune.png",
         categories: [
             {
                 id: 0,
@@ -136,6 +137,7 @@ export const markets = [
     {
         id: 2,
         name: "Miner",
+        image:"/images/markets/miner.png",
         categories: [
             {
                 id: 0,
@@ -167,6 +169,7 @@ export const markets = [
     {
         id: 3,
         name: "Lumberjack",
+        image:"/images/markets/lumberjack.png",
         categories: [
             {
                 id: 0,
@@ -198,6 +201,7 @@ export const markets = [
     {
         id: 4,
         name: "Handyman",
+        image:"/images/markets/handyman.png",
         categories: [
             {
                 id: 0,
@@ -214,6 +218,7 @@ export const markets = [
     {
         id: 5,
         name: "Scroll",
+        image:"/images/markets/scroll.png",
         categories: [
             {
                 id: 0,
@@ -235,6 +240,7 @@ export const markets = [
     {
         id: 6,
         name: "Soul Market",
+        image:"/images/markets/soul.png",
         categories: [
             {
                 id: 0,
@@ -261,6 +267,7 @@ export const markets = [
     {
         id: 7,
         name: "Fisherman",
+        image:"/images/markets/fish.png",
         categories: [
             {
                 id: 0,
@@ -272,6 +279,7 @@ export const markets = [
     {
         id: 8,
         name: "Buther and Hunter",
+        image:"/images/markets/hunter.png",
         categories: [
             {
                 id: 0,
@@ -288,6 +296,7 @@ export const markets = [
     {
         id: 9,
         name: "Bakers",
+        image:"/images/markets/baker.png",
         categories: [
             {
                 id: 0,
@@ -304,6 +313,7 @@ export const markets = [
     {
         id: 10,
         name: "Farmers",
+        image:"/images/markets/farmer.png",
         categories: [
             {
                 id: 0,
@@ -320,6 +330,7 @@ export const markets = [
     {
         id: 11,
         name: "Alchemists",
+        image:"/images/markets/alchemist.png",
         categories: [
             {
                 id: 0,
@@ -356,6 +367,7 @@ export const markets = [
     {
         id: 12,
         name: "Jewellers",
+        image:"/images/markets/jeweler.png",
         categories: [
             {
                 id: 0,
@@ -372,6 +384,7 @@ export const markets = [
     {
         id: 13,
         name: "Shoemakers",
+        image:"/images/markets/shoemaker.png",
         categories: [
             {
                 id: 0,
@@ -388,6 +401,7 @@ export const markets = [
     {
         id: 14,
         name: "Tailors",
+        image:"/images/markets/tailor.png",
         categories: [
             {
                 id: 0,
@@ -409,6 +423,7 @@ export const markets = [
     {
         id: 15,
         name: "Carvers",
+        image:"/images/markets/carver.png",
         categories: [
             {
                 id: 0,
@@ -430,6 +445,7 @@ export const markets = [
     {
         id: 16,
         name: "Smiths",
+        image:"/images/markets/smith.png",
         categories: [
             {
                 id: 0,
@@ -461,6 +477,7 @@ export const markets = [
     {
         id: 17,
         name: "None",
+        image:"/images/markets/none.png",
         categories: [
             {
                 id: 0,
