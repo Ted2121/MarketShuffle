@@ -12,9 +12,13 @@ function BackToTopButton() {
 
     return (
         <Box sx={{
-            border:'1px solid white',
-            borderRadius:'8px',
-            maxWidth:'60px',
+            border: '1px solid white',
+            borderRadius: '8px',
+            maxWidth: '60px',
+            position: 'fixed',
+            bottom: '20px',
+            left: '20px',
+            zIndex: 999,
         }}>
             <IconButton onClick={scrollToTop}>
                 <ExpandLessIcon sx={{
