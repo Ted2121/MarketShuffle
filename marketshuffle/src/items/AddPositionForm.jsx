@@ -6,6 +6,8 @@ function AddPositionForm({ itemId, handleAddPosition }) {
     const [one, setOne] = useState('');
     const [ten, setTen] = useState('');
     const [hundred, setHundred] = useState('');
+    const [bought, setBought] = useState('');
+    const [sold, setSold] = useState('');
     const [details, setDetails] = useState('');
     const [positionQuality, setPositionQuality] = useState('n');
     const oneRef = useRef(null);
@@ -28,6 +30,17 @@ function AddPositionForm({ itemId, handleAddPosition }) {
         const { value } = event.target;
         setHundred(value);
     }
+
+    const handleBoughtChange = (event) => {
+        const { value } = event.target;
+        setBought(value);
+    }
+
+    const handleSoldChange = (event) => {
+        const { value } = event.target;
+        setSold(value);
+    }
+
     const handleDetailsChange = (event) => {
         const { value } = event.target;
         setDetails(value);
@@ -37,6 +50,8 @@ function AddPositionForm({ itemId, handleAddPosition }) {
         setOne('');
         setTen('');
         setHundred('');
+        setBought('');
+        setSold('');
         setDetails('');
         setPositionQuality('');
     }
@@ -44,7 +59,7 @@ function AddPositionForm({ itemId, handleAddPosition }) {
     const onAddPosition = () => {
         oneRef.current.focus();
         const currentUnixTime = Math.floor(Date.now() / 1000);
-        handleAddPosition(itemId, one, ten, hundred, details, currentUnixTime, positionQuality);
+        handleAddPosition(itemId, one, ten, hundred, details, currentUnixTime, positionQuality, bought, sold);
         resetFields();
     }
 
@@ -107,6 +122,36 @@ function AddPositionForm({ itemId, handleAddPosition }) {
                         size='small'
                         value={hundred}
                         onChange={(event) => handleHundredChange(event)}
+                        onKeyDown={handleKeyPress}
+                    />
+                </Box>
+                <Box sx={{
+                    display: 'flex', gap: 2
+                }}>
+                    <Typography>
+                        Bought:
+                    </Typography>
+                    <TextField
+                        type="string"
+                        label="Bought:"
+                        size='small'
+                        value={bought}
+                        onChange={(event) => handleBoughtChange(event)}
+                        onKeyDown={handleKeyPress}
+                    />
+                </Box>
+                <Box sx={{
+                    display: 'flex', gap: 2
+                }}>
+                    <Typography>
+                        Sold:
+                    </Typography>
+                    <TextField
+                        type="string"
+                        label="Sold:"
+                        size='small'
+                        value={sold}
+                        onChange={(event) => handleSoldChange(event)}
                         onKeyDown={handleKeyPress}
                     />
                 </Box>

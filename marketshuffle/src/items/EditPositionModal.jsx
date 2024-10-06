@@ -2,9 +2,8 @@ import React from 'react'
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import { useState } from 'react';
-import { TextField } from '@mui/material';
+import { FormControlLabel, Radio, RadioGroup, TextField } from '@mui/material';
 
 const style = {
   position: 'absolute',
@@ -30,16 +29,20 @@ function EditPositionModal({ handleEditPosition, currentPosition }) {
   const [newTen, setNewTen] = useState('');
   const [newHundred, setNewHundred] = useState('');
   const [newDetails, setNewDetails] = useState('');
+  const [newQuality, setNewQuality] = useState('');
 
   const onEditPosition = () => {
-    handleEditPosition(newOne, newDetails);
+    handleEditPosition(newOne, newTen, newHundred, newDetails, newQuality);
     handleClose();
     resetFields();
   }
 
   const resetFields = () => {
     setNewOne('');
+    setNewTen('');
+    setNewHundred('');
     setNewDetails('');
+    setNewQuality('');
   }
 
   const handleOneChange = (event) => {
@@ -54,6 +57,9 @@ function EditPositionModal({ handleEditPosition, currentPosition }) {
 
   const handleDetailsChange = (event) => {
     setNewDetails(event.target.value);
+  };
+  const handleQualityChange = (event) => {
+    setNewQuality(event.target.value);
   };
 
   return (
@@ -88,7 +94,7 @@ function EditPositionModal({ handleEditPosition, currentPosition }) {
             type="number"
             label="Ten"
             size='small'
-            value={newOne}
+            value={newTen}
             placeholder={currentPosition?.ten?.toString()}
             onChange={(event) => handleTenChange(event)}
           />
@@ -96,7 +102,7 @@ function EditPositionModal({ handleEditPosition, currentPosition }) {
             type="number"
             label="Hundred"
             size='small'
-            value={newOne}
+            value={newHundred}
             placeholder={currentPosition?.hundred.toString()}
             onChange={(event) => handleHundredChange(event)}
           />
@@ -107,6 +113,22 @@ function EditPositionModal({ handleEditPosition, currentPosition }) {
             placeholder={currentPosition?.details.toString()}
             onChange={(event) => handleDetailsChange(event)}
           />
+          <RadioGroup
+                    defaultValue="n"
+                    name="quality"
+                    value={newQuality}
+                    onChange={handleQualityChange}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        gap: 2
+                    }}>
+                    <FormControlLabel value="c" control={<Radio />} label="c" />
+                    <FormControlLabel value="n" control={<Radio />} label="n" />
+                    <FormControlLabel value="g" control={<Radio />} label="g" />
+                    <FormControlLabel value="p" control={<Radio />} label="p" />
+                    <FormControlLabel value="s" control={<Radio />} label="s" />
+                </RadioGroup>
           <Button
             onClick={onEditPosition}
             variant='contained'

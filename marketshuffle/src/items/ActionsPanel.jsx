@@ -6,8 +6,8 @@ import EditPositionModal from './EditPositionModal';
 import AddPositionForm from './AddPositionForm';
 import GeneralItemActions from './GeneralItemActions';
 import CraftingTree from '../crafting-tree/CraftingTree';
-import { deleteItemById, updateItem } from '../services/itemService';
-import { createPositionForItem, deletePositionById } from '../services/positionsService';
+import { deleteItemById, getItemByName, updateItem } from '../services/itemService';
+import { createPositionForItem, deletePositionById, updatePosition } from '../services/positionsService';
 import EditItemModal from './EditItemModal';
 
 function ActionsPanel({ item, handleResetPosition }) {
@@ -33,8 +33,8 @@ function ActionsPanel({ item, handleResetPosition }) {
     return `${day} ${month} ${year}`;
   };
 
-  const handleAddPosition = async (itemId, one, ten, hundred, details, currentUnixTime, positionQuality) => {
-    const itemPositionDto = {
+  const handleAddPosition = async (itemId, one, ten, hundred, details, currentUnixTime, positionQuality, bought, sold) => {
+    let itemPositionDto = {
       parentItemId: itemId,
       one: one ? one : 0,
       ten: ten ? ten : 0,
@@ -43,11 +43,93 @@ function ActionsPanel({ item, handleResetPosition }) {
       date: currentUnixTime,
       quality: positionQuality
     }
+
+    if (bought || sold) {
+      itemPositionDto = await formatPositionFromText(bought, sold, details, currentUnixTime);
+    }
+
+    if (!itemPositionDto) {
+      alert("Position was empty");
+    }
+
     await createPositionForItem(itemPositionDto);
   }
 
-  const handleEditPosition = (newCost, newDetails, newQuality) => {
-    //TODO api request with positionId, new cost, new details
+  const formatPositionFromText = async (bought, sold, details, currentUnixTime) => {
+
+    let regex;
+    let matches;
+
+    // Check if it's a bought or sold operation
+    if (bought) {
+      // Example input for bought: "[09:44] 10 x [Agility Scroll] (59,952 kamas)"
+      regex = /\[(\d{2}:\d{2})\]\s(\d+)\sx\s\[(.*?)\]\s\(([\d,]+)\skamas\)/;
+      matches = bought.match(regex);
+    } else if (sold) {
+      // Example input for sold: "[09:56] Bank: +7,277 kamas (sale: 1 [Agility Scroll])"
+      regex = /\[(\d{2}:\d{2})\]\sBank:\s\+([\d,]+)\skamas\s\(sale:\s(\d+)\s\[(.*?)\]\)/;
+      matches = sold.match(regex);
+    }
+
+    // Handle invalid text format
+    if (!matches) return null;
+
+    // Extract the relevant data depending on bought or sold
+    let quantity, price, itemName;
+
+    if (bought) {
+      quantity = parseInt(matches[2]);  // e.g., 10
+      itemName = matches[3].trim().toLowerCase();  // "Agility Scroll"
+      price = parseInt(matches[4].replace(/,/g, ''));  // Remove commas and parse price, e.g., 59952
+    } else if (sold) {
+      price = parseInt(matches[2].replace(/,/g, ''));  // Remove commas and parse kamas received, e.g., 7277
+      quantity = parseInt(matches[3]);  // e.g., 1
+      itemName = matches[4].trim().toLowerCase();  // "Agility Scroll"
+    }
+
+    const item = await getItemByName(itemName);
+
+    if (!item) return null;
+
+    const itemId = item?.id;
+
+    // Step 2: Determine whether to add price to 'one', 'ten', or 'hundred'
+    let one = 0, ten = 0, hundred = 0;
+
+    if (quantity === 1) {
+      one = price;
+    } else if (quantity === 10) {
+      ten = Math.floor(price / 10);  // Round down to the nearest integer
+    } else if (quantity === 100) {
+      hundred = Math.floor(price / 100);  // Round down to the nearest integer
+    }
+
+    // Step 3: Return the formatted itemPositionDto
+    const itemPositionDto = {
+      parentItemId: itemId,  // Make sure this is passed or accessible
+      one: one,
+      ten: ten,
+      hundred: hundred,
+      details: details,  // Using itemName as details, adjust as needed
+      date: currentUnixTime,  // Ensure this is passed or available
+      quality: "b",  // Ensure this is passed or available
+    };
+
+    console.log(itemPositionDto)
+    return itemPositionDto;
+  }
+
+  const handleEditPosition = async (newOne, newTen, newHundred, newDetails, newQuality) => {
+    const positionToEdit = {
+      id: currentPosition?.id,
+      details: newDetails ? newDetails : currentPosition?.details,
+      quality: newQuality ? newQuality : currentPosition?.quality,
+      one: newOne ? newOne : currentPosition?.one,
+      ten: newTen ? newTen : currentPosition?.ten,
+      hundred: newHundred ? newHunddred : currentPosition?.hundred,
+    }
+
+    await updatePosition(positionToEdit);
   }
 
   const handleEditItem = async (newName, newCategory, newBuyAt, newSellAt, newFavorite, newProfession, newUseFor) => {
@@ -150,7 +232,7 @@ function ActionsPanel({ item, handleResetPosition }) {
 
   return (
     // price history
-    <Box id="actions-panel" sx={{
+    <Box sx={{
       display: 'flex',
       flex: 70,
       justifyContent: 'space-between',
@@ -210,7 +292,7 @@ function ActionsPanel({ item, handleResetPosition }) {
               flex: 4,
             }}>
               {item && (
-                <Box sx={{
+                <Box id="actions-panel" sx={{
                   display: 'flex',
                   flexDirection: 'column'
                 }}>
