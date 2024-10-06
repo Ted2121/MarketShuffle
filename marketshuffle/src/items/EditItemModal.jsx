@@ -29,6 +29,9 @@ function EditItemModal({ handleEditItem, currentItem }) {
     const [newBuyAt, setNewBuyAt] = useState('');
     const [newSellAt, setNewSellAt] = useState('');
     const [newFavorite, setNewFavorite] = useState('')
+    const [newUseFor, setNewUseFor] = useState('')
+    const [newProfession, setNewProfession] = useState('')
+
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
@@ -38,30 +41,40 @@ function EditItemModal({ handleEditItem, currentItem }) {
         setNewSellAt('');
         setNewCategory('');
         setNewFavorite('');
+        setNewUseFor('');
+        setNewProfession('');
     }
     
     const handleBuyAtChange = (event) => {
-        setNewBuyAt(event.target.value);
+        setNewBuyAt(event.target.value && event.target.value);
     };
     
     const handleSellAtChange = (event) => {
-        setNewSellAt(event.target.value);
+        setNewSellAt(event.target.value && event.target.value);
     };
     
     const handleNameChange = (event) => {
-        setNewName(event.target.value);
+        setNewName(event.target.value && event.target.value);
     };
     
     const handleFavoriteChange = (event) => {
-        setNewFavorite(event.target.value);
+        setNewFavorite(event.target.value && event.target.value);
     };
     
     const handleCategoryChange = (event) => {
-        setNewCategory(event.target.value);
+        setNewCategory(event.target.value && event.target.value);
+    };
+
+    const handleUseForChange = (event) => {
+        setNewUseFor(event.target.value && event.target.value);
+    };
+
+    const handleProfessionChange = (event) => {
+        setNewProfession(event.target.value && event.target.value);
     };
     
     const onEditItem = () => {
-        handleEditItem(newName, newCategory, newBuyAt, newSellAt, newFavorite);
+        handleEditItem(newName, newCategory, newBuyAt, newSellAt, newFavorite, newProfession, newUseFor);
         handleClose();
         resetFields();
     }
@@ -114,12 +127,26 @@ function EditItemModal({ handleEditItem, currentItem }) {
                         placeholder={currentItem?.category?.toString()}
                         onChange={(event) => handleCategoryChange(event)}
                     />
-                    <TextField
+                    {/* <TextField
                         label="Favorite"
                         size='small'
                         value={newFavorite}
                         placeholder={currentItem?.isFavorite?.toString()}
                         onChange={(event) => handleFavoriteChange(event)}
+                    /> */}
+                    <TextField
+                        label="Use for"
+                        size='small'
+                        value={newUseFor}
+                        placeholder={currentItem?.useFor?.toString()}
+                        onChange={(event) => handleUseForChange(event)}
+                    />
+                    <TextField
+                        label="Profession"
+                        size='small'
+                        value={newProfession}
+                        placeholder={currentItem?.profession?.toString()}
+                        onChange={(event) => handleProfessionChange(event)}
                     />
                     <Button
                         onClick={onEditItem}

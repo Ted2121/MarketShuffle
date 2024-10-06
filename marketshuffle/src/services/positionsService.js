@@ -47,3 +47,25 @@ export async function deletePositionById(id) {
 
     return true;
 }
+
+export async function updatePosition(itemPositionDto) {
+    if (!itemPositionDto.id) {
+        throw new Error("The id parameter is required.");
+    }
+
+    const url = `${baseUrl}api/position`;
+    const headers = {
+        "Content-Type": "application/json"
+    };
+
+    const body = JSON.stringify(itemPositionDto);
+
+    const response = await fetch(url, { method: "PUT", body, headers });
+
+    if (!response.ok) {
+        const errorMessage = `Failed to update item: ${response.status} ${response.statusText}`;
+        throw new Error(errorMessage);
+    }
+
+    return true;
+}

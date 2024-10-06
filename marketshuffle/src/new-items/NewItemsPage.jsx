@@ -54,7 +54,7 @@ function NewItemsPage() {
   const handleItemCategoryChange = (event) => {
     const { value } = event.target;
     setItemCategory(value);
-    debounceSetItem(prevState => ({ ...prevState, category: value }));
+    debounceSetItem(prevState => ({ ...prevState, category: value ? value : "None" }));
   };
 
   // const handleItemQualityChange = (event) => {

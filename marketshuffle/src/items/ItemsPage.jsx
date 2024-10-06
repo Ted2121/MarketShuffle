@@ -10,6 +10,8 @@ import BackToTopButton from '../shared/components/BackToTopButton'
 
 function ItemsPage() {
   const [selectedItem, setSelectedItem] = useState();
+  const actionsPanel = document.getElementById('actions-panel');
+
 
   const onHandleResetPosition = (item) => {
     handleSetSelectedItem(item);
@@ -21,7 +23,7 @@ function ItemsPage() {
     item.recipe = recipe;
     item.positions = positions;
     setSelectedItem(item);
-    console.log(item)
+    actionsPanel?.scrollIntoView({ behavior: 'smooth' });
   }
   // TODO call the get all favorites in a useEffect and pass it to favorites component
   return (

@@ -42,11 +42,22 @@ function Item({ item, handleSetItem, showFavoriteButton = true }) {
     <Box sx={{ display: 'flex', gap: '16px' }}>
       <Button
         onClick={onSetItem}
-        variant='contained' color='white' sx={{
+        variant='contained'
+        color='white'
+        sx={{
           color: 'black.main',
-          width: '300px'
-        }}>
-        {item?.name}
+          width: '300px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center'
+        }}
+      >
+        <Typography variant='body' fontWeight={600}>{item?.name}</Typography>
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <Typography variant="body1" fontWeight={400} color='green'>Buy: {item?.buy}</Typography>
+          <Typography variant="body1" fontWeight={400} color='#c20000'>Sell: {item?.sell}</Typography>
+        </Box>
       </Button>
       {showFavoriteButton && favoriteButton}
     </Box>

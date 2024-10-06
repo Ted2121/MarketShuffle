@@ -137,6 +137,23 @@ export async function getItemsBySearchString(search) {
     return await response.json();
 }
 
+export async function getItemByName(name) {
+    const url = `${baseUrl}api/item/name/${name}`;
+    const headers = {
+        "Content-Type": "application/json"
+    };
+
+    const response = name && await fetch(url, { method: "GET", headers });
+
+    if (!response.ok) {
+        const errorMessage = `Failed to get item by name: ${response.status} ${response.statusText}`;
+        alert(errorMessage);
+        throw new Error(errorMessage);
+    }
+
+    return await response.json();
+}
+
 export async function updateItem(itemDto) {
     if (!itemDto.id) {
         throw new Error("The id parameter is required.");
