@@ -9,6 +9,7 @@ import NewItemsPage from './new-items/NewItemsPage';
 import UpdateRecipePage from './items/UpdateRecipePage';
 import AllGuildsPage from './guilds/AllGuildsPage';
 import Guild from './guilds/Guild';
+import AttackInterceptor from './tribal-wars-tools/attack-interceptor';
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -37,6 +38,7 @@ function App() {
                 <Route path='/update-recipe' element={<UpdateRecipePage />} />
                 <Route path='/guilds' element={<AllGuildsPage />} />
                 <Route path='/guild/:id' element={<Guild />} />
+                <Route path='/tw-attack' element={<AttackInterceptor />} />
               </Route>
             </Routes>
           </Box>

@@ -148,7 +148,7 @@ export async function getItemByName(name) {
     if (!response.ok) {
         const errorMessage = `Failed to get item by name: ${response.status} ${response.statusText}`;
         alert(errorMessage);
-        throw new Error(errorMessage);
+        console.error(errorMessage);
     }
 
     return await response.json();

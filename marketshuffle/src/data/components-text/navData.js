@@ -14,6 +14,11 @@ const navData = [
     text: 'Guilds',
     route: '/guilds',
   },
+  {
+    id: '4',
+    text: 'TW Attack',
+    route: '/tw-attack',
+  },
   // {
   //   id: '3',
   //   text: 'Crafting Tree',

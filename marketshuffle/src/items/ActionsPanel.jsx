@@ -6,7 +6,7 @@ import EditPositionModal from './EditPositionModal';
 import AddPositionForm from './AddPositionForm';
 import GeneralItemActions from './GeneralItemActions';
 import CraftingTree from '../crafting-tree/CraftingTree';
-import { deleteItemById, getItemByName, updateItem } from '../services/itemService';
+import { createItem, deleteItemById, getItemByName, updateItem } from '../services/itemService';
 import { createPositionForItem, deletePositionById, updatePosition } from '../services/positionsService';
 import EditItemModal from './EditItemModal';
 
@@ -89,9 +89,21 @@ function ActionsPanel({ item, handleResetPosition }) {
 
     const item = await getItemByName(itemName);
 
-    if (!item) return null;
+    let itemId;
 
-    const itemId = item?.id;
+    if (!item?.id) {
+      const id = await createItem({
+        id: "",
+        name: itemName,
+        category: "",
+        quality: "n",
+        isFavorite: false
+      })
+
+      itemId = id;
+    } else {
+      itemId = item?.id;
+    }
 
     // Step 2: Determine whether to add price to 'one', 'ten', or 'hundred'
     let one = 0, ten = 0, hundred = 0;
@@ -112,7 +124,7 @@ function ActionsPanel({ item, handleResetPosition }) {
       hundred: hundred,
       details: details,  // Using itemName as details, adjust as needed
       date: currentUnixTime,  // Ensure this is passed or available
-      quality: "b",  // Ensure this is passed or available
+      quality: bought ? "b" : "s",  // Ensure this is passed or available
     };
 
     console.log(itemPositionDto)
