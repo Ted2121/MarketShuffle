@@ -19,6 +19,16 @@ const navData = [
     text: 'TW Attack',
     route: '/tw-attack',
   },
+  {
+    id: '5',
+    text: 'TW Distance Calc',
+    route: '/tw-distance-calc',
+  },
+  {
+    id: '6',
+    text: 'TW Resource Calculator',
+    route: '/tw-resource-calc',
+  },
   // {
   //   id: '3',
   //   text: 'Crafting Tree',
