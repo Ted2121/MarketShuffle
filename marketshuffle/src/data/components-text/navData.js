@@ -1,19 +1,19 @@
 const navData = [
-  {
-    id: '0',
-    text: 'Craft and sell',
-    route: '/',
-  },
-  {
-    id: '2',
-    text: 'New Items',
-    route: '/new',
-  },
-  {
-    id: '3',
-    text: 'Guilds',
-    route: '/guilds',
-  },
+  // {
+  //   id: '0',
+  //   text: 'Craft and sell',
+  //   route: '/',
+  // },
+  // {
+  //   id: '2',
+  //   text: 'New Items',
+  //   route: '/new',
+  // },
+  // {
+  //   id: '3',
+  //   text: 'Guilds',
+  //   route: '/guilds',
+  // },
   {
     id: '4',
     text: 'TW Attack',
@@ -28,6 +28,11 @@ const navData = [
     id: '6',
     text: 'TW Resource Calculator',
     route: '/tw-resource-calc',
+  },
+  {
+    id: '7',
+    text: 'TW TODO',
+    route: '/tw-todo-list',
   },
   // {
   //   id: '3',

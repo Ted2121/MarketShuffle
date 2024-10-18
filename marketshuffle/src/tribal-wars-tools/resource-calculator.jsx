@@ -231,11 +231,6 @@ export default function TwResourceCalculator() {
                     onChange={(event) => handleCostFierChange(event)}
                 />
             </Box>
-            {/* <Button
-                variant='contained'
-                onClick={() => calculateDistance(cityA, cityB)}>
-                Calculate
-            </Button> */}
             <Button onClick={calculateAndDisplayResult} variant="contained" color="primary">
                 Calculate
             </Button>

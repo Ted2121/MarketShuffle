@@ -12,6 +12,7 @@ import Guild from './guilds/Guild';
 import AttackInterceptor from './tribal-wars-tools/attack-interceptor';
 import TroopDistanceCalculator from './tribal-wars-tools/troop-distance-calculator';
 import TwResourceCalculator from './tribal-wars-tools/resource-calculator';
+import TwTodoList from './tribal-wars-tools/todo-list';
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -42,6 +43,7 @@ function App() {
                 <Route path='/tw-attack' element={<AttackInterceptor />} />
                 <Route path='/tw-distance-calc' element={<TroopDistanceCalculator />} />
                 <Route path='/tw-resource-calc' element={<TwResourceCalculator />} />
+                <Route path='/tw-todo-list' element={<TwTodoList />} />
               </Route>
             </Routes>
           </Box>
