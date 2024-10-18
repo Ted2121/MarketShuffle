@@ -1,12 +1,75 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
+import { todoListModel } from "./models/todo-list.model";
+import Accordion from '@mui/material/Accordion';
+import AccordionActions from '@mui/material/AccordionActions';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function TwTodoList() {
-    const [lemn, setLemn] = useState(0);
+    const [model, setModel] = useState(todoListModel);
+    const currentTime = new Date();
 
-    const handleLemnChange = (event) => {
-        const { value } = event.target;
-        setLemn(parseFloat(value) || 0);
+    const RegularTodoItem = (label, ) => {
+        return (
+            <Box sx={{
+                display: 'flex',
+                gap: 1,
+            }}>
+                
+            </Box>
+        );
+    }
+
+    const SateAccordion = (sate) => {
+        if (Array.isArray(sate)) {
+            return (
+                <>
+                    {sate.map((sat) => (
+                        // remember to add a done indicator to parent if any of the child accordions has a done item
+                        <div key={sat?.id}>
+                            <Accordion>
+                                <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon />}
+                                    id={sat?.id}
+                                >
+                                    {sat?.name}
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+                                    malesuada lacus ex, sit amet blandit leo lobortis eget.
+                                </AccordionDetails>
+                            </Accordion>
+                        </div>
+                    ))}
+                </>
+            );
+        }
+    };
+
+    const LumeAccordion = () => {
+        return (
+            <>
+                {model.map((lume) => (
+                    // remember to add a done indicator to parent if any of the child accordions has a done item
+                    <div key={lume?.id}>
+                        <Accordion>
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                id={lume?.id}
+                            >
+                                {lume?.name}
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+                                malesuada lacus ex, sit amet blandit leo lobortis eget.
+                            </AccordionDetails>
+                        </Accordion>
+                    </div>
+                ))}
+            </>
+        );
     };
 
 
@@ -16,110 +79,55 @@ export default function TwTodoList() {
             height: '100%',
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center',
+            alignItems: 'flex-start',
             flexDirection: 'column',
-            marginTop: 20,
-            gap: 3,
+            marginTop: 10,
+            marginLeft: 10,
+            gap: 1,
         }}>
-            <Box sx={{
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexDirection: 'row',
-                gap: 1,
-            }}>
-                <TextField
-                    label="lemn"
-                    size='small'
-                    value={lemn}
-                    tabIndex="-1"
-                    onChange={(event) => handleLemnChange(event)}
-                />
-                <TextField
-                    label="argila"
-                    size='small'
-                    value={argila}
-                    tabIndex="-1"
-                    onChange={(event) => handleArgilaChange(event)}
-                />
-                <TextField
-                    label="fier"
-                    size='small'
-                    value={fier}
-                    tabIndex="-1"
-                    onChange={(event) => handleFierChange(event)}
-                />
-            </Box>
-            <Box sx={{
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexDirection: 'row',
-                gap: 1,
-            }}>
-                <TextField
-                    label="productieLemn"
-                    size='small'
-                    value={productieLemn}
-                    tabIndex="-1"
-                    onChange={(event) => handleProductieLemnChange(event)}
-                />
-                <TextField
-                    label="productieArgila"
-                    size='small'
-                    value={productieArgila}
-                    tabIndex="-1"
-                    onChange={(event) => handleProductieArgilaChange(event)}
-                />
-                <TextField
-                    label="productieFier"
-                    size='small'
-                    value={productieFier}
-                    tabIndex="-1"
-                    onChange={(event) => handleProductieFierChange(event)}
-                />
-            </Box>
-            <Box sx={{
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexDirection: 'row',
-                gap: 1,
-            }}>
-                <TextField
-                    label="costLemn"
-                    size='small'
-                    value={costLemn}
-                    tabIndex="-1"
-                    onChange={(event) => handleCostLemnChange(event)}
-                />
-                <TextField
-                    label="costArgila"
-                    size='small'
-                    value={costArgila}
-                    tabIndex="-1"
-                    onChange={(event) => handleCostArgilaChange(event)}
-                />
-                <TextField
-                    label="costFier"
-                    size='small'
-                    value={costFier}
-                    tabIndex="-1"
-                    onChange={(event) => handleCostFierChange(event)}
-                />
-            </Box>
-            <Button onClick={calculateAndDisplayResult} variant="contained" color="primary">
-                Calculate
-            </Button>
-            <Typography variant="h4" sx={{ mt: '20px' }}>
-                {resultMessage}
-            </Typography>
-            {timeToReady.map((message, index) => (
-                <Typography variant="h4" key={index}>{message}</Typography>
-            ))}
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1-content"
+                    id="panel1-header"
+                >
+                    Accordion 1
+                </AccordionSummary>
+                <AccordionDetails>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+                    malesuada lacus ex, sit amet blandit leo lobortis eget.
+                </AccordionDetails>
+            </Accordion>
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel2-content"
+                    id="panel2-header"
+                >
+                    Accordion 2
+                </AccordionSummary>
+                <AccordionDetails>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+                    malesuada lacus ex, sit amet blandit leo lobortis eget.
+                </AccordionDetails>
+            </Accordion>
+            <Accordion defaultExpanded>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel3-content"
+                    id="panel3-header"
+                >
+                    Accordion Actions
+                </AccordionSummary>
+                <AccordionDetails>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+                    malesuada lacus ex, sit amet blandit leo lobortis eget.
+                </AccordionDetails>
+                <AccordionActions>
+                    <Button>Cancel</Button>
+                    <Button>Agree</Button>
+                </AccordionActions>
+            </Accordion>
         </Box>
     )
 }
