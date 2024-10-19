@@ -4,7 +4,7 @@ export const todoListModel = [
         name: 'lumea 103',
         villages: [
             {
-                id: 0,
+                id: 'a3e459ac-b287-401b-958f-3655e2a8007c',
                 name: 'McDonalds',
                 atac: '',
                 aparare: '',
@@ -24,7 +24,7 @@ export const todoListModel = [
         name: 'lumea 104',
         villages: [
             {
-                id: 0,
+                id: 'ed0774dd-1e89-49bb-b6f0-a75fc6e720d7',
                 name: 'McDonalds',
                 atac: '',
                 aparare: '',
