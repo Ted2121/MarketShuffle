@@ -5,6 +5,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import WarningIcon from '@mui/icons-material/Warning';
 
 export default function TwTodoList() {
     const [model, setModel] = useState(todoListModel);
@@ -23,7 +24,7 @@ export default function TwTodoList() {
         const newTodoStates = { ...todoStates }; // Clone current states
 
         for (const key in todoStates) {
-            const { date, formatted } = todoStates[key];
+            const { date } = todoStates[key];
             if (!isNaN(new Date(date))) {
                 newTodoStates[key].status = new Date(date) < currentTime ? "Done!" : ""; // Update status
             }
@@ -150,21 +151,36 @@ export default function TwTodoList() {
         if (Array.isArray(villages)) {
             return (
                 <>
-                    {villages.map((village) => (
-                        <div key={village?.id}>
-                            <Accordion>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    id={village?.id}
-                                >
-                                    {village?.name}
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    {renderTodoItemsForVillage(village, worldId)}
-                                </AccordionDetails>
-                            </Accordion>
-                        </div>
-                    ))}
+                    {villages.map((village) => {
+                        // Check if any todo item is done
+                        const isAnyTodoDone = Object.keys(village).some(field => {
+                            if (field !== 'id' && field !== 'name') {
+                                const todoKey = `${village.id}-${field}`;
+                                return todoStates[todoKey]?.status === "Done!";
+                            }
+                            return false;
+                        });
+
+                        const hasIncomingAttack = village.atac;
+
+                        return (
+                            <div key={village?.id}>
+                                <Accordion>
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        id={village?.id}
+                                    >
+                                        {village?.name} 
+                                        {isAnyTodoDone && <span style={{ color: 'green' }}> - Done!</span>}
+                                        {hasIncomingAttack && <WarningIcon sx={{ color: 'red', marginLeft: 1 }} />}
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        {renderTodoItemsForVillage(village, worldId)}
+                                    </AccordionDetails>
+                                </Accordion>
+                            </div>
+                        );
+                    })}
                 </>
             );
         }
