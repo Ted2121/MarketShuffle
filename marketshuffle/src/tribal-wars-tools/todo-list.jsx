@@ -42,7 +42,7 @@ export default function TwTodoList() {
     useEffect(() => {
         const interval = setInterval(() => {
             checkDates();
-        }, 30000);
+        }, 45000);
 
         return () => clearInterval(interval);
     }, []);
@@ -371,14 +371,14 @@ export default function TwTodoList() {
             const minutes = parseInt(match[4], 10);
             const seconds = parseInt(match[5], 10);
 
-            return new Date(today.getFullYear(), month, day, hours - 1, minutes, seconds);
+            return new Date(today.getFullYear(), month, day, hours - 1, minutes - 1, seconds);
         } else if ((match = regexDateTimeNoSec.exec(input))) {
             const day = parseInt(match[1], 10);
             const month = parseInt(match[2], 10) - 1; // Month is zero-based in JS
             const hours = parseInt(match[3], 10);
             const minutes = parseInt(match[4], 10);
 
-            return new Date(today.getFullYear(), month, day, hours - 1, minutes);
+            return new Date(today.getFullYear(), month, day, hours - 1, minutes - 1);
         }
 
         // Check for "mâine"
@@ -388,12 +388,12 @@ export default function TwTodoList() {
             const seconds = parseInt(match[3], 10);
 
             // Set the time to tomorrow
-            return new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), hours - 1, minutes, seconds);
+            return new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), hours - 1, minutes - 1, seconds);
         } else if ((match = regexTomorrowNoSec.exec(input))) {
             const hours = parseInt(match[1], 10);
             const minutes = parseInt(match[2], 10);
 
-            return new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), hours - 1, minutes);
+            return new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), hours - 1, minutes - 1);
         }
 
         // Check for "astăzi"
@@ -403,12 +403,12 @@ export default function TwTodoList() {
             const seconds = parseInt(match[3], 10);
 
             // Set the time to today
-            return new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours - 1, minutes, seconds);
+            return new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours - 1, minutes - 1, seconds);
         } else if ((match = regexTodayNoSec.exec(input))) {
             const hours = parseInt(match[1], 10);
             const minutes = parseInt(match[2], 10);
 
-            return new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours - 1, minutes);
+            return new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours - 1, minutes - 1);
         }
 
         return input;
