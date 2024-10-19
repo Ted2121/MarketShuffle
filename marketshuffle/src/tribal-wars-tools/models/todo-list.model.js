@@ -16,7 +16,6 @@ export const todoListModel = [
                 curteNobila: '',
                 magazie: '',
                 nobili: '',
-                next: '',
             },
             {
                 id: '5f43c2ce-b242-4586-89e6-7f6383c7a7be',
@@ -31,7 +30,6 @@ export const todoListModel = [
                 curteNobila: '',
                 magazie: '',
                 nobili: '',
-                next: '',
             },
         ]
     },
@@ -52,7 +50,6 @@ export const todoListModel = [
                 curteNobila: '',
                 magazie: '',
                 nobili: '',
-                next: '',
             },
         ]
     },

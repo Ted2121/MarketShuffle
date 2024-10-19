@@ -16,11 +16,20 @@ export default function TwTodoList() {
         const savedModel = localStorage.getItem('todoModel');
         return savedModel ? JSON.parse(savedModel) : todoListModel;
     });
-    
+
+    const [villageTodos, setVillageTodos] = useState(() => {
+        const savedVillageTodos = localStorage.getItem('villageTodos');
+        return savedVillageTodos ? JSON.parse(savedVillageTodos) : {};
+    });
+
     const [todoStates, setTodoStates] = useState(() => {
         const savedTodoStates = localStorage.getItem('todoStates');
         return savedTodoStates ? JSON.parse(savedTodoStates) : {};
     });
+
+    useEffect(() => {
+        localStorage.setItem('villageTodos', JSON.stringify(villageTodos));
+    }, [villageTodos]);
 
     useEffect(() => {
         localStorage.setItem('todoModel', JSON.stringify(model));
@@ -34,13 +43,25 @@ export default function TwTodoList() {
         const interval = setInterval(() => {
             checkDates();
         }, 30000);
-        
+
         return () => clearInterval(interval);
     }, []);
 
+    const handleAddTodo = (villageId, todoText) => {
+        setVillageTodos(prevTodos => {
+            return {
+                ...prevTodos,
+                [villageId]: todoText, // Replace the existing value with the new one
+            };
+        });
+    };
+
+    const getTodoByVillageId = (villageId) => {
+        return villageTodos[villageId] || null;
+    };
     const checkDates = () => {
         const currentTime = new Date().getTime();
-    
+
         setTodoStates(prevTodoStates => {
             const newTodoStates = { ...prevTodoStates };
             let stateUpdated = false;
@@ -48,7 +69,7 @@ export default function TwTodoList() {
             for (const key in prevTodoStates) {
                 const { date } = prevTodoStates[key];
                 const parsedDate = new Date(date).getTime();
-    
+
                 if (!isNaN(parsedDate)) {
                     const done = parsedDate < currentTime;
                     if (newTodoStates[key].status !== (done ? "Done!" : "")) {
@@ -57,7 +78,7 @@ export default function TwTodoList() {
                     }
                 }
             }
-    
+
             return stateUpdated ? newTodoStates : prevTodoStates;
         });
     };
@@ -94,22 +115,68 @@ export default function TwTodoList() {
         return `${day} ${month} ${hours}:${minutes}:${seconds}`;
     };
 
-    const RegularTodoItem = ({ label, initialValue, worldId, villagesId, fieldName, itemType }) => {
+    const VillageTodoInput = ({ villageId }) => {
+        const [todoNext, setTodoNext] = useState("");
+
+        const handleAddTodoClick = () => {
+            setTodoNext(todoNext)
+            handleAddTodo(villageId, todoNext);
+        };
+
+        const handleClearTodo = () => {
+            handleAddTodo(villageId, '');
+            setTodoNext("");
+        }
+
+
+        return (
+            <Box sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+            }}>
+                <IconButton
+                    size="small"
+                    onClick={handleClearTodo}
+                    sx={{ marginRight: '-8px' }}
+                >
+                    <ClearIcon />
+                </IconButton>
+                <TextField
+                    value={todoNext}
+                    size="small"
+                    onChange={(e) => setTodoNext(e.target.value)}
+                    label="Next Todo"
+                />
+                <Button
+                    variant="contained"
+                    onClick={handleAddTodoClick}
+                >
+                    Add Todo
+                </Button>
+                <Typography variant="body2" color="text.secondary">
+                    {getTodoByVillageId(villageId)}
+                </Typography>
+            </Box>
+        );
+    };
+
+    const RegularTodoItem = ({ label, initialValue, worldId, villagesId, fieldName }) => {
         const [inputValue, setInputValue] = useState(initialValue || "");
-    
+
         const todoKey = `${villagesId}-${fieldName}`;
         const { status, formatted } = todoStates[todoKey] || {};
-    
+
         const handleInputChange = (e) => {
             const value = e.target.value;
             setInputValue(value);
             handleFieldChange(worldId, villagesId, fieldName, value);
         };
-    
+
         const handleClearInput = () => {
             setInputValue(""); // Clear the TextField
             handleFieldChange(worldId, villagesId, fieldName, ""); // Reset the property value in the model
-            handleButtonClick('', villagesId, fieldName, itemType); // Call to clear the todo state
+            handleButtonClick('', villagesId, fieldName); // Call to clear the todo state
             setTodoStates(prev => ({
                 ...prev,
                 [`${villagesId}-${fieldName}`]: {
@@ -119,12 +186,11 @@ export default function TwTodoList() {
                 }
             }));
         };
-    
+
         const handleSubmit = () => {
-            console.log("Submitting:", inputValue);
-            handleButtonClick(inputValue, villagesId, fieldName, itemType);
+            handleButtonClick(inputValue, villagesId, fieldName);
         };
-    
+
         return (
             <Box sx={{
                 display: 'flex',
@@ -137,11 +203,10 @@ export default function TwTodoList() {
                     alignItems: 'center',
                     gap: 1,
                 }}>
-                    {/* X button to clear the text field */}
                     <IconButton
                         size="small"
                         onClick={handleClearInput}
-                        sx={{ marginRight: '-8px' }} 
+                        sx={{ marginRight: '-8px' }}
                     >
                         <ClearIcon />
                     </IconButton>
@@ -166,24 +231,15 @@ export default function TwTodoList() {
         );
     };
 
-    const handleButtonClick = (fieldValue, villagesId, fieldName, itemType) => {
+    const handleButtonClick = (fieldValue, villagesId, fieldName) => {
         const dateObj = parseCustomDate(fieldValue);
-        if (!isNaN(dateObj) && itemType === 'date') {
+        if (!isNaN(dateObj)) {
             const formattedDate = formatDateTime(dateObj);
             setTodoStates(prev => ({
                 ...prev,
                 [`${villagesId}-${fieldName}`]: {
                     date: dateObj,
                     formatted: formattedDate,
-                    status: ""
-                }
-            }));
-        } else if (itemType === 'text'){
-            setTodoStates(prev => ({
-                ...prev,
-                [`${villagesId}-${fieldName}`]: {
-                    date: "",
-                    formatted: fieldValue,
                     status: ""
                 }
             }));
@@ -210,7 +266,6 @@ export default function TwTodoList() {
                         worldId={worldId}
                         villagesId={village.id}
                         fieldName={field}
-                        itemType={field === 'next' || field === 'nobili' ? 'text' : 'date'}
                     />
                 );
             }
@@ -226,7 +281,6 @@ export default function TwTodoList() {
                         const isAnyTodoDone = Object.keys(village).some(field => {
                             if (field !== 'id' && field !== 'name') {
                                 const todoKey = `${village.id}-${field}`;
-                                console.log(todoStates[todoKey]?.status)
                                 return todoStates[todoKey]?.status === "Done!";
                             }
                             return false;
@@ -247,6 +301,7 @@ export default function TwTodoList() {
                                     </AccordionSummary>
                                     <AccordionDetails>
                                         {renderTodoItemsForVillage(village, worldId)}
+                                        <VillageTodoInput villageId={village.id} />
                                     </AccordionDetails>
                                 </Accordion>
                             </div>
@@ -283,13 +338,16 @@ export default function TwTodoList() {
         const today = new Date();
         const tomorrow = new Date(today);
         tomorrow.setDate(today.getDate() + 1); // Set tomorrow's date
-    
+
         const regexDateTime = /(\d{1,2})\.(\d{1,2})\. la ora (\d{1,2}):(\d{1,2}):(\d{1,2})/;
+        const regexDateTimeNoSec = /(\d{1,2})\.(\d{1,2})\. la ora (\d{1,2}):(\d{1,2})/;
         const regexTomorrow = /mâine la ora (\d{1,2}):(\d{1,2}):(\d{1,2})/;
+        const regexTomorrowNoSec = /mâine la ora (\d{1,2}):(\d{1,2})/;
         const regexToday = /astăzi la ora (\d{1,2}):(\d{1,2}):(\d{1,2})/;
-    
+        const regexTodayNoSec = /astăzi la ora (\d{1,2}):(\d{1,2})/;
+
         let match;
-    
+
         // Check for the full date format
         if ((match = regexDateTime.exec(input))) {
             const day = parseInt(match[1], 10);
@@ -297,30 +355,47 @@ export default function TwTodoList() {
             const hours = parseInt(match[3], 10);
             const minutes = parseInt(match[4], 10);
             const seconds = parseInt(match[5], 10);
-            
+
             return new Date(today.getFullYear(), month, day, hours - 1, minutes, seconds);
+        } else if ((match = regexDateTimeNoSec.exec(input))) {
+            const day = parseInt(match[1], 10);
+            const month = parseInt(match[2], 10) - 1; // Month is zero-based in JS
+            const hours = parseInt(match[3], 10);
+            const minutes = parseInt(match[4], 10);
+
+            return new Date(today.getFullYear(), month, day, hours - 1, minutes);
         }
-    
+
         // Check for "mâine"
         if ((match = regexTomorrow.exec(input))) {
             const hours = parseInt(match[1], 10);
             const minutes = parseInt(match[2], 10);
             const seconds = parseInt(match[3], 10);
-            
+
             // Set the time to tomorrow
             return new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), hours - 1, minutes, seconds);
+        } else if ((match = regexTomorrowNoSec.exec(input))) {
+            const hours = parseInt(match[1], 10);
+            const minutes = parseInt(match[2], 10);
+
+            return new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), hours - 1, minutes);
         }
-    
+
         // Check for "astăzi"
         if ((match = regexToday.exec(input))) {
             const hours = parseInt(match[1], 10);
             const minutes = parseInt(match[2], 10);
             const seconds = parseInt(match[3], 10);
-            
+
             // Set the time to today
             return new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours - 1, minutes, seconds);
+        } else if ((match = regexTodayNoSec.exec(input))) {
+            const hours = parseInt(match[1], 10);
+            const minutes = parseInt(match[2], 10);
+
+            return new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours - 1, minutes);
         }
-    
+
         return input;
     }
 
