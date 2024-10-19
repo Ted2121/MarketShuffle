@@ -248,6 +248,7 @@ export default function TwTodoList() {
             alignItems: 'flex-start',
             flexDirection: 'column',
             marginTop: 10,
+            marginBottom: 20,
             marginLeft: 10,
             gap: 1,
         }}>
