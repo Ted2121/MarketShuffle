@@ -1,5 +1,5 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { todoListModel } from "./models/todo-list.model";
 import Accordion from '@mui/material/Accordion';
 import AccordionActions from '@mui/material/AccordionActions';
@@ -7,27 +7,126 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
+const calculateCountdown = (targetTime) => {
+    const currentTime = new Date().getTime();
+    const difference = targetTime - currentTime;
+
+    if (difference <= 0) {
+        return "00:00:00"; // Time is up or past
+    }
+
+    const hours = Math.floor(difference / (1000 * 60 * 60));
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+    // Format the result as hh:mm:ss
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+};
+
 export default function TwTodoList() {
     const [model, setModel] = useState(todoListModel);
-    const currentTime = new Date();
+    const [countdowns, setCountdowns] = useState({}); // Store countdowns
+    const [targetTimes, setTargetTimes] = useState({}); // Store target times
 
-    const RegularTodoItem = (label, ) => {
+    // Single interval to update all countdowns
+    useEffect(() => {
+        if (Object.keys(targetTimes).length > 0) {
+            const intervalId = setInterval(() => {
+                const updatedCountdowns = {};
+                Object.keys(targetTimes).forEach(key => {
+                    if (targetTimes[key]) {
+                        updatedCountdowns[key] = calculateCountdown(targetTimes[key]);
+                    }
+                });
+                setCountdowns(updatedCountdowns);
+            }, 1000);
+
+            return () => clearInterval(intervalId); // Cleanup on unmount
+        }
+    }, [targetTimes]);
+
+    const handleFieldChange = (lumeaId, sateId, fieldName, value) => {
+        // Update the state without affecting the countdown timer logic
+        const updatedModel = model.map(lumea => {
+            if (lumea.id === lumeaId) {
+                return {
+                    ...lumea,
+                    sate: lumea.sate.map(sat => {
+                        if (sat.id === sateId) {
+                            return { ...sat, [fieldName]: value };
+                        }
+                        return sat;
+                    })
+                };
+            }
+            return lumea;
+        });
+
+        setModel(updatedModel); // Update model state
+    };
+
+    const handleButtonClick = (lumeaId, sateId, targetTimeValue) => {
+        const targetTime = new Date(targetTimeValue).getTime();
+
+        setTargetTimes(prev => ({
+            ...prev,
+            [`${lumeaId}-${sateId}`]: targetTime
+        }));
+    };
+
+    // Renders a TextField, countdown, and button for each property of a sat (excluding id and name)
+    const RegularTodoItem = ({ label, fieldValue, lumeaId, sateId, fieldName }) => {
         return (
             <Box sx={{
                 display: 'flex',
                 gap: 1,
+                alignItems: 'center',
+                marginBottom: 2
             }}>
-                
+                <TextField
+                    label={label}
+                    value={fieldValue}
+                    onChange={(e) => handleFieldChange(lumeaId, sateId, fieldName, e.target.value)}
+                    sx={{ width: '200px' }}
+                />
+                <Button
+                    variant="contained"
+                    onClick={() => handleButtonClick(lumeaId, sateId, fieldValue)}
+                >
+                    Submit
+                </Button>
+                {/* Display the countdown */}
+                <Typography sx={{ marginLeft: 2 }}>
+                    {countdowns[`${lumeaId}-${sateId}`] || "00:00:00"}
+                </Typography>
             </Box>
         );
-    }
+    };
 
-    const SateAccordion = (sate) => {
+    // Renders the todo items (TextFields) inside the accordion for each sat
+    const renderTodoItemsForSat = (sat, lumeaId) => {
+        return Object.keys(sat).map(field => {
+            if (field !== 'id' && field !== 'name') {
+                return (
+                    <RegularTodoItem
+                        key={field}
+                        label={field}
+                        fieldValue={sat[field]}
+                        lumeaId={lumeaId}
+                        sateId={sat.id}
+                        fieldName={field}
+                    />
+                );
+            }
+        });
+    };
+
+    // Renders each sat inside its accordion, with all todo items (TextFields) as details
+    const SateAccordion = (sate, lumeaId) => {
         if (Array.isArray(sate)) {
             return (
                 <>
                     {sate.map((sat) => (
-                        // remember to add a done indicator to parent if any of the child accordions has a done item
                         <div key={sat?.id}>
                             <Accordion>
                                 <AccordionSummary
@@ -37,8 +136,8 @@ export default function TwTodoList() {
                                     {sat?.name}
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                                    malesuada lacus ex, sit amet blandit leo lobortis eget.
+                                    {/* Render all todo items (TextFields) for this sat */}
+                                    {renderTodoItemsForSat(sat, lumeaId)}
                                 </AccordionDetails>
                             </Accordion>
                         </div>
@@ -48,22 +147,22 @@ export default function TwTodoList() {
         }
     };
 
+    // Renders each lume with its sate accordions
     const LumeAccordion = () => {
         return (
             <>
-                {model.map((lume) => (
-                    // remember to add a done indicator to parent if any of the child accordions has a done item
-                    <div key={lume?.id}>
+                {model.map((lumea) => (
+                    <div key={lumea?.id}>
                         <Accordion>
                             <AccordionSummary
                                 expandIcon={<ExpandMoreIcon />}
-                                id={lume?.id}
+                                id={lumea?.id}
                             >
-                                {lume?.name}
+                                {lumea?.name}
                             </AccordionSummary>
                             <AccordionDetails>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                                malesuada lacus ex, sit amet blandit leo lobortis eget.
+                                {/* Render the sate accordion for each lume */}
+                                {SateAccordion(lumea.sate, lumea.id)}
                             </AccordionDetails>
                         </Accordion>
                     </div>
@@ -71,7 +170,6 @@ export default function TwTodoList() {
             </>
         );
     };
-
 
     return (
         <Box sx={{
@@ -82,52 +180,12 @@ export default function TwTodoList() {
             alignItems: 'flex-start',
             flexDirection: 'column',
             marginTop: 10,
+            marginBottom: 20,
             marginLeft: 10,
             gap: 1,
         }}>
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1-content"
-                    id="panel1-header"
-                >
-                    Accordion 1
-                </AccordionSummary>
-                <AccordionDetails>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                    malesuada lacus ex, sit amet blandit leo lobortis eget.
-                </AccordionDetails>
-            </Accordion>
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel2-content"
-                    id="panel2-header"
-                >
-                    Accordion 2
-                </AccordionSummary>
-                <AccordionDetails>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                    malesuada lacus ex, sit amet blandit leo lobortis eget.
-                </AccordionDetails>
-            </Accordion>
-            <Accordion defaultExpanded>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel3-content"
-                    id="panel3-header"
-                >
-                    Accordion Actions
-                </AccordionSummary>
-                <AccordionDetails>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                    malesuada lacus ex, sit amet blandit leo lobortis eget.
-                </AccordionDetails>
-                <AccordionActions>
-                    <Button>Cancel</Button>
-                    <Button>Agree</Button>
-                </AccordionActions>
-            </Accordion>
+            {/* Render all accordions with dynamic fields */}
+            {LumeAccordion()}
         </Box>
-    )
+    );
 }
