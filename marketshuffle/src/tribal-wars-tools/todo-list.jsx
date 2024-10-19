@@ -14,24 +14,35 @@ export default function TwTodoList() {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            checkDates();
-        }, 10000); // Check every 10 seconds
-
+            checkDates(); // Call the checkDates function every 5 seconds
+        }, 5000);
+    
         return () => clearInterval(interval); // Clean up on unmount
-    }, [todoStates]); // Depend on todoStates to re-check when they change
-
+    }, []); // Only run on component mount, so no dependencies
+    
     const checkDates = () => {
-        const currentTime = new Date();
+        const currentTime = new Date().getTime(); // Get the current timestamp in milliseconds
         const newTodoStates = { ...todoStates }; // Clone current states
-
+    
+        let stateUpdated = false; // Track if we make any updates
+    
         for (const key in todoStates) {
             const { date } = todoStates[key];
-            if (!isNaN(new Date(date))) {
-                newTodoStates[key].status = new Date(date) < currentTime ? "Done!" : ""; // Update status
+            const parsedDate = new Date(date).getTime();
+    
+            if (!isNaN(parsedDate)) { // Check if the date is valid
+                const done = parsedDate < currentTime; // Compare timestamps
+                if (newTodoStates[key].status !== (done ? "Done!" : "")) {
+                    newTodoStates[key].status = done ? "Done!" : ""; // Update status if necessary
+                    stateUpdated = true; // Mark that we made a change
+                }
             }
         }
-
-        setTodoStates(newTodoStates); // Update state with new status messages
+    
+        // Only update state if there was an actual change
+        if (stateUpdated) {
+            setTodoStates(newTodoStates); // Update state with new status messages
+        }
     };
 
     const handleFieldChange = (worldId, villagesId, fieldName, value) => {
@@ -65,7 +76,6 @@ export default function TwTodoList() {
     const RegularTodoItem = ({ label, initialValue, worldId, villagesId, fieldName }) => {
         const [inputValue, setInputValue] = useState(initialValue || "");
 
-        // Get status and formatted from the state (if available)
         const todoKey = `${villagesId}-${fieldName}`;
         const { status, formatted } = todoStates[todoKey] || {};
 
@@ -133,7 +143,7 @@ export default function TwTodoList() {
             setTodoStates(prev => ({
                 ...prev,
                 [`${villagesId}-${fieldName}`]: {
-                    date: formattedDate,
+                    date: dateObj,
                     formatted: formattedDate,
                     status: ""
                 }
