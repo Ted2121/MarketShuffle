@@ -238,7 +238,7 @@ export default function TwTodoList() {
                     >
                         Submit
                     </Button>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color={status === 'Done!' ? 'green' : 'text.secondary'}>
                         {status || formatted || "No date set"}
                     </Typography>
                 </Box>
