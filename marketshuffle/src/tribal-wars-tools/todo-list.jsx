@@ -33,7 +33,7 @@ export default function TwTodoList() {
     useEffect(() => {
         const interval = setInterval(() => {
             checkDates();
-        }, 5000);
+        }, 30000);
         
         return () => clearInterval(interval);
     }, []);
@@ -94,7 +94,7 @@ export default function TwTodoList() {
         return `${day} ${month} ${hours}:${minutes}:${seconds}`;
     };
 
-    const RegularTodoItem = ({ label, initialValue, worldId, villagesId, fieldName }) => {
+    const RegularTodoItem = ({ label, initialValue, worldId, villagesId, fieldName, itemType }) => {
         const [inputValue, setInputValue] = useState(initialValue || "");
     
         const todoKey = `${villagesId}-${fieldName}`;
@@ -109,7 +109,7 @@ export default function TwTodoList() {
         const handleClearInput = () => {
             setInputValue(""); // Clear the TextField
             handleFieldChange(worldId, villagesId, fieldName, ""); // Reset the property value in the model
-            handleButtonClick('', villagesId, fieldName); // Call to clear the todo state
+            handleButtonClick('', villagesId, fieldName, itemType); // Call to clear the todo state
             setTodoStates(prev => ({
                 ...prev,
                 [`${villagesId}-${fieldName}`]: {
@@ -122,7 +122,7 @@ export default function TwTodoList() {
     
         const handleSubmit = () => {
             console.log("Submitting:", inputValue);
-            handleButtonClick(inputValue, villagesId, fieldName);
+            handleButtonClick(inputValue, villagesId, fieldName, itemType);
         };
     
         return (
@@ -166,15 +166,24 @@ export default function TwTodoList() {
         );
     };
 
-    const handleButtonClick = (fieldValue, villagesId, fieldName) => {
+    const handleButtonClick = (fieldValue, villagesId, fieldName, itemType) => {
         const dateObj = parseCustomDate(fieldValue);
-        if (!isNaN(dateObj)) {
+        if (!isNaN(dateObj) && itemType === 'date') {
             const formattedDate = formatDateTime(dateObj);
             setTodoStates(prev => ({
                 ...prev,
                 [`${villagesId}-${fieldName}`]: {
                     date: dateObj,
                     formatted: formattedDate,
+                    status: ""
+                }
+            }));
+        } else if (itemType === 'text'){
+            setTodoStates(prev => ({
+                ...prev,
+                [`${villagesId}-${fieldName}`]: {
+                    date: "",
+                    formatted: fieldValue,
                     status: ""
                 }
             }));
@@ -201,6 +210,7 @@ export default function TwTodoList() {
                         worldId={worldId}
                         villagesId={village.id}
                         fieldName={field}
+                        itemType={field === 'next' || field === 'nobili' ? 'text' : 'date'}
                     />
                 );
             }

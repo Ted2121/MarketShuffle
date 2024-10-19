@@ -15,6 +15,7 @@ export const todoListModel = [
                 atelier: '',
                 curteNobila: '',
                 magazie: '',
+                nobili: '',
                 next: '',
             },
             {
@@ -29,6 +30,7 @@ export const todoListModel = [
                 atelier: '',
                 curteNobila: '',
                 magazie: '',
+                nobili: '',
                 next: '',
             },
         ]
@@ -49,6 +51,7 @@ export const todoListModel = [
                 atelier: '',
                 curteNobila: '',
                 magazie: '',
+                nobili: '',
                 next: '',
             },
         ]
