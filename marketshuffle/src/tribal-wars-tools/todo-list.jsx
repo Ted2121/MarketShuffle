@@ -70,7 +70,7 @@ export default function TwTodoList() {
         if (!(date instanceof Date) || isNaN(date)) {
             return "Invalid date"; // Handle invalid date case
         }
-        
+
         const day = String(date.getDate()).padStart(2, '0');
         const month = date.toLocaleString('default', { month: 'short' });
         const hours = String(date.getHours()).padStart(2, '0');
@@ -126,7 +126,7 @@ export default function TwTodoList() {
                     <IconButton
                         size="small"
                         onClick={handleClearInput}
-                        sx={{ marginRight: '-8px' }} // Adjust position if needed
+                        sx={{ marginRight: '-8px' }} 
                     >
                         <ClearIcon />
                     </IconButton>
@@ -198,7 +198,6 @@ export default function TwTodoList() {
             return (
                 <>
                     {villages.map((village) => {
-                        // Check if any todo item is done
                         const isAnyTodoDone = Object.keys(village).some(field => {
                             if (field !== 'id' && field !== 'name') {
                                 const todoKey = `${village.id}-${field}`;
@@ -274,7 +273,6 @@ export default function TwTodoList() {
             const minutes = parseInt(match[4], 10);
             const seconds = parseInt(match[5], 10);
             
-            // Create a date object for the specified date and time
             return new Date(today.getFullYear(), month, day, hours - 1, minutes, seconds);
         }
     
@@ -298,8 +296,7 @@ export default function TwTodoList() {
             return new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours - 1, minutes, seconds);
         }
     
-        // If the input does not match any format, return null or throw an error
-        return input; // or throw new Error("Invalid date format");
+        return input;
     }
 
     return (
