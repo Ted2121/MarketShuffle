@@ -1,5 +1,5 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { todoListModel } from "./models/todo-list.model";
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -8,7 +8,29 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function TwTodoList() {
     const [model, setModel] = useState(todoListModel);
-    const [formattedDates, setFormattedDates] = useState({});
+    const [todoStates, setTodoStates] = useState({}); // Combine dates and status messages
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            checkDates();
+        }, 5000); // Check every 5 seconds
+
+        return () => clearInterval(interval); // Clean up on unmount
+    }, [todoStates]); // Depend on todoStates to re-check when they change
+
+    const checkDates = () => {
+        const currentTime = new Date();
+        const newTodoStates = { ...todoStates }; // Clone current states
+
+        for (const key in todoStates) {
+            const { date, formatted } = todoStates[key];
+            if (!isNaN(new Date(date))) {
+                newTodoStates[key].status = new Date(date) < currentTime ? "Done!" : ""; // Update status
+            }
+        }
+
+        setTodoStates(newTodoStates); // Update state with new status messages
+    };
 
     const handleFieldChange = (worldId, villagesId, fieldName, value) => {
         const updatedModel = model.map(world => {
@@ -27,20 +49,6 @@ export default function TwTodoList() {
         });
 
         setModel(updatedModel);
-
-        const dateObj = new Date(value);
-        if (!isNaN(dateObj)) {
-            const formattedDate = formatDateTime(dateObj);
-            setFormattedDates(prev => ({
-                ...prev,
-                [villagesId]: formattedDate
-            }));
-        } else {
-            setFormattedDates(prev => ({
-                ...prev,
-                [villagesId]: ""  // Clear if not valid date
-            }));
-        }
     };
 
     const formatDateTime = (date) => {
@@ -52,25 +60,47 @@ export default function TwTodoList() {
         return `${day} ${month} ${hours}:${minutes}:${seconds}`;
     };
 
-    // Handles the button click event (logic to be implemented later)
     const handleButtonClick = (fieldValue, villagesId, fieldName) => {
         const dateObj = new Date(fieldValue);
         if (!isNaN(dateObj)) {
             const formattedDate = formatDateTime(dateObj);
-            setFormattedDates(prev => ({
+            setTodoStates(prev => ({
                 ...prev,
-                [`${villagesId}-${fieldName}`]: formattedDate
+                [`${villagesId}-${fieldName}`]: {
+                    date: formattedDate,
+                    formatted: formattedDate,
+                    status: ""
+                }
             }));
         } else {
-            setFormattedDates(prev => ({
+            setTodoStates(prev => ({
                 ...prev,
-                [`${villagesId}-${fieldName}`]: "Invalid date"
+                [`${villagesId}-${fieldName}`]: {
+                    date: "",
+                    formatted: "Invalid date",
+                    status: ""
+                }
             }));
         }
     };
 
-    // Renders a TextField and button for each property of a village (excluding id and name)
-    const RegularTodoItem = ({ label, fieldValue, worldId, villagesId, fieldName }) => {
+    const RegularTodoItem = ({ label, initialValue, worldId, villagesId, fieldName }) => {
+        const [inputValue, setInputValue] = useState(initialValue || "");
+
+        const handleInputChange = (e) => {
+            const value = e.target.value;
+            setInputValue(value);
+            handleFieldChange(worldId, villagesId, fieldName, value);
+        };
+
+        const handleSubmit = () => {
+            handleButtonClick(inputValue, villagesId, fieldName);
+            setInputValue(""); // Clear the TextField
+        };
+
+        const todoKey = `${villagesId}-${fieldName}`;
+        const { formatted = "", status = "Enter a valid date" } = todoStates[todoKey] || {};
+
         return (
             <Box sx={{
                 display: 'flex',
@@ -80,25 +110,24 @@ export default function TwTodoList() {
             }}>
                 <TextField
                     label={label}
-                    value={fieldValue}
+                    value={inputValue}
                     size="small"
-                    onChange={(e) => handleFieldChange(worldId, villagesId, fieldName, e.target.value)}
+                    onChange={handleInputChange}
                     sx={{ width: '200px' }}
                 />
                 <Button
                     variant="contained"
-                    onClick={() => handleButtonClick(fieldValue, villagesId, fieldName)}
+                    onClick={handleSubmit}
                 >
                     Submit
                 </Button>
                 <Typography variant="body2" color="text.secondary">
-                    {formattedDates[`${villagesId}-${fieldName}`] || "Enter a valid date"}
+                    {status || formatted}
                 </Typography>
             </Box>
         );
     };
 
-    // Renders the todo items (TextFields) inside the accordion for each village
     const renderTodoItemsForVillage = (village, worldId) => {
         return Object.keys(village).map(field => {
             if (field !== 'id' && field !== 'name') {
@@ -106,7 +135,7 @@ export default function TwTodoList() {
                     <RegularTodoItem
                         key={field}
                         label={field}
-                        fieldValue={village[field]}
+                        initialValue={village[field]}
                         worldId={worldId}
                         villagesId={village.id}
                         fieldName={field}
@@ -117,7 +146,6 @@ export default function TwTodoList() {
         });
     };
 
-    // Renders each village inside its accordion, with all todo items (TextFields) as details
     const VillagesAccordion = (villages, worldId) => {
         if (Array.isArray(villages)) {
             return (
@@ -132,7 +160,6 @@ export default function TwTodoList() {
                                     {village?.name}
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                    {/* Render all todo items (TextFields) for this village */}
                                     {renderTodoItemsForVillage(village, worldId)}
                                 </AccordionDetails>
                             </Accordion>
@@ -143,7 +170,6 @@ export default function TwTodoList() {
         }
     };
 
-    // Renders each lume with its villages accordions
     const WorldAccordion = () => {
         return (
             <>
@@ -157,7 +183,6 @@ export default function TwTodoList() {
                                 {world?.name}
                             </AccordionSummary>
                             <AccordionDetails>
-                                {/* Render the villages accordion for each lume */}
                                 {VillagesAccordion(world.villages, world.id)}
                             </AccordionDetails>
                         </Accordion>
@@ -179,7 +204,6 @@ export default function TwTodoList() {
             marginLeft: 10,
             gap: 1,
         }}>
-            {/* Render all accordions with dynamic fields */}
             {WorldAccordion()}
         </Box>
     );
