@@ -16,33 +16,32 @@ export default function TwTodoList() {
         const interval = setInterval(() => {
             checkDates(); // Call the checkDates function every 5 seconds
         }, 5000);
-    
+        
         return () => clearInterval(interval); // Clean up on unmount
-    }, []); // Only run on component mount, so no dependencies
+    }, []); // Only run on component mount, no dependencies
     
     const checkDates = () => {
         const currentTime = new Date().getTime(); // Get the current timestamp in milliseconds
-        const newTodoStates = { ...todoStates }; // Clone current states
     
-        let stateUpdated = false; // Track if we make any updates
+        setTodoStates(prevTodoStates => {
+            const newTodoStates = { ...prevTodoStates }; // Clone current states
+            let stateUpdated = false; // Track if we make any updates
     
-        for (const key in todoStates) {
-            const { date } = todoStates[key];
-            const parsedDate = new Date(date).getTime();
+            for (const key in prevTodoStates) {
+                const { date } = prevTodoStates[key];
+                const parsedDate = new Date(date).getTime();
     
-            if (!isNaN(parsedDate)) { // Check if the date is valid
-                const done = parsedDate < currentTime; // Compare timestamps
-                if (newTodoStates[key].status !== (done ? "Done!" : "")) {
-                    newTodoStates[key].status = done ? "Done!" : ""; // Update status if necessary
-                    stateUpdated = true; // Mark that we made a change
+                if (!isNaN(parsedDate)) { // Check if the date is valid
+                    const done = parsedDate < currentTime; // Compare timestamps
+                    if (newTodoStates[key].status !== (done ? "Done!" : "")) {
+                        newTodoStates[key].status = done ? "Done!" : ""; // Update status if necessary
+                        stateUpdated = true; // Mark that we made a change
+                    }
                 }
             }
-        }
     
-        // Only update state if there was an actual change
-        if (stateUpdated) {
-            setTodoStates(newTodoStates); // Update state with new status messages
-        }
+            return stateUpdated ? newTodoStates : prevTodoStates; // Only update state if necessary
+        });
     };
 
     const handleFieldChange = (worldId, villagesId, fieldName, value) => {
@@ -88,6 +87,7 @@ export default function TwTodoList() {
         const handleClearInput = () => {
             setInputValue(""); // Clear the TextField
             handleFieldChange(worldId, villagesId, fieldName, ""); // Reset the property value in the model
+            handleButtonClick('', villagesId, fieldName);
         };
 
         const handleSubmit = () => {
