@@ -67,6 +67,10 @@ export default function TwTodoList() {
     };
 
     const formatDateTime = (date) => {
+        if (!(date instanceof Date) || isNaN(date)) {
+            return "Invalid date"; // Handle invalid date case
+        }
+        
         const day = String(date.getDate()).padStart(2, '0');
         const month = date.toLocaleString('default', { month: 'short' });
         const hours = String(date.getHours()).padStart(2, '0');
@@ -77,27 +81,35 @@ export default function TwTodoList() {
 
     const RegularTodoItem = ({ label, initialValue, worldId, villagesId, fieldName }) => {
         const [inputValue, setInputValue] = useState(initialValue || "");
-
+    
         const todoKey = `${villagesId}-${fieldName}`;
         const { status, formatted } = todoStates[todoKey] || {};
-
+    
         const handleInputChange = (e) => {
             const value = e.target.value;
             setInputValue(value);
             handleFieldChange(worldId, villagesId, fieldName, value);
         };
-
+    
         const handleClearInput = () => {
             setInputValue(""); // Clear the TextField
             handleFieldChange(worldId, villagesId, fieldName, ""); // Reset the property value in the model
-            handleButtonClick('', villagesId, fieldName);
+            handleButtonClick('', villagesId, fieldName); // Call to clear the todo state
+            setTodoStates(prev => ({
+                ...prev,
+                [`${villagesId}-${fieldName}`]: {
+                    date: "", // Clear the date
+                    formatted: "", // Clear the formatted date
+                    status: "" // Clear the status
+                }
+            }));
         };
-
+    
         const handleSubmit = () => {
             console.log("Submitting:", inputValue);
             handleButtonClick(inputValue, villagesId, fieldName);
         };
-
+    
         return (
             <Box sx={{
                 display: 'flex',
@@ -190,6 +202,7 @@ export default function TwTodoList() {
                         const isAnyTodoDone = Object.keys(village).some(field => {
                             if (field !== 'id' && field !== 'name') {
                                 const todoKey = `${village.id}-${field}`;
+                                console.log(todoStates[todoKey]?.status)
                                 return todoStates[todoKey]?.status === "Done!";
                             }
                             return false;

@@ -17,6 +17,20 @@ export const todoListModel = [
                 magazie: '',
                 next: '',
             },
+            {
+                id: '5f43c2ce-b242-4586-89e6-7f6383c7a7be',
+                name: 'KFC',
+                atac: '',
+                aparare: '',
+                sprijin: '',
+                cladireaPrincipala: '',
+                cazarma: '',
+                grajd: '',
+                atelier: '',
+                curteNobila: '',
+                magazie: '',
+                next: '',
+            },
         ]
     },
     {
