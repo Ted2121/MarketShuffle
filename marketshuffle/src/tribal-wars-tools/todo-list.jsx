@@ -47,6 +47,21 @@ export default function TwTodoList() {
         return () => clearInterval(interval);
     }, []);
 
+    useEffect(() => {
+        const doneCount = countDoneItems();
+        document.title = `[ ${doneCount} ]`;
+    }, [todoStates]);
+
+    const countDoneItems = () => {
+        let doneCount = 0;
+        for (const key in todoStates) {
+            if (todoStates[key].status === "Done!") {
+                doneCount++;
+            }
+        }
+        return doneCount;
+    };
+
     const handleAddTodo = (villageId, todoText) => {
         setVillageTodos(prevTodos => {
             return {
