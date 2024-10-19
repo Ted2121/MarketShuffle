@@ -1,81 +1,76 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { todoListModel } from "./models/todo-list.model";
 import Accordion from '@mui/material/Accordion';
-import AccordionActions from '@mui/material/AccordionActions';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-const calculateCountdown = (targetTime) => {
-    const currentTime = new Date().getTime();
-    const difference = targetTime - currentTime;
-
-    if (difference <= 0) {
-        return "00:00:00"; // Time is up or past
-    }
-
-    const hours = Math.floor(difference / (1000 * 60 * 60));
-    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-    // Format the result as hh:mm:ss
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-};
-
 export default function TwTodoList() {
     const [model, setModel] = useState(todoListModel);
-    const [countdowns, setCountdowns] = useState({}); // Store countdowns
-    const [targetTimes, setTargetTimes] = useState({}); // Store target times
+    const [formattedDates, setFormattedDates] = useState({});
 
-    // Single interval to update all countdowns
-    useEffect(() => {
-        if (Object.keys(targetTimes).length > 0) {
-            const intervalId = setInterval(() => {
-                const updatedCountdowns = {};
-                Object.keys(targetTimes).forEach(key => {
-                    if (targetTimes[key]) {
-                        updatedCountdowns[key] = calculateCountdown(targetTimes[key]);
-                    }
-                });
-                setCountdowns(updatedCountdowns);
-            }, 1000);
-
-            return () => clearInterval(intervalId); // Cleanup on unmount
-        }
-    }, [targetTimes]);
-
-    const handleFieldChange = (lumeaId, sateId, fieldName, value) => {
-        // Update the state without affecting the countdown timer logic
-        const updatedModel = model.map(lumea => {
-            if (lumea.id === lumeaId) {
+    const handleFieldChange = (worldId, villagesId, fieldName, value) => {
+        const updatedModel = model.map(world => {
+            if (world.id === worldId) {
                 return {
-                    ...lumea,
-                    sate: lumea.sate.map(sat => {
-                        if (sat.id === sateId) {
-                            return { ...sat, [fieldName]: value };
+                    ...world,
+                    villages: world.villages.map(village => {
+                        if (village.id === villagesId) {
+                            return { ...village, [fieldName]: value };
                         }
-                        return sat;
+                        return village;
                     })
                 };
             }
-            return lumea;
+            return world;
         });
 
-        setModel(updatedModel); // Update model state
+        setModel(updatedModel);
+
+        const dateObj = new Date(value);
+        if (!isNaN(dateObj)) {
+            const formattedDate = formatDateTime(dateObj);
+            setFormattedDates(prev => ({
+                ...prev,
+                [villagesId]: formattedDate
+            }));
+        } else {
+            setFormattedDates(prev => ({
+                ...prev,
+                [villagesId]: ""  // Clear if not valid date
+            }));
+        }
     };
 
-    const handleButtonClick = (lumeaId, sateId, targetTimeValue) => {
-        const targetTime = new Date(targetTimeValue).getTime();
-
-        setTargetTimes(prev => ({
-            ...prev,
-            [`${lumeaId}-${sateId}`]: targetTime
-        }));
+    const formatDateTime = (date) => {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = date.toLocaleString('default', { month: 'short' });
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        return `${day} ${month} ${hours}:${minutes}:${seconds}`;
     };
 
-    // Renders a TextField, countdown, and button for each property of a sat (excluding id and name)
-    const RegularTodoItem = ({ label, fieldValue, lumeaId, sateId, fieldName }) => {
+    // Handles the button click event (logic to be implemented later)
+    const handleButtonClick = (fieldValue, villagesId, fieldName) => {
+        const dateObj = new Date(fieldValue);
+        if (!isNaN(dateObj)) {
+            const formattedDate = formatDateTime(dateObj);
+            setFormattedDates(prev => ({
+                ...prev,
+                [`${villagesId}-${fieldName}`]: formattedDate
+            }));
+        } else {
+            setFormattedDates(prev => ({
+                ...prev,
+                [`${villagesId}-${fieldName}`]: "Invalid date"
+            }));
+        }
+    };
+
+    // Renders a TextField and button for each property of a village (excluding id and name)
+    const RegularTodoItem = ({ label, fieldValue, worldId, villagesId, fieldName }) => {
         return (
             <Box sx={{
                 display: 'flex',
@@ -86,58 +81,59 @@ export default function TwTodoList() {
                 <TextField
                     label={label}
                     value={fieldValue}
-                    onChange={(e) => handleFieldChange(lumeaId, sateId, fieldName, e.target.value)}
+                    size="small"
+                    onChange={(e) => handleFieldChange(worldId, villagesId, fieldName, e.target.value)}
                     sx={{ width: '200px' }}
                 />
                 <Button
                     variant="contained"
-                    onClick={() => handleButtonClick(lumeaId, sateId, fieldValue)}
+                    onClick={() => handleButtonClick(fieldValue, villagesId, fieldName)}
                 >
                     Submit
                 </Button>
-                {/* Display the countdown */}
-                <Typography sx={{ marginLeft: 2 }}>
-                    {countdowns[`${lumeaId}-${sateId}`] || "00:00:00"}
+                <Typography variant="body2" color="text.secondary">
+                    {formattedDates[`${villagesId}-${fieldName}`] || "Enter a valid date"}
                 </Typography>
             </Box>
         );
     };
 
-    // Renders the todo items (TextFields) inside the accordion for each sat
-    const renderTodoItemsForSat = (sat, lumeaId) => {
-        return Object.keys(sat).map(field => {
+    // Renders the todo items (TextFields) inside the accordion for each village
+    const renderTodoItemsForVillage = (village, worldId) => {
+        return Object.keys(village).map(field => {
             if (field !== 'id' && field !== 'name') {
                 return (
                     <RegularTodoItem
                         key={field}
                         label={field}
-                        fieldValue={sat[field]}
-                        lumeaId={lumeaId}
-                        sateId={sat.id}
+                        fieldValue={village[field]}
+                        worldId={worldId}
+                        villagesId={village.id}
                         fieldName={field}
                     />
                 );
             }
+            return null;
         });
     };
 
-    // Renders each sat inside its accordion, with all todo items (TextFields) as details
-    const SateAccordion = (sate, lumeaId) => {
-        if (Array.isArray(sate)) {
+    // Renders each village inside its accordion, with all todo items (TextFields) as details
+    const VillagesAccordion = (villages, worldId) => {
+        if (Array.isArray(villages)) {
             return (
                 <>
-                    {sate.map((sat) => (
-                        <div key={sat?.id}>
+                    {villages.map((village) => (
+                        <div key={village?.id}>
                             <Accordion>
                                 <AccordionSummary
                                     expandIcon={<ExpandMoreIcon />}
-                                    id={sat?.id}
+                                    id={village?.id}
                                 >
-                                    {sat?.name}
+                                    {village?.name}
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                    {/* Render all todo items (TextFields) for this sat */}
-                                    {renderTodoItemsForSat(sat, lumeaId)}
+                                    {/* Render all todo items (TextFields) for this village */}
+                                    {renderTodoItemsForVillage(village, worldId)}
                                 </AccordionDetails>
                             </Accordion>
                         </div>
@@ -147,22 +143,22 @@ export default function TwTodoList() {
         }
     };
 
-    // Renders each lume with its sate accordions
-    const LumeAccordion = () => {
+    // Renders each lume with its villages accordions
+    const WorldAccordion = () => {
         return (
             <>
-                {model.map((lumea) => (
-                    <div key={lumea?.id}>
+                {model.map((world) => (
+                    <div key={world?.id}>
                         <Accordion>
                             <AccordionSummary
                                 expandIcon={<ExpandMoreIcon />}
-                                id={lumea?.id}
+                                id={world?.id}
                             >
-                                {lumea?.name}
+                                {world?.name}
                             </AccordionSummary>
                             <AccordionDetails>
-                                {/* Render the sate accordion for each lume */}
-                                {SateAccordion(lumea.sate, lumea.id)}
+                                {/* Render the villages accordion for each lume */}
+                                {VillagesAccordion(world.villages, world.id)}
                             </AccordionDetails>
                         </Accordion>
                     </div>
@@ -180,12 +176,11 @@ export default function TwTodoList() {
             alignItems: 'flex-start',
             flexDirection: 'column',
             marginTop: 10,
-            marginBottom: 20,
             marginLeft: 10,
             gap: 1,
         }}>
             {/* Render all accordions with dynamic fields */}
-            {LumeAccordion()}
+            {WorldAccordion()}
         </Box>
     );
 }

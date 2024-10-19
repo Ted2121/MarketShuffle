@@ -2,7 +2,7 @@ export const todoListModel = [
     {
         id: 0,
         name: 'lumea 103',
-        sate: [
+        villages: [
             {
                 id: 0,
                 name: 'McDonalds',
@@ -22,7 +22,7 @@ export const todoListModel = [
     {
         id: 1,
         name: 'lumea 104',
-        sate: [
+        villages: [
             {
                 id: 0,
                 name: 'McDonalds',
