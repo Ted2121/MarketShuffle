@@ -12,38 +12,53 @@ import WarningIcon from '@mui/icons-material/Warning';
 import ClearIcon from '@mui/icons-material/Clear';
 
 export default function TwTodoList() {
-    const [model, setModel] = useState(todoListModel);
-    const [todoStates, setTodoStates] = useState({}); // Combine dates and status messages
+    const [model, setModel] = useState(() => {
+        const savedModel = localStorage.getItem('todoModel');
+        return savedModel ? JSON.parse(savedModel) : todoListModel;
+    });
+    
+    const [todoStates, setTodoStates] = useState(() => {
+        const savedTodoStates = localStorage.getItem('todoStates');
+        return savedTodoStates ? JSON.parse(savedTodoStates) : {};
+    });
+
+    useEffect(() => {
+        localStorage.setItem('todoModel', JSON.stringify(model));
+    }, [model]);
+
+    useEffect(() => {
+        localStorage.setItem('todoStates', JSON.stringify(todoStates));
+    }, [todoStates]);
 
     useEffect(() => {
         const interval = setInterval(() => {
-            checkDates(); // Call the checkDates function every 5 seconds
+            checkDates();
         }, 5000);
         
-        return () => clearInterval(interval); // Clean up on unmount
-    }, []); // Only run on component mount, no dependencies
-    
+        return () => clearInterval(interval);
+    }, []);
+
     const checkDates = () => {
-        const currentTime = new Date().getTime(); // Get the current timestamp in milliseconds
+        const currentTime = new Date().getTime();
     
         setTodoStates(prevTodoStates => {
-            const newTodoStates = { ...prevTodoStates }; // Clone current states
-            let stateUpdated = false; // Track if we make any updates
-    
+            const newTodoStates = { ...prevTodoStates };
+            let stateUpdated = false;
+
             for (const key in prevTodoStates) {
                 const { date } = prevTodoStates[key];
                 const parsedDate = new Date(date).getTime();
     
-                if (!isNaN(parsedDate)) { // Check if the date is valid
-                    const done = parsedDate < currentTime; // Compare timestamps
+                if (!isNaN(parsedDate)) {
+                    const done = parsedDate < currentTime;
                     if (newTodoStates[key].status !== (done ? "Done!" : "")) {
-                        newTodoStates[key].status = done ? "Done!" : ""; // Update status if necessary
-                        stateUpdated = true; // Mark that we made a change
+                        newTodoStates[key].status = done ? "Done!" : "";
+                        stateUpdated = true;
                     }
                 }
             }
     
-            return stateUpdated ? newTodoStates : prevTodoStates; // Only update state if necessary
+            return stateUpdated ? newTodoStates : prevTodoStates;
         });
     };
 
