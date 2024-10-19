@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, IconButton, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import { todoListModel } from "./models/todo-list.model";
 import Accordion from '@mui/material/Accordion';
@@ -6,6 +6,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import WarningIcon from '@mui/icons-material/Warning';
+import ClearIcon from '@mui/icons-material/Clear';
 
 export default function TwTodoList() {
     const [model, setModel] = useState(todoListModel);
@@ -14,7 +15,7 @@ export default function TwTodoList() {
     useEffect(() => {
         const interval = setInterval(() => {
             checkDates();
-        }, 5000); // Check every 5 seconds
+        }, 10000); // Check every 10 seconds
 
         return () => clearInterval(interval); // Clean up on unmount
     }, [todoStates]); // Depend on todoStates to re-check when they change
@@ -61,6 +62,70 @@ export default function TwTodoList() {
         return `${day} ${month} ${hours}:${minutes}:${seconds}`;
     };
 
+    const RegularTodoItem = ({ label, initialValue, worldId, villagesId, fieldName }) => {
+        const [inputValue, setInputValue] = useState(initialValue || "");
+
+        // Get status and formatted from the state (if available)
+        const todoKey = `${villagesId}-${fieldName}`;
+        const { status, formatted } = todoStates[todoKey] || {};
+
+        const handleInputChange = (e) => {
+            const value = e.target.value;
+            setInputValue(value);
+            handleFieldChange(worldId, villagesId, fieldName, value);
+        };
+
+        const handleClearInput = () => {
+            setInputValue(""); // Clear the TextField
+            handleFieldChange(worldId, villagesId, fieldName, ""); // Reset the property value in the model
+        };
+
+        const handleSubmit = () => {
+            console.log("Submitting:", inputValue);
+            handleButtonClick(inputValue, villagesId, fieldName);
+        };
+
+        return (
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
+                marginBottom: 2
+            }}>
+                <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                }}>
+                    {/* X button to clear the text field */}
+                    <IconButton
+                        size="small"
+                        onClick={handleClearInput}
+                        sx={{ marginRight: '-8px' }} // Adjust position if needed
+                    >
+                        <ClearIcon />
+                    </IconButton>
+                    <TextField
+                        label={label}
+                        value={inputValue}
+                        size="small"
+                        onChange={handleInputChange}
+                        sx={{ width: '200px' }}
+                    />
+                    <Button
+                        variant="contained"
+                        onClick={handleSubmit}
+                    >
+                        Submit
+                    </Button>
+                    <Typography variant="body2" color="text.secondary">
+                        {status || formatted || "No date set"}
+                    </Typography>
+                </Box>
+            </Box>
+        );
+    };
+
     const handleButtonClick = (fieldValue, villagesId, fieldName) => {
         const dateObj = new Date(fieldValue);
         if (!isNaN(dateObj)) {
@@ -83,50 +148,6 @@ export default function TwTodoList() {
                 }
             }));
         }
-    };
-
-    const RegularTodoItem = ({ label, initialValue, worldId, villagesId, fieldName }) => {
-        const [inputValue, setInputValue] = useState(initialValue || "");
-
-        const handleInputChange = (e) => {
-            const value = e.target.value;
-            setInputValue(value);
-            handleFieldChange(worldId, villagesId, fieldName, value);
-        };
-
-        const handleSubmit = () => {
-            handleButtonClick(inputValue, villagesId, fieldName);
-            setInputValue(""); // Clear the TextField
-        };
-
-        const todoKey = `${villagesId}-${fieldName}`;
-        const { formatted = "", status = "Enter a valid date" } = todoStates[todoKey] || {};
-
-        return (
-            <Box sx={{
-                display: 'flex',
-                gap: 1,
-                alignItems: 'center',
-                marginBottom: 2
-            }}>
-                <TextField
-                    label={label}
-                    value={inputValue}
-                    size="small"
-                    onChange={handleInputChange}
-                    sx={{ width: '200px' }}
-                />
-                <Button
-                    variant="contained"
-                    onClick={handleSubmit}
-                >
-                    Submit
-                </Button>
-                <Typography variant="body2" color="text.secondary">
-                    {status || formatted}
-                </Typography>
-            </Box>
-        );
     };
 
     const renderTodoItemsForVillage = (village, worldId) => {
@@ -170,7 +191,7 @@ export default function TwTodoList() {
                                         expandIcon={<ExpandMoreIcon />}
                                         id={village?.id}
                                     >
-                                        {village?.name} 
+                                        {village?.name}
                                         {isAnyTodoDone && <span style={{ color: 'green' }}> - Done!</span>}
                                         {hasIncomingAttack && <WarningIcon sx={{ color: 'red', marginLeft: 1 }} />}
                                     </AccordionSummary>
