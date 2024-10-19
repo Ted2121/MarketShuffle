@@ -1,3 +1,6 @@
+/** IMPORTANT NOTE: I subtracted 1 hour in all 3 returns statements from parseCustomDate because I'm in Denmark.
+ * Remove it when it's no longer needed
+*/
 import { Box, Button, TextField, IconButton, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import { todoListModel } from "./models/todo-list.model";
@@ -137,7 +140,7 @@ export default function TwTodoList() {
     };
 
     const handleButtonClick = (fieldValue, villagesId, fieldName) => {
-        const dateObj = new Date(fieldValue);
+        const dateObj = parseCustomDate(fieldValue);
         if (!isNaN(dateObj)) {
             const formattedDate = formatDateTime(dateObj);
             setTodoStates(prev => ({
@@ -192,7 +195,7 @@ export default function TwTodoList() {
                             return false;
                         });
 
-                        const hasIncomingAttack = village.atac;
+                        const hasIncomingAttack = village.aparare;
 
                         return (
                             <div key={village?.id}>
@@ -238,6 +241,53 @@ export default function TwTodoList() {
             </>
         );
     };
+
+    function parseCustomDate(input) {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1); // Set tomorrow's date
+    
+        const regexDateTime = /(\d{1,2})\.(\d{1,2})\. la ora (\d{1,2}):(\d{1,2}):(\d{1,2})/;
+        const regexTomorrow = /mâine la ora (\d{1,2}):(\d{1,2}):(\d{1,2})/;
+        const regexToday = /astăzi la ora (\d{1,2}):(\d{1,2}):(\d{1,2})/;
+    
+        let match;
+    
+        // Check for the full date format
+        if ((match = regexDateTime.exec(input))) {
+            const day = parseInt(match[1], 10);
+            const month = parseInt(match[2], 10) - 1; // Month is zero-based in JS
+            const hours = parseInt(match[3], 10);
+            const minutes = parseInt(match[4], 10);
+            const seconds = parseInt(match[5], 10);
+            
+            // Create a date object for the specified date and time
+            return new Date(today.getFullYear(), month, day, hours - 1, minutes, seconds);
+        }
+    
+        // Check for "mâine"
+        if ((match = regexTomorrow.exec(input))) {
+            const hours = parseInt(match[1], 10);
+            const minutes = parseInt(match[2], 10);
+            const seconds = parseInt(match[3], 10);
+            
+            // Set the time to tomorrow
+            return new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), hours - 1, minutes, seconds);
+        }
+    
+        // Check for "astăzi"
+        if ((match = regexToday.exec(input))) {
+            const hours = parseInt(match[1], 10);
+            const minutes = parseInt(match[2], 10);
+            const seconds = parseInt(match[3], 10);
+            
+            // Set the time to today
+            return new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours - 1, minutes, seconds);
+        }
+    
+        // If the input does not match any format, return null or throw an error
+        return input; // or throw new Error("Invalid date format");
+    }
 
     return (
         <Box sx={{
