@@ -1,21 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography, Accordion, AccordionSummary, AccordionDetails, Divider } from "@mui/material";
+import { Box, Button, Typography, Accordion, AccordionSummary, AccordionDetails, Divider, TextField } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Import Quill styles
 
 export default function TwReports() {
     const [reportInput, setReportInput] = useState('');
+    const [searchInput, setSearchInput] = useState('');
     const [reports, setReports] = useState(() => {
-        // Load from local storage on component mount
         const storedReports = localStorage.getItem('reports');
         return storedReports ? JSON.parse(storedReports) : [];
     });
 
+    const [filteredReports, setFilteredReports] = useState(reports);
+
     useEffect(() => {
-        // Save to local storage whenever reports state changes
         localStorage.setItem('reports', JSON.stringify(reports));
+        setFilteredReports(reports); // Update filtered reports when reports change
     }, [reports]);
+
+    useEffect(() => {
+        const debounceTimer = setTimeout(() => {
+            if (searchInput) {
+                setFilteredReports(reports.filter(report => report.target.toLowerCase().includes(searchInput.toLowerCase())));
+            } else {
+                setFilteredReports(reports); // Reset to all reports if search is empty
+            }
+        }, 300); // Adjust debounce delay as needed
+
+        return () => clearTimeout(debounceTimer); // Cleanup on unmount or when searchInput changes
+    }, [searchInput, reports]);
 
     const addReport = () => {
         if (reportInput.trim()) {
@@ -23,9 +37,9 @@ export default function TwReports() {
             const newReport = { id, date, target, links };
     
             setReports((prevReports) => {
-                const grouped = groupReportsByTarget([newReport, ...prevReports]); // Add new report at the beginning
+                const grouped = groupReportsByTarget([newReport, ...prevReports]);
                 const limitedReports = limitReportsToFive(grouped);
-                return Object.values(limitedReports).flat(); // Flatten grouped structure back to array
+                return Object.values(limitedReports).flat();
             });
             setReportInput(''); // Clear input after adding
         }
@@ -69,16 +83,16 @@ export default function TwReports() {
     const limitReportsToFive = (groupedReports) => {
         const limitedReports = {};
         for (const target in groupedReports) {
-            limitedReports[target] = groupedReports[target].slice(-5); // Keep only the last 5 reports
+            limitedReports[target] = groupedReports[target].slice(-5);
         }
         return limitedReports;
     };
 
-    const groupedReports = groupReportsByTarget(reports);
+    const groupedReports = groupReportsByTarget(filteredReports);
 
     return (
         <Box sx={{
-            width: '100%',
+            width: '90%',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -95,9 +109,18 @@ export default function TwReports() {
                 Add Report
             </Button>
 
+            {/* Search Input */}
+            <TextField
+                label="Search by Target"
+                variant="outlined"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                sx={{ width: '100%', marginTop: 2 }}
+            />
+
             {/* Render Accordions for each target */}
             {Object.entries(groupedReports).map(([target, reports]) => (
-                <Accordion key={target} sx={{ width: '90%' }}>
+                <Accordion key={target} sx={{ width: '100%' }}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography variant="h6">{target}</Typography>
                     </AccordionSummary>
@@ -108,7 +131,7 @@ export default function TwReports() {
                                 <Typography variant="body1">Date: {report.date}</Typography>
                                 <Typography variant="body1">
                                     Links: {report.links.map((link, index) => (
-                                        <a style={{color:'white'}}key={index} href={link} target="_blank" rel="noopener noreferrer">
+                                        <a style={{ color: 'white' }} key={index} href={link} target="_blank" rel="noopener noreferrer">
                                             {link}
                                         </a>
                                     )).reduce((prev, curr) => [prev, ', ', curr])}
