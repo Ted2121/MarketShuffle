@@ -9,6 +9,10 @@ import NewItemsPage from './new-items/NewItemsPage';
 import UpdateRecipePage from './items/UpdateRecipePage';
 import AllGuildsPage from './guilds/AllGuildsPage';
 import Guild from './guilds/Guild';
+import AttackInterceptor from './tribal-wars-tools/attack-interceptor';
+import TroopDistanceCalculator from './tribal-wars-tools/troop-distance-calculator';
+import TwResourceCalculator from './tribal-wars-tools/resource-calculator';
+import TwTodoList from './tribal-wars-tools/todo-list';
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -22,7 +26,6 @@ function App() {
             className='main'
             sx={{
               display: 'flex',
-              flex: 1,
               minHeight: '100%',
               minWidth: '100%',
               justifyContent: 'center',
@@ -32,11 +35,16 @@ function App() {
             <Routes>
               <Route path='/' element={<RouteLayout />}>
                 {/* public routes */}
-                <Route path='/' element={<ItemsPage />} />
-                <Route path='/new' element={<NewItemsPage />} />
+                {/* <Route path='/' element={<ItemsPage />} /> */}
+                <Route path='/' element={<TwTodoList />} />
+                {/* <Route path='/new' element={<NewItemsPage />} />
                 <Route path='/update-recipe' element={<UpdateRecipePage />} />
                 <Route path='/guilds' element={<AllGuildsPage />} />
-                <Route path='/guild/:id' element={<Guild />} />
+                <Route path='/guild/:id' element={<Guild />} /> */}
+                <Route path='/tw-attack' element={<AttackInterceptor />} />
+                <Route path='/tw-distance-calc' element={<TroopDistanceCalculator />} />
+                <Route path='/tw-resource-calc' element={<TwResourceCalculator />} />
+                <Route path='/tw-todo-list' element={<TwTodoList />} />
               </Route>
             </Routes>
           </Box>
