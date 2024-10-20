@@ -90,6 +90,15 @@ export default function TwReports() {
 
     const groupedReports = groupReportsByTarget(filteredReports);
 
+    const handlePaste = async () => {
+        try {
+            const text = await navigator.clipboard.readText();
+            setSearchInput(text); // Set the search input to the pasted text
+        } catch (err) {
+            console.error('Failed to read clipboard contents: ', err);
+        }
+    };
+
     return (
         <Box sx={{
             width: '90%',
@@ -97,7 +106,8 @@ export default function TwReports() {
             flexDirection: 'column',
             alignItems: 'center',
             gap: 2,
-            marginTop: 5
+            marginTop: 5,
+            marginBottom: 10,
         }}>
             <ReactQuill
                 value={reportInput}
@@ -109,14 +119,20 @@ export default function TwReports() {
                 Add Report
             </Button>
 
-            {/* Search Input */}
-            <TextField
-                label="Search by Target"
-                variant="outlined"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                sx={{ width: '100%', marginTop: 2 }}
-            />
+            {/* Search Input with Paste Button */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
+                <Button onClick={handlePaste} variant="outlined">
+                    Paste
+                </Button>
+                <TextField
+                    label="Search by Target"
+                    variant="outlined"
+                    size="small"
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    sx={{ flex: 1 }} // Allow the TextField to take up remaining space
+                />
+            </Box>
 
             {/* Render Accordions for each target */}
             {Object.entries(groupedReports).map(([target, reports]) => (
