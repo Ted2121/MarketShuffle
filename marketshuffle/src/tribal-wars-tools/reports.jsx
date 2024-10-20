@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Button, Typography, Accordion, AccordionSummary, AccordionDetails, Divider, TextField, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css"; // Import Quill styles
+import "react-quill/dist/quill.snow.css";
 
 export default function TwReports() {
     document.title = 'TW Reports';
