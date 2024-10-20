@@ -1,6 +1,3 @@
-/** IMPORTANT NOTE: I subtracted 1 hour in all 3 returns statements from parseCustomDate because I'm in Denmark.
- * Remove it when it's no longer needed
-*/
 import { Box, Button, TextField, IconButton, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import { todoListModel } from "./models/todo-list.model";
@@ -10,6 +7,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import WarningIcon from '@mui/icons-material/Warning';
 import ClearIcon from '@mui/icons-material/Clear';
+import { parseCustomDate } from './helpers/time-formatter';
 
 export default function TwTodoList() {
     const [model, setModel] = useState(() => {
@@ -379,71 +377,6 @@ export default function TwTodoList() {
             </>
         );
     };
-
-    function parseCustomDate(input, minutesOffset = 0) {
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1); // Set tomorrow's date
-
-        const regexDateTime = /(\d{1,2})\.(\d{1,2})\. la ora (\d{1,2}):(\d{1,2}):(\d{1,2})/;
-        const regexDateTimeNoSec = /(\d{1,2})\.(\d{1,2})\. la ora (\d{1,2}):(\d{1,2})/;
-        const regexTomorrow = /mâine la ora (\d{1,2}):(\d{1,2}):(\d{1,2})/;
-        const regexTomorrowNoSec = /mâine la ora (\d{1,2}):(\d{1,2})/;
-        const regexToday = /astăzi la ora (\d{1,2}):(\d{1,2}):(\d{1,2})/;
-        const regexTodayNoSec = /astăzi la ora (\d{1,2}):(\d{1,2})/;
-
-        let match;
-
-        // Check for the full date format
-        if ((match = regexDateTime.exec(input))) {
-            const day = parseInt(match[1], 10);
-            const month = parseInt(match[2], 10) - 1; // Month is zero-based in JS
-            const hours = parseInt(match[3], 10);
-            const minutes = parseInt(match[4], 10);
-            const seconds = parseInt(match[5], 10);
-
-            return new Date(today.getFullYear(), month, day, hours - 1, minutes - minutesOffset, seconds);
-        } else if ((match = regexDateTimeNoSec.exec(input))) {
-            const day = parseInt(match[1], 10);
-            const month = parseInt(match[2], 10) - 1; // Month is zero-based in JS
-            const hours = parseInt(match[3], 10);
-            const minutes = parseInt(match[4], 10);
-
-            return new Date(today.getFullYear(), month, day, hours - 1, minutes - minutesOffset);
-        }
-
-        // Check for "mâine"
-        if ((match = regexTomorrow.exec(input))) {
-            const hours = parseInt(match[1], 10);
-            const minutes = parseInt(match[2], 10);
-            const seconds = parseInt(match[3], 10);
-
-            // Set the time to tomorrow
-            return new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), hours - 1, minutes - minutesOffset, seconds);
-        } else if ((match = regexTomorrowNoSec.exec(input))) {
-            const hours = parseInt(match[1], 10);
-            const minutes = parseInt(match[2], 10);
-
-            return new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), hours - 1, minutes - minutesOffset);
-        }
-
-        // Check for "astăzi"
-        if ((match = regexToday.exec(input))) {
-            const hours = parseInt(match[1], 10);
-            const minutes = parseInt(match[2], 10);
-            const seconds = parseInt(match[3], 10);
-
-            // Set the time to today
-            return new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours - 1, minutes - minutesOffset, seconds);
-        } else if ((match = regexTodayNoSec.exec(input))) {
-            const hours = parseInt(match[1], 10);
-            const minutes = parseInt(match[2], 10);
-
-            return new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours - 1, minutes - minutesOffset);
-        }
-
-        return input;
-    }
 
     return (
         <Box sx={{
