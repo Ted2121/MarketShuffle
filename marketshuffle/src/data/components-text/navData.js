@@ -21,12 +21,12 @@ const navData = [
   },
   {
     id: '5',
-    text: 'Distance Calc',
+    text: 'Distances',
     route: '/tw-distance-calc',
   },
   {
     id: '6',
-    text: 'Resource Calculator',
+    text: 'Resources',
     route: '/tw-resource-calc',
   },
   {
