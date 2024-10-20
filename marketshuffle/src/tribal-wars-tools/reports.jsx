@@ -102,7 +102,9 @@ export default function TwReports() {
         return limitedReports;
     };
 
-    const groupedReports = groupReportsByTarget(filteredReports);
+    // Filter reports based on selected world
+    const reportsForSelectedWorld = filteredReports.filter(report => report.world === selectedWorld);
+    const groupedReports = groupReportsByTarget(reportsForSelectedWorld);
 
     // Get unique worlds from the reports
     const uniqueWorlds = Array.from(new Set(reports.map(report => report.world)));
