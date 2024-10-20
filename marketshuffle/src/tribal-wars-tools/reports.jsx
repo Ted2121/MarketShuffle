@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography, Accordion, AccordionSummary, AccordionDetails, Divider, TextField } from "@mui/material";
+import { Box, Button, Typography, Accordion, AccordionSummary, AccordionDetails, Divider, TextField, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Import Quill styles
@@ -7,6 +7,10 @@ import "react-quill/dist/quill.snow.css"; // Import Quill styles
 export default function TwReports() {
     const [reportInput, setReportInput] = useState('');
     const [searchInput, setSearchInput] = useState('');
+    const [selectedWorld, setSelectedWorld] = useState(() => {
+        const storedWorld = localStorage.getItem('selectedWorld');
+        return storedWorld ? JSON.parse(storedWorld) : '';
+    });
     const [reports, setReports] = useState(() => {
         const storedReports = localStorage.getItem('reports');
         return storedReports ? JSON.parse(storedReports) : [];
@@ -31,11 +35,15 @@ export default function TwReports() {
         return () => clearTimeout(debounceTimer); // Cleanup on unmount or when searchInput changes
     }, [searchInput, reports]);
 
+    useEffect(() => {
+        localStorage.setItem('selectedWorld', JSON.stringify(selectedWorld)); // Save selected world to local storage
+    }, [selectedWorld]);
+
     const addReport = () => {
         if (reportInput.trim()) {
-            const { id, date, target, links } = parseReport(reportInput.trim());
-            const newReport = { id, date, target, links };
-    
+            const { id, date, target, links, world } = parseReport(reportInput.trim());
+            const newReport = { id, date, target, links, world };
+
             setReports((prevReports) => {
                 const grouped = groupReportsByTarget([newReport, ...prevReports]);
                 const limitedReports = limitReportsToFive(grouped);
@@ -54,9 +62,15 @@ export default function TwReports() {
         const targetMatch = reportString.match(/atacă\s([^\(]+ \(\d+\|\d+\) K\d{2})/);
         const target = targetMatch ? targetMatch[1].trim() : '';
 
-        const links = extractLinks(reportString);
+        const links = extractLinks(reportString) || []; // Ensure links is always an array
+        const world = extractWorld(reportString); // Extract the world number
 
-        return { id, date, target, links };
+        return { id, date, target, links, world };
+    };
+
+    const extractWorld = (reportString) => {
+        const worldMatch = reportString.match(/https?:\/\/([a-z]+)(\d+)\./);
+        return worldMatch ? worldMatch[2] : ''; // Extracts the world number (e.g., "104" from "ro104")
     };
 
     const extractLinks = (content) => {
@@ -90,10 +104,13 @@ export default function TwReports() {
 
     const groupedReports = groupReportsByTarget(filteredReports);
 
+    // Get unique worlds from the reports
+    const uniqueWorlds = Array.from(new Set(reports.map(report => report.world)));
+
     const handlePaste = async () => {
         try {
             const text = await navigator.clipboard.readText();
-            setSearchInput(text); // Set the search input to the pasted text
+            setReportInput(text); // Set the report input to the pasted text
         } catch (err) {
             console.error('Failed to read clipboard contents: ', err);
         }
@@ -118,6 +135,20 @@ export default function TwReports() {
             <Button onClick={addReport} variant="contained">
                 Add Report
             </Button>
+
+            {/* World Selection Dropdown */}
+            <FormControl variant="outlined" sx={{ width: '200px' }}>
+                <InputLabel>World</InputLabel>
+                <Select
+                    value={selectedWorld}
+                    onChange={(e) => setSelectedWorld(e.target.value)}
+                    label="World"
+                >
+                    {uniqueWorlds.map(world => (
+                        <MenuItem key={world} value={world}>{world}</MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
 
             {/* Search Input with Paste Button */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
@@ -146,11 +177,11 @@ export default function TwReports() {
                             <Box key={report.id} sx={{ marginBottom: 2 }}>
                                 <Typography variant="body1">Date: {report.date}</Typography>
                                 <Typography variant="body1">
-                                    Links: {report.links.map((link, index) => (
+                                    Links: {Array.isArray(report.links) ? report.links.map((link, index) => (
                                         <a style={{ color: 'white' }} key={index} href={link} target="_blank" rel="noopener noreferrer">
                                             {link}
                                         </a>
-                                    )).reduce((prev, curr) => [prev, ', ', curr])}
+                                    )).reduce((prev, curr) => [prev, ', ', curr]) : 'No links available'}
                                 </Typography>
                                 <Divider sx={{ mt: '6px' }} />
                             </Box>
