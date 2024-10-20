@@ -16,23 +16,28 @@ const navData = [
   // },
   {
     id: '4',
-    text: 'TW Attack',
+    text: 'Split',
     route: '/tw-attack',
   },
   {
     id: '5',
-    text: 'TW Distance Calc',
+    text: 'Distance Calc',
     route: '/tw-distance-calc',
   },
   {
     id: '6',
-    text: 'TW Resource Calculator',
+    text: 'Resource Calculator',
     route: '/tw-resource-calc',
   },
   {
     id: '7',
-    text: 'TW TODO',
+    text: 'TODO',
     route: '/tw-todo-list',
+  },
+  {
+    id: '8',
+    text: 'reports',
+    route: '/tw-reports',
   },
   // {
   //   id: '3',
