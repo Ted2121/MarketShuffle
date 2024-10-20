@@ -133,6 +133,15 @@ export default function TwTodoList() {
     const VillageTodoInput = ({ villageId }) => {
         const [todoNext, setTodoNext] = useState("");
 
+        const handlePasteFromClipboard = async () => {
+            try {
+                const clipboardText = await navigator.clipboard.readText();
+                setTodoNext(clipboardText); // Set the pasted text into the input field
+            } catch (err) {
+                console.error("Failed to read clipboard contents: ", err);
+            }
+        };
+
         const handleAddTodoClick = () => {
             setTodoNext(todoNext)
             handleAddTodo(villageId, todoNext);
@@ -157,6 +166,12 @@ export default function TwTodoList() {
                 >
                     <ClearIcon />
                 </IconButton>
+                <Button
+                    variant="outlined"
+                    onClick={handlePasteFromClipboard}
+                >
+                    Paste
+                </Button>
                 <TextField
                     value={todoNext}
                     size="small"
@@ -186,6 +201,16 @@ export default function TwTodoList() {
             const value = e.target.value;
             setInputValue(value);
             handleFieldChange(worldId, villagesId, fieldName, value);
+        };
+
+        const handlePasteFromClipboard = async () => {
+            try {
+                const clipboardText = await navigator.clipboard.readText();
+                setInputValue(clipboardText); // Set the pasted text into the input field
+                handleFieldChange(worldId, villagesId, fieldName, clipboardText); // Update the model
+            } catch (err) {
+                console.error("Failed to read clipboard contents: ", err);
+            }
         };
 
         const handleClearInput = () => {
@@ -225,6 +250,12 @@ export default function TwTodoList() {
                     >
                         <ClearIcon />
                     </IconButton>
+                    <Button
+                        variant="outlined"
+                        onClick={handlePasteFromClipboard}
+                    >
+                        Paste
+                    </Button>
                     <TextField
                         label={label}
                         value={inputValue}
