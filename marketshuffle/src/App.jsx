@@ -35,11 +35,12 @@ function App() {
             <Routes>
               <Route path='/' element={<RouteLayout />}>
                 {/* public routes */}
-                <Route path='/' element={<ItemsPage />} />
-                <Route path='/new' element={<NewItemsPage />} />
+                {/* <Route path='/' element={<ItemsPage />} /> */}
+                <Route path='/' element={<TwTodoList />} />
+                {/* <Route path='/new' element={<NewItemsPage />} />
                 <Route path='/update-recipe' element={<UpdateRecipePage />} />
                 <Route path='/guilds' element={<AllGuildsPage />} />
-                <Route path='/guild/:id' element={<Guild />} />
+                <Route path='/guild/:id' element={<Guild />} /> */}
                 <Route path='/tw-attack' element={<AttackInterceptor />} />
                 <Route path='/tw-distance-calc' element={<TroopDistanceCalculator />} />
                 <Route path='/tw-resource-calc' element={<TwResourceCalculator />} />
