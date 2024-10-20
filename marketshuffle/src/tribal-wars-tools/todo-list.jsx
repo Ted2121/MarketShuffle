@@ -133,6 +133,15 @@ export default function TwTodoList() {
     const VillageTodoInput = ({ villageId }) => {
         const [todoNext, setTodoNext] = useState("");
 
+        const handlePasteFromClipboard = async () => {
+            try {
+                const clipboardText = await navigator.clipboard.readText();
+                setTodoNext(clipboardText); // Set the pasted text into the input field
+            } catch (err) {
+                console.error("Failed to read clipboard contents: ", err);
+            }
+        };
+
         const handleAddTodoClick = () => {
             setTodoNext(todoNext)
             handleAddTodo(villageId, todoNext);
@@ -157,6 +166,12 @@ export default function TwTodoList() {
                 >
                     <ClearIcon />
                 </IconButton>
+                <Button
+                    variant="outlined"
+                    onClick={handlePasteFromClipboard}
+                >
+                    Paste
+                </Button>
                 <TextField
                     value={todoNext}
                     size="small"
@@ -186,6 +201,16 @@ export default function TwTodoList() {
             const value = e.target.value;
             setInputValue(value);
             handleFieldChange(worldId, villagesId, fieldName, value);
+        };
+
+        const handlePasteFromClipboard = async () => {
+            try {
+                const clipboardText = await navigator.clipboard.readText();
+                setInputValue(clipboardText); // Set the pasted text into the input field
+                handleFieldChange(worldId, villagesId, fieldName, clipboardText); // Update the model
+            } catch (err) {
+                console.error("Failed to read clipboard contents: ", err);
+            }
         };
 
         const handleClearInput = () => {
@@ -225,6 +250,12 @@ export default function TwTodoList() {
                     >
                         <ClearIcon />
                     </IconButton>
+                    <Button
+                        variant="outlined"
+                        onClick={handlePasteFromClipboard}
+                    >
+                        Paste
+                    </Button>
                     <TextField
                         label={label}
                         value={inputValue}
@@ -247,7 +278,7 @@ export default function TwTodoList() {
     };
 
     const handleButtonClick = (fieldValue, villagesId, fieldName) => {
-        const dateObj = parseCustomDate(fieldValue);
+        const dateObj = parseCustomDate(fieldValue, 1);
         if (!isNaN(dateObj)) {
             const formattedDate = formatDateTime(dateObj);
             setTodoStates(prev => ({
@@ -349,7 +380,7 @@ export default function TwTodoList() {
         );
     };
 
-    function parseCustomDate(input) {
+    function parseCustomDate(input, minutesOffset = 0) {
         const today = new Date();
         const tomorrow = new Date(today);
         tomorrow.setDate(today.getDate() + 1); // Set tomorrow's date
@@ -371,14 +402,14 @@ export default function TwTodoList() {
             const minutes = parseInt(match[4], 10);
             const seconds = parseInt(match[5], 10);
 
-            return new Date(today.getFullYear(), month, day, hours - 1, minutes - 1, seconds);
+            return new Date(today.getFullYear(), month, day, hours - 1, minutes - minutesOffset, seconds);
         } else if ((match = regexDateTimeNoSec.exec(input))) {
             const day = parseInt(match[1], 10);
             const month = parseInt(match[2], 10) - 1; // Month is zero-based in JS
             const hours = parseInt(match[3], 10);
             const minutes = parseInt(match[4], 10);
 
-            return new Date(today.getFullYear(), month, day, hours - 1, minutes - 1);
+            return new Date(today.getFullYear(), month, day, hours - 1, minutes - minutesOffset);
         }
 
         // Check for "mâine"
@@ -388,12 +419,12 @@ export default function TwTodoList() {
             const seconds = parseInt(match[3], 10);
 
             // Set the time to tomorrow
-            return new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), hours - 1, minutes - 1, seconds);
+            return new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), hours - 1, minutes - minutesOffset, seconds);
         } else if ((match = regexTomorrowNoSec.exec(input))) {
             const hours = parseInt(match[1], 10);
             const minutes = parseInt(match[2], 10);
 
-            return new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), hours - 1, minutes - 1);
+            return new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), hours - 1, minutes - minutesOffset);
         }
 
         // Check for "astăzi"
@@ -403,12 +434,12 @@ export default function TwTodoList() {
             const seconds = parseInt(match[3], 10);
 
             // Set the time to today
-            return new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours - 1, minutes - 1, seconds);
+            return new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours - 1, minutes - minutesOffset, seconds);
         } else if ((match = regexTodayNoSec.exec(input))) {
             const hours = parseInt(match[1], 10);
             const minutes = parseInt(match[2], 10);
 
-            return new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours - 1, minutes - 1);
+            return new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours - 1, minutes - minutesOffset);
         }
 
         return input;

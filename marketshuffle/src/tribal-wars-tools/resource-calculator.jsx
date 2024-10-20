@@ -1,7 +1,12 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function TwResourceCalculator() {
+    const getInitialValue = (key) => {
+        const savedValue = localStorage.getItem(key);
+        return savedValue ? parseFloat(savedValue) : 0;
+    };
+
     const [lemn, setLemn] = useState(0);
     const [argila, setArgila] = useState(0);
     const [fier, setFier] = useState(0);
@@ -10,12 +15,23 @@ export default function TwResourceCalculator() {
     const [costArgila, setCostArgila] = useState(0);
     const [costFier, setCostFier] = useState(0);
 
-    const [productieLemn, setProductieLemn] = useState(0);
-    const [productieArgila, setProductieArgila] = useState(0);
-    const [productieFier, setProductieFier] = useState(0);
-
+    
     const [resultMessage, setResultMessage] = useState('');
     const [timeToReady, setTimeToReady] = useState([]);
+    
+    const [productieLemn, setProductieLemn] = useState(() => getInitialValue('productieLemn'));
+    const [productieArgila, setProductieArgila] = useState(() => getInitialValue('productieArgila'));
+    const [productieFier, setProductieFier] = useState(() => getInitialValue('productieFier'));
+
+    useEffect(() => {
+        const savedProductieLemn = localStorage.getItem('productieLemn');
+        const savedProductieArgila = localStorage.getItem('productieArgila');
+        const savedProductieFier = localStorage.getItem('productieFier');
+    
+        if (savedProductieLemn !== null) setProductieLemn(parseFloat(savedProductieLemn) || 0);
+        if (savedProductieArgila !== null) setProductieArgila(parseFloat(savedProductieArgila) || 0);
+        if (savedProductieFier !== null) setProductieFier(parseFloat(savedProductieFier) || 0);
+    }, []);
 
     const handleLemnChange = (event) => {
         const { value } = event.target;
@@ -74,6 +90,10 @@ export default function TwResourceCalculator() {
     };
 
     const calculateAndDisplayResult = () => {
+        localStorage.setItem('productieLemn', productieLemn);
+        localStorage.setItem('productieArgila', productieArgila);
+        localStorage.setItem('productieFier', productieFier);
+
         const message = blockedByResource();
         setResultMessage(message);
 

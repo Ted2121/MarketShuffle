@@ -116,7 +116,6 @@ export default function TroopDistanceCalculator() {
                 alignItems: 'center',
                 flexDirection: 'row',
                 gap: 3,
-                marginTop: 20,
             }}>
                 <Box sx={{
                     flex: 1,
