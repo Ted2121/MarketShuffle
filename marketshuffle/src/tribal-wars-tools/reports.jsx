@@ -108,7 +108,7 @@ export default function TwReports() {
                                 <Typography variant="body1">Date: {report.date}</Typography>
                                 <Typography variant="body1">
                                     Links: {report.links.map((link, index) => (
-                                        <a key={index} href={link} target="_blank" rel="noopener noreferrer">
+                                        <a style={{color:'white'}}key={index} href={link} target="_blank" rel="noopener noreferrer">
                                             {link}
                                         </a>
                                     )).reduce((prev, curr) => [prev, ', ', curr])}
