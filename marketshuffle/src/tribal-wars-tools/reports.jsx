@@ -138,19 +138,7 @@ export default function TwReports() {
                 Add Report
             </Button>
 
-            {/* World Selection Dropdown */}
-            <FormControl variant="outlined" sx={{ width: '200px' }}>
-                <InputLabel>World</InputLabel>
-                <Select
-                    value={selectedWorld}
-                    onChange={(e) => setSelectedWorld(e.target.value)}
-                    label="World"
-                >
-                    {uniqueWorlds.map(world => (
-                        <MenuItem key={world} value={world}>{world}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
+
 
             {/* Search Input with Paste Button */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
@@ -165,6 +153,19 @@ export default function TwReports() {
                     onChange={(e) => setSearchInput(e.target.value)}
                     sx={{ flex: 1 }} // Allow the TextField to take up remaining space
                 />
+                {/* World Selection Dropdown */}
+                <FormControl size="small" variant="outlined" sx={{ width: '200px' }}>
+                    <InputLabel>World</InputLabel>
+                    <Select
+                        value={selectedWorld}
+                        onChange={(e) => setSelectedWorld(e.target.value)}
+                        label="World"
+                    >
+                        {uniqueWorlds.map(world => (
+                            <MenuItem key={world} value={world}>{world}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
             </Box>
 
             {/* Render Accordions for each target */}
