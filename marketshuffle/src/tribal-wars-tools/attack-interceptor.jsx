@@ -2,6 +2,8 @@ import { Box, Button, Input, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 
 export default function AttackInterceptor() {
+    document.title = 'TW Split';
+
     const [time, setTime] = useState(new Date().toLocaleTimeString('en-US', { hour12: false }) + '.' + new Date().getMilliseconds());
     const [attackOne, setAttackOne] = useState('');
     const [attackTwo, setAttackTwo] = useState('');

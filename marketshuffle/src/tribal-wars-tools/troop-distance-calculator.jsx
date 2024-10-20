@@ -2,6 +2,8 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 
 export default function TroopDistanceCalculator() {
+    document.title = 'TW Distances';
+
     const [calculatedDistance, setCalculatedDistance] = useState(0);
     const [cityA, setCityA] = useState('');
     const [cityB, setCityB] = useState('');

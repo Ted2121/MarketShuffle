@@ -5,6 +5,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Import Quill styles
 
 export default function TwReports() {
+    document.title = 'TW Reports';
     const [reportInput, setReportInput] = useState('');
     const [searchInput, setSearchInput] = useState('');
     const [selectedWorld, setSelectedWorld] = useState(() => {

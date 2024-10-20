@@ -2,6 +2,8 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 
 export default function TwResourceCalculator() {
+    document.title = 'TW Resources';
+
     const getInitialValue = (key) => {
         const savedValue = localStorage.getItem(key);
         return savedValue ? parseFloat(savedValue) : 0;
