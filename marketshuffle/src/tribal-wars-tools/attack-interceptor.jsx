@@ -144,21 +144,21 @@ export default function AttackInterceptor() {
                 onChange={(event) => handleAttackOneChange(event)}
             />
             <TextField
-                label="1"
+                label="2"
                 size='small'
                 value={attackTwo}
                 tabIndex="-1"
                 onChange={(event) => handleAttackTwoChange(event)}
             />
             <TextField
-                label="1"
+                label="3"
                 size='small'
                 value={attackThree}
                 tabIndex="-1"
                 onChange={(event) => handleAttackThreeChange(event)}
             />
             <TextField
-                label="1"
+                label="4"
                 size='small'
                 value={attackFour}
                 tabIndex="-1"
