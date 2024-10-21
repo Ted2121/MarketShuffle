@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography, Accordion, AccordionSummary, AccordionDetails, Divider, TextField, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
+import { Box, Button, Typography, Accordion, AccordionSummary, AccordionDetails, Divider, TextField, Select, MenuItem, InputLabel, FormControl, IconButton } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ReactQuill from "react-quill";
+import ClearIcon from '@mui/icons-material/Clear';
 import "react-quill/dist/quill.snow.css";
 
 export default function TwReports() {
@@ -146,6 +147,12 @@ export default function TwReports() {
                 <Button onClick={handlePaste} variant="outlined">
                     Paste
                 </Button>
+                <IconButton
+                    size="small"
+                    onClick={() => setSearchInput('')}
+                >
+                    <ClearIcon />
+                </IconButton>
                 <TextField
                     label="Search by Target"
                     variant="outlined"
