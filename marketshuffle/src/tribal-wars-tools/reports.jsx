@@ -60,8 +60,8 @@ export default function TwReports() {
 
         const id = crypto.randomUUID();
 
-        const targetMatch = reportString.match(/atacă\s([^\(]+ \(\d+\|\d+\) K\d{2})/);
-        const target = targetMatch ? targetMatch[1].trim() : '';
+        const targetMatch = reportString.match(/(atacă|spionează)\s([^\(]+ \(\d+\|\d+\) K\d{2})/);
+        const target = targetMatch ? targetMatch[2].trim() : '';
 
         const links = extractLinks(reportString) || []; // Ensure links is always an array
         const world = extractWorld(reportString); // Extract the world number
