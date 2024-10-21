@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import navData from '../../data/components-text/navData';
 import { Link } from 'react-router-dom';
 import ExportButton from '../../import-export/export-button';
+import ImportButton from '../../import-export/import-button';
 
 const pages = navData;
 
@@ -35,6 +36,7 @@ function Navbar() {
                         </Box>
                         <Box>
                             <ExportButton />
+                            <ImportButton />
                         </Box>
                 </Toolbar>
             </Container>
