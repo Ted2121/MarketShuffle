@@ -113,7 +113,7 @@ export default function TwReports() {
     const handlePaste = async () => {
         try {
             const text = await navigator.clipboard.readText();
-            setReportInput(text); // Set the report input to the pasted text
+            setSearchInput(text); // Set the report input to the pasted text
         } catch (err) {
             console.error('Failed to read clipboard contents: ', err);
         }

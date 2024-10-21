@@ -14,6 +14,7 @@ import TroopDistanceCalculator from './tribal-wars-tools/troop-distance-calculat
 import TwResourceCalculator from './tribal-wars-tools/resource-calculator';
 import TwTodoList from './tribal-wars-tools/todo-list';
 import TwReports from './tribal-wars-tools/reports';
+import TwWarNotes from './tribal-wars-tools/war-notes';
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -47,6 +48,7 @@ function App() {
                 <Route path='/tw-resource-calc' element={<TwResourceCalculator />} />
                 <Route path='/tw-todo-list' element={<TwTodoList />} />
                 <Route path='/tw-reports' element={<TwReports />} />
+                <Route path='/tw-war-notes' element={<TwWarNotes />} />
               </Route>
             </Routes>
           </Box>

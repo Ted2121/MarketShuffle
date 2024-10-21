@@ -39,6 +39,11 @@ const navData = [
     text: 'reports',
     route: '/tw-reports',
   },
+  {
+    id: '9',
+    text: 'war notes',
+    route: '/tw-war-notes',
+  },
   // {
   //   id: '3',
   //   text: 'Crafting Tree',

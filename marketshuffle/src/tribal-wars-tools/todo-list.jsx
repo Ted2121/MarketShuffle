@@ -276,7 +276,7 @@ export default function TwTodoList() {
     };
 
     const handleButtonClick = (fieldValue, villagesId, fieldName) => {
-        const minutesOffset = fieldName === 'cladireaPrincipala' ? 3 : 1;
+        const minutesOffset = fieldName === 'cladireaPrincipala' ? 4 : 1;
         const dateObj = parseCustomDate(fieldValue, minutesOffset);
         if (!isNaN(dateObj)) {
             const formattedDate = formatDateTime(dateObj);
