@@ -15,6 +15,7 @@ import TwResourceCalculator from './tribal-wars-tools/resource-calculator';
 import TwTodoList from './tribal-wars-tools/todo-list';
 import TwReports from './tribal-wars-tools/reports';
 import TwWarNotes from './tribal-wars-tools/war-notes';
+import ScavengeCalculator from './tribal-wars-tools/scavanging';
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -49,6 +50,7 @@ function App() {
                 <Route path='/tw-todo-list' element={<TwTodoList />} />
                 <Route path='/tw-reports' element={<TwReports />} />
                 <Route path='/tw-war-notes' element={<TwWarNotes />} />
+                <Route path='/tw-scavanging' element={<ScavengeCalculator />} />
               </Route>
             </Routes>
           </Box>

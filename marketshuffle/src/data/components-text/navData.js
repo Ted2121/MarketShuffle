@@ -44,6 +44,11 @@ const navData = [
     text: 'war notes',
     route: '/tw-war-notes',
   },
+  {
+    id: '10',
+    text: 'scavanging',
+    route: '/tw-scavanging',
+  },
   // {
   //   id: '3',
   //   text: 'Crafting Tree',
