@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import {
     Box,
     Table,
@@ -12,11 +14,33 @@ import {
 
 export default function TwWarNotes() {
     document.title = 'TW Reports';
-
+    const [quillInput, setQuillInput] = useState('');
     const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('calories');
+    const [orderBy, setOrderBy] = React.useState('dateTime');
     const [selected, setSelected] = React.useState([]);
-    const rows = [ /* Your row data goes here */ ]; // Replace with your actual data
+    const rows = [ /* Your row data goes here */]; // Replace with your actual data
+
+    //#region Quill
+    const handleQuillInput = (event) => {
+        const { value } = event.target;
+        setQuillInput(value);
+    }
+
+    const addAttacks = () => {
+        if (quillInput.trim()) {
+            const { id, date, target, links, world } = parseQuill(reportInput.trim());
+            const newAttacks = { id, target, targetLink, world, attacks };
+
+            setReports((prevReports) => {
+                const grouped = groupReportsByTarget([newReport, ...prevReports]);
+                const limitedReports = limitReportsToFive(grouped);
+                return Object.values(limitedReports).flat();
+            });
+            setReportInput(''); // Clear input after adding
+        }
+    };
+
+    //#endregion Quill
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -63,6 +87,15 @@ export default function TwWarNotes() {
             marginTop: 5,
             marginBottom: 10,
         }}>
+            <ReactQuill
+                value={quillInput}
+                onChange={handleQuillInput}
+                modules={{ toolbar: false }}
+                style={{ width: '700px', height: '50px' }}
+            />
+            <Button onClick={addAttacks} variant="contained">
+                Add Attacks
+            </Button>
             <TableContainer>
                 <Table sx={{ width: '70%' }} size={'medium'}>
                     <TableHead>
@@ -102,9 +135,6 @@ export default function TwWarNotes() {
                                         <Checkbox
                                             color="primary"
                                             checked={isItemSelected}
-                                            inputProps={{
-                                                'aria-labelledby': labelId,
-                                            }}
                                         />
                                     </TableCell>
                                     <TableCell
