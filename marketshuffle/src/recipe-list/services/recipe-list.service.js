@@ -32,3 +32,19 @@ export const addRecipeList = async (recipeList) => {
 
     return response.text();
 }
+
+export async function deleteRecipeListById(id) {
+    const url = `${baseUrl}api/recipelists/${id}`;
+    const headers = {
+        "Content-Type": "application/json"
+    };
+
+    const response = await fetch(url, { method: "DELETE", headers });
+
+    if (!response.ok) {
+        const errorMessage = `Failed to delete row: ${response.status} ${response.statusText}`;
+        throw new Error(errorMessage);
+    }
+
+    return true;
+}

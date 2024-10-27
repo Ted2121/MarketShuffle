@@ -2,7 +2,7 @@ import { Box, Button, IconButton, MenuItem, Select, Table, TableBody, TableCell,
 import React, { useEffect, useState } from 'react';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { getAllRecipeListsWithRows, addRecipeList } from './services/recipe-list.service';
+import { getAllRecipeListsWithRows, addRecipeList, deleteRecipeListById } from './services/recipe-list.service';
 import { addRecipeListRow, deleteRecipeRowById, updateRecipeRow } from './services/recipe-list-row.service';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -125,15 +125,34 @@ export default function RecipeList() {
 
     const handleDeleteRow = async (id) => {
         try {
-            await deleteRecipeRowById(id);
-            setRecipeLists(prevLists => {
-                return prevLists.map(list => ({
-                    ...list,
-                    rows: list.rows.filter(row => row.id !== id)
-                }));
-            });
+            const isConfirmed = window.confirm("Are you sure you want to delete this row?");
+
+            if (isConfirmed) {
+                await deleteRecipeRowById(id);
+                setRecipeLists(prevLists => {
+                    return prevLists.map(list => ({
+                        ...list,
+                        rows: list.rows.filter(row => row.id !== id)
+                    }));
+                });
+            }
         } catch (error) {
             console.error("Failed to delete row:", error);
+        }
+    };
+
+    const handleDeleteList = async (id) => {
+        try {
+            const isConfirmed = window.confirm("Are you sure you want to delete this recipe list?");
+
+            if (isConfirmed) {
+                await deleteRecipeListById(id);
+                setRecipeLists(prevLists => {
+                    return prevLists.filter(list => list.id !== id); // Remove the entire list by its ID
+                });
+            }
+        } catch (error) {
+            console.error("Failed to delete recipe list:", error);
         }
     };
 
@@ -198,7 +217,17 @@ export default function RecipeList() {
 
             {recipeLists.map((list) => (
                 <TableContainer key={list.id} sx={{ marginBottom: 5, maxWidth: '90%' }}>
-                    <h3>{list.name}</h3>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <IconButton
+                            aria-label="delete list"
+                            onClick={() => handleDeleteList(list.id)}
+                            color="error"
+                            size='small'
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                        <h3>{list.name}</h3>
+                    </Box>
                     <Table>
                         <TableHead>
                             <TableRow>
