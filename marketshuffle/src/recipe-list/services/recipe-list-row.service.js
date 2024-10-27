@@ -1,3 +1,5 @@
+import { baseUrl } from "../../utility/serverAddress";
+
 export const getAllRecipeListRows = async () => {
     const url = `${baseUrl}api/recipelistrows/`;
     const headers = {

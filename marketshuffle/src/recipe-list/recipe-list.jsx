@@ -31,7 +31,7 @@ export default function RecipeList() {
         if (selectedListId) {
             // If a list is selected, add rows to the existing list
             try {
-                extractedRecipeRows.forEach(async (r) => {
+                extractedRecipeRows.forEach(async (row) => {
                     await addRecipeListRow({ ...row, recipeListId: selectedListId }); // Send recipeListId
                 })
 
