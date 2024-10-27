@@ -1,29 +1,36 @@
-import { Box, 
-    Button,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TextField, } from '@mui/material';
-import React, { useState } from 'react'
+import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { getAllRecipeListsWithRows } from './services/recipe-list.service';
 
 export default function RecipeList() {
     const [quillInput, setQuillInput] = useState('');
-    const [recipeRows, setRecipeRows] = useState([]);
+    const [recipeLists, setRecipeLists] = useState([]); // Changed to hold multiple recipe lists
+
+    useEffect(() => {
+        const loadRecipeLists = async () => {
+            try {
+                const data = await getAllRecipeListsWithRows();
+                setRecipeLists(data); // Set the fetched data to state
+            } catch (error) {
+                console.error("Error fetching recipe lists:", error);
+            }
+        };
+
+        loadRecipeLists();
+    }, []);
 
     const addRecipeListRows = async () => {
         const extractedRecipeRows = extractRecipeRows();
-        setRecipeRows(
-            ...recipeRows,
-            ...extractedRecipeRows
-        );
+        const newRecipeList = {
+            id: `list-${Date.now()}`, // Unique ID for the new recipe list
+            rows: extractedRecipeRows
+        };
 
-
-    }
+        setRecipeLists([...recipeLists, newRecipeList]); // Add new recipe list
+        setQuillInput(''); // Clear the input after adding
+    };
 
     const extractRecipeRows = () => {
         const editorContent = quillInput;
@@ -48,44 +55,71 @@ export default function RecipeList() {
         return items;
     };
 
+    const handleChange = (listId, rowIndex, field, value) => {
+        setRecipeLists(prevLists => {
+            const updatedLists = [...prevLists];
+            const updatedRows = [...updatedLists.find(list => list.id === listId).rows];
+
+            updatedRows[rowIndex] = {
+                ...updatedRows[rowIndex],
+                [field]: value
+            };
+
+            updatedLists.find(list => list.id === listId).rows = updatedRows;
+            return updatedLists;
+        });
+    };
+
     return (
-        <Box sx={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 2,
-            marginTop: 5,
-            marginBottom: 10,
-        }}>
-            <Box sx={{
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 2,
-                marginBottom: 10,
-            }}>
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, marginTop: 5, marginBottom: 10 }}>
+            <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, marginBottom: 10 }}>
                 <ReactQuill
                     value={quillInput}
                     onChange={setQuillInput}
                     modules={{ toolbar: false }}
                     style={{ width: '700px', height: '50px' }}
                 />
-                <Button onClick={addRecipeListRows} variant="contained">
-                    Add Recipe List
-                </Button>
+                <Button onClick={addRecipeListRows} variant="contained">Add Recipe List</Button>
             </Box>
-            <Box sx={{
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 2,
-                marginBottom: 10,
-            }}>
-
-            </Box>
+            {recipeLists.map((list) => (
+                <TableContainer key={list.id} sx={{ marginBottom: 5, maxWidth:'90%' }}>
+                    <h3>{list.name}</h3>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Quantity</TableCell>
+                                <TableCell>Resource Name</TableCell>
+                                <TableCell>Link</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {list.rows.map((row, index) => (
+                                <TableRow key={index}>
+                                    <TableCell>
+                                        <TextField
+                                            type="number"
+                                            value={row.quantity}
+                                            onChange={(e) => handleChange(list.id, index, 'quantity', e.target.value)}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <TextField
+                                            value={row.resourceName}
+                                            onChange={(e) => handleChange(list.id, index, 'resourceName', e.target.value)}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <TextField
+                                            value={row.link}
+                                            onChange={(e) => handleChange(list.id, index, 'link', e.target.value)}
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            ))}
         </Box>
     );
 }
