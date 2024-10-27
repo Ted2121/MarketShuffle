@@ -1,4 +1,4 @@
-import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
+import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -82,7 +82,7 @@ export default function RecipeList() {
                 <Button onClick={addRecipeListRows} variant="contained">Add Recipe List</Button>
             </Box>
             {recipeLists.map((list) => (
-                <TableContainer key={list.id} sx={{ marginBottom: 5, maxWidth:'90%' }}>
+                <TableContainer key={list.id} sx={{ marginBottom: 5, maxWidth: '90%' }}>
                     <h3>{list.name}</h3>
                     <Table>
                         <TableHead>
@@ -109,10 +109,11 @@ export default function RecipeList() {
                                         />
                                     </TableCell>
                                     <TableCell>
-                                        <TextField
-                                            value={row.link}
-                                            onChange={(e) => handleChange(list.id, index, 'link', e.target.value)}
-                                        />
+                                        <Typography>
+                                            <a href={row.link} target='_blank' style={{color: 'white'}}>
+                                                {row.link}
+                                            </a>
+                                        </Typography>
                                     </TableCell>
                                 </TableRow>
                             ))}
