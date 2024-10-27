@@ -136,7 +136,7 @@ export default function RecipeList() {
             console.error("Failed to delete row:", error);
         }
     };
-    
+
     const handleDone = (listId, index) => {
         setRecipeLists(prevLists => {
             const updatedLists = [...prevLists];
@@ -152,7 +152,7 @@ export default function RecipeList() {
                 value={selectedListId}
                 onChange={(e) => setSelectedListId(e.target.value)}
                 displayEmpty
-                sx={{ width: '50%' }}
+                sx={{ width: '300px' }}
             >
                 <MenuItem value="">
                     <em>Select Existing Recipe List</em>
@@ -169,13 +169,15 @@ export default function RecipeList() {
                 label="New Recipe List Name"
                 value={newListName}
                 onChange={(e) => setNewListName(e.target.value)}
-                sx={{ width: '50%' }}
+                sx={{ width: '300px' }}
+                size='small'
             />
             <TextField
                 label="New Recipe List Note"
                 value={newListNote}
                 onChange={(e) => setNewListNote(e.target.value)}
-                sx={{ width: '50%' }}
+                sx={{ width: '300px' }}
+                size='small'
             />
 
             <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, marginBottom: 10 }}>
@@ -194,6 +196,7 @@ export default function RecipeList() {
                     <Table>
                         <TableHead>
                             <TableRow>
+                                <TableCell padding='checkbox'></TableCell>
                                 <TableCell>Quantity</TableCell>
                                 <TableCell>Resource Name</TableCell>
                                 <TableCell>Area</TableCell>
@@ -204,18 +207,18 @@ export default function RecipeList() {
                         <TableBody>
                             {list.rows.map((row, index) => (
                                 <TableRow key={index} sx={{ justifyContent: 'center' }}>
-                                    <TableCell sx={{ width: '100px', display:'flex' }}>
+                                    <TableCell sx={{ width: '100px', display: 'flex' }}>
                                         <IconButton
                                             aria-label="done"
                                             onClick={() => handleDone(list.id, index)}
                                             color="success"
-                                            size='large'
+                                            size='small'
                                         >
-                                            <CheckCircleIcon fontSize='large'/>
+                                            <CheckCircleIcon fontSize='large' />
                                         </IconButton>
                                         <IconButton
                                             aria-label="delete"
-                                            size='large'
+                                            size='small'
                                             onClick={() => handleDeleteRow(row.id)}
                                             color="error"
                                         >
@@ -225,6 +228,7 @@ export default function RecipeList() {
                                     <TableCell>
                                         <TextField
                                             sx={{ width: '80px' }}
+                                            size='small'
                                             type="number"
                                             value={row.quantity}
                                             onChange={(e) => handleChange(list.id, index, 'quantity', e.target.value)}
@@ -233,6 +237,7 @@ export default function RecipeList() {
                                     <TableCell>
                                         <TextField
                                             sx={{ width: '250px' }}
+                                            size='small'
                                             value={row.resourceName}
                                             onChange={(e) => handleChange(list.id, index, 'resourceName', e.target.value)}
                                         />
@@ -240,12 +245,14 @@ export default function RecipeList() {
                                     <TableCell>
                                         <TextField
                                             sx={{ width: '250px' }}
+                                            size='small'
                                             value={row.area}
                                             onChange={(e) => handleChange(list.id, index, 'area', e.target.value)}
                                         />
                                     </TableCell>
                                     <TableCell>
                                         <TextField
+                                            size='small'
                                             value={row.note}
                                             onChange={(e) => handleChange(list.id, index, 'note', e.target.value)}
                                         />
