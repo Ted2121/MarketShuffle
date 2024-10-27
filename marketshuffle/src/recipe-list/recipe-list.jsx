@@ -142,11 +142,11 @@ export default function RecipeList() {
             const updatedLists = [...prevLists];
             const list = updatedLists.find(list => list.id === listId);
             const row = list.rows[index];
-            
+
             row.done = !row.done;
-    
+
             updateRecipeRow(row).catch((error) => console.error("Error updating row:", error));
-    
+
             return updatedLists;
         });
     };
@@ -269,6 +269,15 @@ export default function RecipeList() {
                                                 {row.link}
                                             </a>
                                         </Typography>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Button
+                                            variant="contained"
+                                            size="small"
+                                            onClick={() => updateRecipeRow(row)}
+                                        >
+                                            Save
+                                        </Button>
                                     </TableCell>
                                 </TableRow>
                             ))}
