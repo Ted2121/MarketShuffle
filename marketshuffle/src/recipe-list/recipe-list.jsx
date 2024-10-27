@@ -1,9 +1,11 @@
-import { Box, Button, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import { Box, Button, IconButton, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { getAllRecipeListsWithRows, addRecipeList } from './services/recipe-list.service';
-import { addRecipeListRow } from './services/recipe-list-row.service';
+import { addRecipeListRow, deleteRecipeRowById } from './services/recipe-list-row.service';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 export default function RecipeList() {
     const [quillInput, setQuillInput] = useState('');
@@ -27,23 +29,23 @@ export default function RecipeList() {
 
     const addRecipeListRows = async () => {
         const extractedRecipeRows = extractRecipeRows();
-    
+
         if (selectedListId) {
             // If a list is selected, add rows to the existing list
             try {
                 for (const row of extractedRecipeRows) {
                     await addRecipeListRow({ ...row, recipeListId: selectedListId });
                 }
-    
+
                 // Update the list with the new rows in recipeLists state
                 setRecipeLists(prevLists => {
-                    return prevLists.map(list => 
-                        list.id === selectedListId 
+                    return prevLists.map(list =>
+                        list.id === selectedListId
                             ? { ...list, rows: [...list.rows, ...extractedRecipeRows] }
                             : list
                     );
                 });
-    
+
                 setQuillInput(''); // Clear the input after adding
             } catch (error) {
                 console.error("Error adding recipe rows:", error);
@@ -52,17 +54,17 @@ export default function RecipeList() {
             // If no list is selected, create a new list with the specified name and note
             try {
                 const newRecipeListId = await addRecipeList({ name: newListName, note: newListNote });
-                
+
                 // Update recipeLists with the new list immediately
                 setRecipeLists(prevLists => [
-                    ...prevLists, 
+                    ...prevLists,
                     { id: newRecipeListId, name: newListName, note: newListNote, rows: extractedRecipeRows }
                 ]);
-    
+
                 for (const row of extractedRecipeRows) {
                     await addRecipeListRow({ ...row, recipeListId: newRecipeListId });
                 }
-    
+
                 // Clear inputs
                 setNewListName('');
                 setNewListNote('');
@@ -117,6 +119,28 @@ export default function RecipeList() {
             };
 
             updatedLists.find(list => list.id === listId).rows = updatedRows;
+            return updatedLists;
+        });
+    };
+
+    const handleDeleteRow = async (id) => {
+        try {
+            await deleteRecipeRowById(id);
+            setRecipeLists(prevLists => {
+                return prevLists.map(list => ({
+                    ...list,
+                    rows: list.rows.filter(row => row.id !== id)
+                }));
+            });
+        } catch (error) {
+            console.error("Failed to delete row:", error);
+        }
+    };
+    
+    const handleDone = (listId, index) => {
+        setRecipeLists(prevLists => {
+            const updatedLists = [...prevLists];
+            updatedLists.find(list => list.id === listId).rows[index].done = true;
             return updatedLists;
         });
     };
@@ -179,7 +203,25 @@ export default function RecipeList() {
                         </TableHead>
                         <TableBody>
                             {list.rows.map((row, index) => (
-                                <TableRow key={index}>
+                                <TableRow key={index} sx={{ justifyContent: 'center' }}>
+                                    <TableCell sx={{ width: '100px', display:'flex' }}>
+                                        <IconButton
+                                            aria-label="done"
+                                            onClick={() => handleDone(list.id, index)}
+                                            color="success"
+                                            size='large'
+                                        >
+                                            <CheckCircleIcon fontSize='large'/>
+                                        </IconButton>
+                                        <IconButton
+                                            aria-label="delete"
+                                            size='large'
+                                            onClick={() => handleDeleteRow(row.id)}
+                                            color="error"
+                                        >
+                                            <DeleteIcon fontSize='large' />
+                                        </IconButton>
+                                    </TableCell>
                                     <TableCell>
                                         <TextField
                                             sx={{ width: '80px' }}
