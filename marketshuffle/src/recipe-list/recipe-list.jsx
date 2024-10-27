@@ -42,11 +42,11 @@ export default function RecipeList() {
         } else if (newListName) {
             // If no list is selected, create a new list with the specified name and note
             try {
-                const newRecipeList = await addRecipeList({ name: newListName, note: newListNote });
+                const newRecipeListId = await addRecipeList({ name: newListName, note: newListNote });
                 for (const row of extractedRecipeRows) {
-                    await addRecipeListRow({ ...row, recipeListId: newRecipeList.id }); // Use new list ID
+                    await addRecipeListRow({ ...row, recipeListId: newRecipeListId });
                 }
-                setRecipeLists([...recipeLists, newRecipeList]); // Update recipe lists
+                setRecipeLists([...recipeLists, {id: newRecipeListId, name: newListName, note: newListNote}]);
                 setNewListName(''); // Clear new list fields
                 setNewListNote('');
                 setQuillInput('');
@@ -62,18 +62,18 @@ export default function RecipeList() {
         const items = [];
         const parser = new DOMParser();
         const htmlDoc = parser.parseFromString(quillInput, 'text/html');
-    
+
         // Target each <li> element in the document
         htmlDoc.querySelectorAll("li").forEach((node) => {
             // Get the quantity as the first part before any whitespace
             const quantityMatch = node.textContent.match(/^(\d+)\s+/);
             const quantity = quantityMatch ? parseInt(quantityMatch[1], 10) : null;
-    
+
             // Get the link element within the <li> for name and link
             const linkElement = node.querySelector('a');
             const resourceName = linkElement ? linkElement.textContent.trim() : null;
             const link = linkElement ? linkElement.href : null;
-    
+
             if (quantity && resourceName) {
                 // Push an object for each item found
                 items.push({
@@ -85,7 +85,7 @@ export default function RecipeList() {
                 });
             }
         });
-    
+
         return items;
     };
 
@@ -165,6 +165,7 @@ export default function RecipeList() {
                                 <TableRow key={index}>
                                     <TableCell>
                                         <TextField
+                                            sx={{ width: '80px' }}
                                             type="number"
                                             value={row.quantity}
                                             onChange={(e) => handleChange(list.id, index, 'quantity', e.target.value)}
@@ -172,12 +173,14 @@ export default function RecipeList() {
                                     </TableCell>
                                     <TableCell>
                                         <TextField
+                                            sx={{ width: '250px' }}
                                             value={row.resourceName}
                                             onChange={(e) => handleChange(list.id, index, 'resourceName', e.target.value)}
                                         />
                                     </TableCell>
                                     <TableCell>
                                         <TextField
+                                            sx={{ width: '250px' }}
                                             value={row.area}
                                             onChange={(e) => handleChange(list.id, index, 'area', e.target.value)}
                                         />
