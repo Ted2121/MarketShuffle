@@ -27,14 +27,23 @@ export default function RecipeList() {
 
     const addRecipeListRows = async () => {
         const extractedRecipeRows = extractRecipeRows();
-
+    
         if (selectedListId) {
             // If a list is selected, add rows to the existing list
             try {
-                extractedRecipeRows.forEach(async (row) => {
-                    await addRecipeListRow({ ...row, recipeListId: selectedListId }); // Send recipeListId
-                })
-
+                for (const row of extractedRecipeRows) {
+                    await addRecipeListRow({ ...row, recipeListId: selectedListId });
+                }
+    
+                // Update the list with the new rows in recipeLists state
+                setRecipeLists(prevLists => {
+                    return prevLists.map(list => 
+                        list.id === selectedListId 
+                            ? { ...list, rows: [...list.rows, ...extractedRecipeRows] }
+                            : list
+                    );
+                });
+    
                 setQuillInput(''); // Clear the input after adding
             } catch (error) {
                 console.error("Error adding recipe rows:", error);
@@ -43,11 +52,19 @@ export default function RecipeList() {
             // If no list is selected, create a new list with the specified name and note
             try {
                 const newRecipeListId = await addRecipeList({ name: newListName, note: newListNote });
+                
+                // Update recipeLists with the new list immediately
+                setRecipeLists(prevLists => [
+                    ...prevLists, 
+                    { id: newRecipeListId, name: newListName, note: newListNote, rows: extractedRecipeRows }
+                ]);
+    
                 for (const row of extractedRecipeRows) {
                     await addRecipeListRow({ ...row, recipeListId: newRecipeListId });
                 }
-                setRecipeLists([...recipeLists, {id: newRecipeListId, name: newListName, note: newListNote}]);
-                setNewListName(''); // Clear new list fields
+    
+                // Clear inputs
+                setNewListName('');
                 setNewListNote('');
                 setQuillInput('');
             } catch (error) {
