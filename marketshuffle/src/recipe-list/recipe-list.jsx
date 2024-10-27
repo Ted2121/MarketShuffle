@@ -59,29 +59,33 @@ export default function RecipeList() {
     };
 
     const extractRecipeRows = () => {
-        const editorContent = quillInput;
         const items = [];
         const parser = new DOMParser();
-        const htmlDoc = parser.parseFromString(editorContent, 'text/html');
-
-        htmlDoc.body.childNodes.forEach(node => {
-            const itemRegex = /^(\d+)\s+(.+?)\s*\[(.+?)\]\s*{(.+)}$/;
-            const text = node.innerText;
-
-            const match = itemRegex.exec(text);
-            if (match) {
-                const quantity = parseInt(match[1], 10);
-                const resourceName = match[2].trim();
-                const area = match[3].trim();
-                const note = match[4].trim();
-                const link = node.querySelector('a') ? node.querySelector('a').href : null;
-
-                items.push({ quantity, resourceName, area, note, link });
+        const htmlDoc = parser.parseFromString(quillInput, 'text/html');
+    
+        // Target each <li> element in the document
+        htmlDoc.querySelectorAll("li").forEach((node) => {
+            // Get the quantity as the first part before any whitespace
+            const quantityMatch = node.textContent.match(/^(\d+)\s+/);
+            const quantity = quantityMatch ? parseInt(quantityMatch[1], 10) : null;
+    
+            // Get the link element within the <li> for name and link
+            const linkElement = node.querySelector('a');
+            const resourceName = linkElement ? linkElement.textContent.trim() : null;
+            const link = linkElement ? linkElement.href : null;
+    
+            if (quantity && resourceName) {
+                // Push an object for each item found
+                items.push({
+                    quantity,
+                    resourceName,
+                    area: "", // Default to empty since area is not provided
+                    note: "", // Default to empty since note is not provided
+                    link
+                });
             }
         });
-
-        console.log(quillInput)
-
+    
         return items;
     };
 
