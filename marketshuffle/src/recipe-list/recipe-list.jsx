@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { getAllRecipeListsWithRows, addRecipeList } from './services/recipe-list.service';
-import { addRecipeListRow, deleteRecipeRowById } from './services/recipe-list-row.service';
+import { addRecipeListRow, deleteRecipeRowById, updateRecipeRow } from './services/recipe-list-row.service';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
@@ -137,10 +137,16 @@ export default function RecipeList() {
         }
     };
 
-    const handleDone = (listId, index) => {
+    const handleDone = async (listId, index) => {
         setRecipeLists(prevLists => {
             const updatedLists = [...prevLists];
-            updatedLists.find(list => list.id === listId).rows[index].done = true;
+            const list = updatedLists.find(list => list.id === listId);
+            const row = list.rows[index];
+            
+            row.done = !row.done;
+    
+            updateRecipeRow(row).catch((error) => console.error("Error updating row:", error));
+    
             return updatedLists;
         });
     };
@@ -206,7 +212,7 @@ export default function RecipeList() {
                         </TableHead>
                         <TableBody>
                             {list.rows.map((row, index) => (
-                                <TableRow key={index} sx={{ justifyContent: 'center' }}>
+                                <TableRow key={index} sx={{ backgroundColor: row.done ? '#2c6329' : '' }}>
                                     <TableCell sx={{ width: '100px', display: 'flex' }}>
                                         <IconButton
                                             aria-label="done"

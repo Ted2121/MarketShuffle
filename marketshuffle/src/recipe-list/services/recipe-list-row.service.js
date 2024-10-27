@@ -48,3 +48,25 @@ export async function deleteRecipeRowById(id) {
 
     return true;
 }
+
+export async function updateRecipeRow(recipeRow) {
+    if (!recipeRow.id) {
+        throw new Error("The id parameter is required.");
+    }
+
+    const url = `${baseUrl}api/recipelistrows`;
+    const headers = {
+        "Content-Type": "application/json"
+    };
+
+    const body = JSON.stringify(recipeRow);
+
+    const response = await fetch(url, { method: "PUT", body, headers });
+
+    if (!response.ok) {
+        const errorMessage = `Failed to update item: ${response.status} ${response.statusText}`;
+        throw new Error(errorMessage);
+    }
+
+    return true;
+}
