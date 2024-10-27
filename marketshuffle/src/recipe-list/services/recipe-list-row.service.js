@@ -33,7 +33,7 @@ export const addRecipeListRow = async (recipeRow) => {
     return response.text();
 }
 
-export async function deletePositionById(id) {
+export async function deleteRecipeRowById(id) {
     const url = `${baseUrl}api/recipelistrows/${id}`;
     const headers = {
         "Content-Type": "application/json"
