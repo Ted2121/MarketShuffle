@@ -1,19 +1,22 @@
-import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import { Box, Button, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { getAllRecipeListsWithRows } from './services/recipe-list.service';
+import { getAllRecipeListsWithRows, addRecipeList } from './services/recipe-list.service';
 import { addRecipeListRow } from './services/recipe-list-row.service';
 
 export default function RecipeList() {
     const [quillInput, setQuillInput] = useState('');
-    const [recipeLists, setRecipeLists] = useState([]); // Changed to hold multiple recipe lists
+    const [recipeLists, setRecipeLists] = useState([]);
+    const [selectedListId, setSelectedListId] = useState(''); // State to track selected list
+    const [newListName, setNewListName] = useState(''); // State for new list name
+    const [newListNote, setNewListNote] = useState(''); // State for new list note
 
     useEffect(() => {
         const loadRecipeLists = async () => {
             try {
                 const data = await getAllRecipeListsWithRows();
-                setRecipeLists(data); // Set the fetched data to state
+                setRecipeLists(data);
             } catch (error) {
                 console.error("Error fetching recipe lists:", error);
             }
@@ -24,19 +27,34 @@ export default function RecipeList() {
 
     const addRecipeListRows = async () => {
         const extractedRecipeRows = extractRecipeRows();
-        const newRecipeList = {
-            id: `list-${Date.now()}`, // Unique ID for the new recipe list
-            rows: extractedRecipeRows
-        };
 
-        try {
-            for (const row of extractedRecipeRows) {
-                await addRecipeListRow(row); // Call the service to add each row
+        if (selectedListId) {
+            // If a list is selected, add rows to the existing list
+            try {
+                extractedRecipeRows.forEach(async (r) => {
+                    await addRecipeListRow({ ...row, recipeListId: selectedListId }); // Send recipeListId
+                })
+
+                setQuillInput(''); // Clear the input after adding
+            } catch (error) {
+                console.error("Error adding recipe rows:", error);
             }
-            setRecipeLists([...recipeLists, newRecipeList]); // Add new recipe list
-            setQuillInput(''); // Clear the input after adding
-        } catch (error) {
-            console.error("Error adding recipe rows:", error);
+        } else if (newListName) {
+            // If no list is selected, create a new list with the specified name and note
+            try {
+                const newRecipeList = await addRecipeList({ name: newListName, note: newListNote });
+                for (const row of extractedRecipeRows) {
+                    await addRecipeListRow({ ...row, recipeListId: newRecipeList.id }); // Use new list ID
+                }
+                setRecipeLists([...recipeLists, newRecipeList]); // Update recipe lists
+                setNewListName(''); // Clear new list fields
+                setNewListNote('');
+                setQuillInput('');
+            } catch (error) {
+                console.error("Error creating new recipe list and adding rows:", error);
+            }
+        } else {
+            console.warn("Please select an existing list or enter a name for a new list.");
         }
     };
 
@@ -47,20 +65,22 @@ export default function RecipeList() {
         const htmlDoc = parser.parseFromString(editorContent, 'text/html');
 
         htmlDoc.body.childNodes.forEach(node => {
-            const itemRegex = /^(\d+)\s+(.+?)\s*\[(.+?)\]\s*{(.+)}$/; // Regex to capture quantity, resource name, area, and note
+            const itemRegex = /^(\d+)\s+(.+?)\s*\[(.+?)\]\s*{(.+)}$/;
             const text = node.innerText;
 
             const match = itemRegex.exec(text);
             if (match) {
                 const quantity = parseInt(match[1], 10);
                 const resourceName = match[2].trim();
-                const area = match[3].trim(); // Capture area from regex
-                const note = match[4].trim(); // Capture note from regex
+                const area = match[3].trim();
+                const note = match[4].trim();
                 const link = node.querySelector('a') ? node.querySelector('a').href : null;
 
                 items.push({ quantity, resourceName, area, note, link });
             }
         });
+
+        console.log(quillInput)
 
         return items;
     };
@@ -82,6 +102,37 @@ export default function RecipeList() {
 
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, marginTop: 5, marginBottom: 10 }}>
+            {/* Dropdown to select an existing recipe list */}
+            <Select
+                value={selectedListId}
+                onChange={(e) => setSelectedListId(e.target.value)}
+                displayEmpty
+                sx={{ width: '50%' }}
+            >
+                <MenuItem value="">
+                    <em>Select Existing Recipe List</em>
+                </MenuItem>
+                {recipeLists.map((list) => (
+                    <MenuItem key={list.id} value={list.id}>
+                        {list.name}
+                    </MenuItem>
+                ))}
+            </Select>
+
+            {/* Input fields for new list name and note */}
+            <TextField
+                label="New Recipe List Name"
+                value={newListName}
+                onChange={(e) => setNewListName(e.target.value)}
+                sx={{ width: '50%' }}
+            />
+            <TextField
+                label="New Recipe List Note"
+                value={newListNote}
+                onChange={(e) => setNewListNote(e.target.value)}
+                sx={{ width: '50%' }}
+            />
+
             <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, marginBottom: 10 }}>
                 <ReactQuill
                     value={quillInput}
@@ -89,8 +140,9 @@ export default function RecipeList() {
                     modules={{ toolbar: false }}
                     style={{ width: '700px', height: '50px' }}
                 />
-                <Button onClick={addRecipeListRows} variant="contained">Add Recipe List</Button>
+                <Button onClick={addRecipeListRows} variant="contained">Add Recipe List Rows</Button>
             </Box>
+
             {recipeLists.map((list) => (
                 <TableContainer key={list.id} sx={{ marginBottom: 5, maxWidth: '90%' }}>
                     <h3>{list.name}</h3>

@@ -15,3 +15,20 @@ export const getAllRecipeListsWithRows = async () => {
 
     return await response.json();
 }
+
+export const addRecipeList = async (recipeList) => {
+    const url = `${baseUrl}api/recipelists`;
+    const body = JSON.stringify(recipeList);
+    const headers = {
+        "Content-Type": "application/json"
+    };
+
+    const response = await fetch(url, { method: "POST", body, headers });
+
+    if (!response.ok) {
+        const errorMessage = `Failed to create position: ${response.status} ${response.statusText}`;
+        throw new Error(errorMessage);
+    }
+
+    return response.text();
+}

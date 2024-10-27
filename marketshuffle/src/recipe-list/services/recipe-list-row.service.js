@@ -15,7 +15,7 @@ export const getAllRecipeListRows = async () => {
 }
 
 export const addRecipeListRow = async (recipeRow) => {
-    const url = `${baseUrl}api/recipelistrow`;
+    const url = `${baseUrl}api/recipelistrows`;
     const body = JSON.stringify(recipeRow);
     const headers = {
         "Content-Type": "application/json"
