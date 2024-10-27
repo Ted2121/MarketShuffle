@@ -39,16 +39,18 @@ export default function RecipeList() {
         const htmlDoc = parser.parseFromString(editorContent, 'text/html');
 
         htmlDoc.body.childNodes.forEach(node => {
-            const itemRegex = /^(\d+)\s+(.+)$/; // Regex to capture quantity and resource name
+            const itemRegex = /^(\d+)\s+(.+?)\s*\[(.+?)\]\s*{(.+)}$/; // Regex to capture quantity, resource name, area, and note
             const text = node.innerText;
 
             const match = itemRegex.exec(text);
             if (match) {
                 const quantity = parseInt(match[1], 10);
-                const resourceName = match[2];
+                const resourceName = match[2].trim();
+                const area = match[3].trim(); // Capture area from regex
+                const note = match[4].trim(); // Capture note from regex
                 const link = node.querySelector('a') ? node.querySelector('a').href : null;
 
-                items.push({ quantity, resourceName, link });
+                items.push({ quantity, resourceName, area, note, link });
             }
         });
 
@@ -89,6 +91,8 @@ export default function RecipeList() {
                             <TableRow>
                                 <TableCell>Quantity</TableCell>
                                 <TableCell>Resource Name</TableCell>
+                                <TableCell>Area</TableCell>
+                                <TableCell>Note</TableCell>
                                 <TableCell>Link</TableCell>
                             </TableRow>
                         </TableHead>
@@ -109,8 +113,20 @@ export default function RecipeList() {
                                         />
                                     </TableCell>
                                     <TableCell>
+                                        <TextField
+                                            value={row.area}
+                                            onChange={(e) => handleChange(list.id, index, 'area', e.target.value)}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <TextField
+                                            value={row.note}
+                                            onChange={(e) => handleChange(list.id, index, 'note', e.target.value)}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
                                         <Typography>
-                                            <a href={row.link} target='_blank' style={{color: 'white'}}>
+                                            <a href={row.link} target='_blank' style={{ color: 'white' }}>
                                                 {row.link}
                                             </a>
                                         </Typography>
