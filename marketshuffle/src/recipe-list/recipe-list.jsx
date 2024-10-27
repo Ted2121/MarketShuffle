@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { getAllRecipeListsWithRows } from './services/recipe-list.service';
+import { addRecipeListRow } from './services/recipe-list-row.service';
 
 export default function RecipeList() {
     const [quillInput, setQuillInput] = useState('');
@@ -28,8 +29,15 @@ export default function RecipeList() {
             rows: extractedRecipeRows
         };
 
-        setRecipeLists([...recipeLists, newRecipeList]); // Add new recipe list
-        setQuillInput(''); // Clear the input after adding
+        try {
+            for (const row of extractedRecipeRows) {
+                await addRecipeListRow(row); // Call the service to add each row
+            }
+            setRecipeLists([...recipeLists, newRecipeList]); // Add new recipe list
+            setQuillInput(''); // Clear the input after adding
+        } catch (error) {
+            console.error("Error adding recipe rows:", error);
+        }
     };
 
     const extractRecipeRows = () => {
