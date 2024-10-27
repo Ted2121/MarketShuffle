@@ -12,7 +12,6 @@ export default function RecipeList() {
     const [recipeLists, setRecipeLists] = useState([]);
     const [selectedListId, setSelectedListId] = useState(''); // State to track selected list
     const [newListName, setNewListName] = useState(''); // State for new list name
-    const [newListNote, setNewListNote] = useState(''); // State for new list note
 
     useEffect(() => {
         const loadRecipeLists = async () => {
@@ -53,12 +52,12 @@ export default function RecipeList() {
         } else if (newListName) {
             // If no list is selected, create a new list with the specified name and note
             try {
-                const newRecipeListId = await addRecipeList({ name: newListName, note: newListNote });
+                const newRecipeListId = await addRecipeList({ name: newListName });
 
                 // Update recipeLists with the new list immediately
                 setRecipeLists(prevLists => [
                     ...prevLists,
-                    { id: newRecipeListId, name: newListName, note: newListNote, rows: extractedRecipeRows }
+                    { id: newRecipeListId, name: newListName, rows: extractedRecipeRows }
                 ]);
 
                 for (const row of extractedRecipeRows) {
@@ -67,7 +66,6 @@ export default function RecipeList() {
 
                 // Clear inputs
                 setNewListName('');
-                setNewListNote('');
                 setQuillInput('');
             } catch (error) {
                 console.error("Error creating new recipe list and adding rows:", error);
@@ -82,16 +80,22 @@ export default function RecipeList() {
         const parser = new DOMParser();
         const htmlDoc = parser.parseFromString(quillInput, 'text/html');
 
-        // Target each <li> element in the document
-        htmlDoc.querySelectorAll("li").forEach((node) => {
+        // Flatten the HTML and remove <p> tags
+        const plainText = Array.from(htmlDoc.body.childNodes)
+            .map(node => node.nodeName === 'P' ? node.textContent.trim() : node.nodeValue)
+            .filter(text => text) // Remove empty strings
+            .join('\n'); // Join the lines back together
+
+        // Split the input into lines to handle plain text
+        const lines = plainText.split('\n');
+
+        lines.forEach(line => {
             // Get the quantity as the first part before any whitespace
-            const quantityMatch = node.textContent.match(/^(\d+)\s+/);
+            const quantityMatch = line.match(/^(\d+)\s+/);
             const quantity = quantityMatch ? parseInt(quantityMatch[1], 10) : null;
 
-            // Get the link element within the <li> for name and link
-            const linkElement = node.querySelector('a');
-            const resourceName = linkElement ? linkElement.textContent.trim() : null;
-            const link = linkElement ? linkElement.href : null;
+            // Get the rest of the line as the resource name
+            const resourceName = line.replace(quantityMatch ? quantityMatch[0] : '', '').trim();
 
             if (quantity && resourceName) {
                 // Push an object for each item found
@@ -100,13 +104,54 @@ export default function RecipeList() {
                     resourceName,
                     area: "", // Default to empty since area is not provided
                     note: "", // Default to empty since note is not provided
-                    link
+                    link: "" // No link available for plain text
                 });
+            }
+        });
+
+        // Target each <li> element in the document for rich text
+        htmlDoc.querySelectorAll("li").forEach((node) => {
+            // Get the quantity as the first part before any whitespace
+            const quantityMatch = node.textContent.match(/^(\d+)\s+/);
+            const quantity = quantityMatch ? parseInt(quantityMatch[1], 10) : null;
+
+            // Get the link element within the <li> for name and link
+            const linkElement = node.querySelector('a');
+
+            // Check if there is a link element
+            if (linkElement) {
+                const resourceName = linkElement.textContent.trim();
+                const link = linkElement.href;
+
+                if (quantity && resourceName) {
+                    // Push an object for each item found with a link
+                    items.push({
+                        quantity,
+                        resourceName,
+                        area: "", // Default to empty since area is not provided
+                        note: "", // Default to empty since note is not provided
+                        link
+                    });
+                }
+            } else {
+                // Handle plain text case when there is no link element
+                const plainTextNode = node.textContent.trim();
+                if (quantity && plainTextNode) {
+                    // Consider the entire text as resource name if no link is found
+                    items.push({
+                        quantity,
+                        resourceName: plainTextNode, // Use the plain text as the resource name
+                        area: "", // Default to empty since area is not provided
+                        note: "", // Default to empty since note is not provided
+                        link: "" // No link available
+                    });
+                }
             }
         });
 
         return items;
     };
+
 
     const handleChange = (listId, rowIndex, field, value) => {
         setRecipeLists(prevLists => {
@@ -197,14 +242,6 @@ export default function RecipeList() {
                 sx={{ width: '300px' }}
                 size='small'
             />
-            <TextField
-                label="New Recipe List Note"
-                value={newListNote}
-                onChange={(e) => setNewListNote(e.target.value)}
-                sx={{ width: '300px' }}
-                size='small'
-            />
-
             <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, marginBottom: 10 }}>
                 <ReactQuill
                     value={quillInput}
@@ -235,7 +272,7 @@ export default function RecipeList() {
                                 <TableCell>Quantity</TableCell>
                                 <TableCell>Resource Name</TableCell>
                                 <TableCell>Area</TableCell>
-                                <TableCell>Note</TableCell>
+                                {/* <TableCell>Note</TableCell> */}
                                 <TableCell>Link</TableCell>
                             </TableRow>
                         </TableHead>
@@ -270,12 +307,9 @@ export default function RecipeList() {
                                         />
                                     </TableCell>
                                     <TableCell>
-                                        <TextField
-                                            sx={{ width: '250px' }}
-                                            size='small'
-                                            value={row.resourceName}
-                                            onChange={(e) => handleChange(list.id, index, 'resourceName', e.target.value)}
-                                        />
+                                        <Typography>
+                                            {row.resourceName}
+                                        </Typography>
                                     </TableCell>
                                     <TableCell>
                                         <TextField
@@ -285,13 +319,13 @@ export default function RecipeList() {
                                             onChange={(e) => handleChange(list.id, index, 'area', e.target.value)}
                                         />
                                     </TableCell>
-                                    <TableCell>
+                                    {/* <TableCell>
                                         <TextField
                                             size='small'
                                             value={row.note}
                                             onChange={(e) => handleChange(list.id, index, 'note', e.target.value)}
                                         />
-                                    </TableCell>
+                                    </TableCell> */}
                                     <TableCell>
                                         <Typography>
                                             <a href={row.link} target='_blank' style={{ color: 'white' }}>
