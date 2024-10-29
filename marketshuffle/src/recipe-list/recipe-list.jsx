@@ -157,7 +157,6 @@ export default function RecipeList() {
         setRecipeLists(prevLists => {
             const updatedLists = [...prevLists];
             const updatedRows = [...updatedLists.find(list => list.id === listId).rows];
-
             updatedRows[rowIndex] = {
                 ...updatedRows[rowIndex],
                 [field]: value
