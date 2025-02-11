@@ -202,16 +202,25 @@ export default function RecipeList() {
 
     const handleDone = async (listId, index) => {
         setRecipeLists(prevLists => {
-            const updatedLists = [...prevLists];
-            const list = updatedLists.find(list => list.id === listId);
-            const row = list.rows[index];
-
-            row.done = !row.done;
-
-            updateRecipeRow(row).catch((error) => console.error("Error updating row:", error));
-
-            return updatedLists;
+            return prevLists.map(list => {
+                if (list.id !== listId) return list;
+    
+                // Create a new array for rows
+                const updatedRows = list.rows.map((row, rowIndex) => 
+                    rowIndex === index ? { ...row, done: !row.done } : row
+                );
+    
+                return { ...list, rows: updatedRows };
+            });
         });
+    
+        try {
+            const list = recipeLists.find(list => list.id === listId);
+            const row = list.rows[index];
+            await updateRecipeRow({ ...row, done: !row.done });
+        } catch (error) {
+            console.error("Error updating row:", error);
+        }
     };
 
     return (
