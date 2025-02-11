@@ -10,10 +10,11 @@ import ExportButton from '../../import-export/export-button';
 import ImportButton from '../../import-export/import-button';
 
 const pages = navData;
+console.log(pages)
 
 function Navbar() {
     return (
-        <AppBar position="static">
+        <AppBar position="static" >
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                         <Box sx={{ flexGrow: 1, display: 'flex' }}>

@@ -17,6 +17,7 @@ import TwReports from './tribal-wars-tools/reports';
 import TwWarNotes from './tribal-wars-tools/war-notes';
 import ScavengeCalculator from './tribal-wars-tools/scavanging';
 import RecipeList from './recipe-list/recipe-list';
+import SWHeroes from './sw-tools/sw-heroes';
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -43,8 +44,8 @@ function App() {
                 {/* <Route path='/' element={<TwTodoList />} /> */}
                 <Route path='/new' element={<NewItemsPage />} />
                 <Route path='/update-recipe' element={<UpdateRecipePage />} />
-                <Route path='/guilds' element={<AllGuildsPage />} />
-                <Route path='/guild/:id' element={<Guild />} />
+                {/* <Route path='/guilds' element={<AllGuildsPage />} />
+                <Route path='/guild/:id' element={<Guild />} /> */}
                 <Route path='/recipe-list' element={<RecipeList />} />
 
                 {/* Tribal Wars */}
@@ -55,6 +56,8 @@ function App() {
                 <Route path='/tw-reports' element={<TwReports />} />
                 <Route path='/tw-war-notes' element={<TwWarNotes />} />
                 <Route path='/tw-scavanging' element={<ScavengeCalculator />} /> */}
+
+                {/* <Route path='/' element={<SWHeroes />} /> */}
               </Route>
             </Routes>
           </Box>

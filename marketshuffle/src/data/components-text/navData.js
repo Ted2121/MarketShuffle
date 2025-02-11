@@ -9,11 +9,11 @@ const navData = [
     text: 'New Items',
     route: '/new',
   },
-  {
-    id: 'd2',
-    text: 'Guilds',
-    route: '/guilds',
-  },
+  // {
+  //   id: 'd2',
+  //   text: 'Guilds',
+  //   route: '/guilds',
+  // },
   {
     id: 'd3',
     text: 'Recipe List',
@@ -58,6 +58,11 @@ const navData = [
   //   id: '3',
   //   text: 'Crafting Tree',
   //   route: '/craft',
+  // },
+  // {
+  //   id: 'sw1',
+  //   text: 'SW Heroes',
+  //   route: '/sw-heroes',
   // },
 ]
 
