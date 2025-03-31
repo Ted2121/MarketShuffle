@@ -19,6 +19,11 @@ const navData = [
     text: 'Recipe List',
     route: '/recipe-list',
   },
+  {
+    id: 'd4',
+    text: 'Crushing',
+    route: '/crushing',
+  },
   // {
   //   id: '4',
   //   text: 'Split',

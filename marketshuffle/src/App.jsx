@@ -18,6 +18,7 @@ import TwWarNotes from './tribal-wars-tools/war-notes';
 import ScavengeCalculator from './tribal-wars-tools/scavanging';
 import RecipeList from './recipe-list/recipe-list';
 import SWHeroes from './sw-tools/sw-heroes';
+import Crushing from './crushing/crushing';
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -47,6 +48,7 @@ function App() {
                 {/* <Route path='/guilds' element={<AllGuildsPage />} />
                 <Route path='/guild/:id' element={<Guild />} /> */}
                 <Route path='/recipe-list' element={<RecipeList />} />
+                <Route path='/crushing' element={<Crushing />} />
 
                 {/* Tribal Wars */}
                 {/* <Route path='/tw-attack' element={<AttackInterceptor />} />

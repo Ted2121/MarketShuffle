@@ -10,7 +10,6 @@ import ExportButton from '../../import-export/export-button';
 import ImportButton from '../../import-export/import-button';
 
 const pages = navData;
-console.log(pages)
 
 function Navbar() {
     return (
