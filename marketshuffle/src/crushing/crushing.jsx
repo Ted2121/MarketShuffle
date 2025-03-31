@@ -55,6 +55,7 @@ const stats = [
 export default function Crushing() {
   const [text, setText] = useState("");
   const [parsedStats, setParsedStats] = useState([]);
+  const [globalMultiplier, setGlobalMultiplier] = useState(1); // State for global multiplier
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -67,27 +68,21 @@ export default function Crushing() {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlString, "text/html");
 
-    // Select all <li> elements
     const listItems = doc.querySelectorAll("li");
 
     const parsedData = Array.from(listItems).map((li, index) => {
-      // Extract min and max values with optional '%' and stat name
       const match = li.textContent.match(/(\d+)~(\d+)%?\s+(.*)/);
-      if (!match) return null; // Skip invalid formats
+      if (!match) return null; 
 
       const [, minValue, maxValue, statName] = match;
 
-      // Normalize the stat name: check for '%' at the end
       let normalizedStatName = statName.trim();
       if (normalizedStatName.includes('%')) {
         normalizedStatName = normalizedStatName.replace('%', '').trim();
       }
 
-      // Find the stat from the predefined list, handle % in name properly
       const matchedStat = stats.find(
-        (s) =>
-          s.name === normalizedStatName ||
-          s.name === `% ${normalizedStatName}` // Check for '%' version as well
+        (s) => s.name === normalizedStatName || s.name === `% ${normalizedStatName}`
       );
 
       return matchedStat
@@ -97,10 +92,10 @@ export default function Crushing() {
             sink: matchedStat.sink,
             minValue: parseInt(minValue),
             maxValue: parseInt(maxValue),
-            cost: "", // New attribute for kamas/sink ratio
+            cost: "", 
           }
         : null;
-    }).filter(Boolean); // Remove null entries if any
+    }).filter(Boolean); 
 
     setParsedStats(parsedData);
     console.log(parsedData);
@@ -112,27 +107,30 @@ export default function Crushing() {
     setParsedStats(updatedStats);
   };
 
-  const calculateCostPerSink = (cost, sink) => {
-    if (!cost || !sink || sink === 0) return 0;
-    return (parseFloat(cost) / sink).toFixed(2); // Round to 2 decimal places
+  const handleGlobalMultiplierChange = (value) => {
+    setGlobalMultiplier(value ? parseFloat(value) / 100 : 1); // Convert to percentage (e.g., 73 becomes 0.73)
   };
 
-  // Calculate total min and max sink values
+  const calculateRuneCost = (stat) => {
+    const runesGeneratedMin = stat.minValue / stat.sink;
+    const runesGeneratedMax = stat.maxValue / stat.sink;
+    
+    // Apply multipliers: static 0.5 and global dynamic multiplier
+    const minRunesWithMultipliers = runesGeneratedMin * 0.5 * globalMultiplier;
+    const maxRunesWithMultipliers = runesGeneratedMax * 0.5 * globalMultiplier;
+    
+    // Calculate total cost
+    const totalMinCost = minRunesWithMultipliers * stat.cost;
+    const totalMaxCost = maxRunesWithMultipliers * stat.cost;
+    
+    return { totalMinCost, totalMaxCost };
+  };
+
   const totalMinSink = parsedStats.reduce((total, stat) => total + stat.minValue, 0);
   const totalMaxSink = parsedStats.reduce((total, stat) => total + stat.maxValue, 0);
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 2,
-        marginTop: 5,
-        marginBottom: 10,
-      }}
-    >
+    <Box sx={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: 2, marginTop: 5, marginBottom: 10 }}>
       <ReactQuill
         value={text}
         onChange={setText}
@@ -140,38 +138,28 @@ export default function Crushing() {
         modules={{ toolbar: false }}
         style={{ width: "700px", height: "100px" }}
       />
+      
+      <TextField
+        label="Global Dynamic Multiplier (%)"
+        variant="outlined"
+        size="small"
+        value={globalMultiplier * 100} // Display as percentage
+        onChange={(e) => handleGlobalMultiplierChange(e.target.value)}
+        type="number"
+        sx={{ marginTop: 2, marginBottom: 2 }}
+      />
+      
       {parsedStats.length > 0 && (
         <Box sx={{ width: "95%", marginTop: 2 }}>
-          {/* Display Total Min and Max Sink */}
           <Typography variant="h6" sx={{ marginBottom: 2 }}>
             {totalMinSink} - {totalMaxSink}
           </Typography>
 
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              width: "100%",
-            }}
-          >
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%" }}>
             {parsedStats.map((stat, index) => (
-              <Box
-                key={index}
-                sx={{
-                  display: "flex",
-                  border: "1px solid #ddd",
-                  padding: 2,
-                  borderRadius: 2,
-                  width: "100%",
-                  gap: 3,
-                  alignItems: "center",
-                }}
-              >
+              <Box key={index} sx={{ display: "flex", border: "1px solid #ddd", padding: 2, borderRadius: 2, width: "100%", gap: 3, alignItems: "center" }}>
                 <Typography variant="h6">{stat.stat}</Typography>
-                <Typography>
-                  {stat.minValue} - {stat.maxValue}
-                </Typography>
+                <Typography>{stat.minValue} - {stat.maxValue}</Typography>
                 <Typography>Sink: {stat.sink}</Typography>
                 <TextField
                   label="Cost"
@@ -182,10 +170,17 @@ export default function Crushing() {
                   type="number"
                   sx={{ marginTop: 1 }}
                 />
-                {/* Cost / Sink Calculation */}
-                <Typography variant="body1">
-                  Cost / Sink: {calculateCostPerSink(stat.cost, stat.sink)}
-                </Typography>
+                {/* Total cost calculation */}
+                {stat.cost && (
+                  <Box>
+                    <Typography variant="body1">
+                      Total Min Cost: {calculateRuneCost(stat).totalMinCost}
+                    </Typography>
+                    <Typography variant="body1">
+                      Total Max Cost: {calculateRuneCost(stat).totalMaxCost}
+                    </Typography>
+                  </Box>
+                )}
               </Box>
             ))}
           </Box>
