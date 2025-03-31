@@ -66,33 +66,38 @@ export default function Crushing() {
     const parseText = (htmlString) => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlString, "text/html");
-
+    
         // Select all <li> elements
         const listItems = doc.querySelectorAll("li");
-
+    
         const parsedData = Array.from(listItems).map((li, index) => {
-            // Extract the numbers (min~max values)
-            const match = li.textContent.match(/^(\d+)~(\d+)%?\s+/);
-            if (!match) return null;
-
-            const [, minValue, maxValue] = match.map(Number);
-
-            // Extract the stat name from <a> tag
-            const link = li.querySelector("a");
-            if (!link) return null;
-
-            const statName = link.textContent.trim();
-            const matchedStat = stats.find(s => s.name === statName);
-
+            // Extract min and max values with optional '%' and stat name
+            const match = li.textContent.match(/(\d+)~(\d+)%?\s+(.*)/);
+            if (!match) return null; // Skip invalid formats
+    
+            const [, minValue, maxValue, statName] = match;
+    
+            // Normalize the stat name: check for '%' at the end
+            let normalizedStatName = statName.trim();
+            if (normalizedStatName.includes('%')) {
+                normalizedStatName = normalizedStatName.replace('%', '').trim();
+            }
+    
+            // Find the stat from the predefined list, handle % in name properly
+            const matchedStat = stats.find(s => 
+                s.name === normalizedStatName || 
+                s.name === `% ${normalizedStatName}` // Check for '%' version as well
+            );
+    
             return matchedStat ? {
                 index,
-                stat: statName,
+                stat: statName.trim(),
                 sink: matchedStat.sink,
-                minValue,
-                maxValue,
+                minValue: parseInt(minValue),
+                maxValue: parseInt(maxValue),
             } : null;
-        }).filter(Boolean); // Remove null entries
-
+        }).filter(Boolean); // Remove null entries if any
+    
         setParsedStats(parsedData);
         console.log(parsedData);
     };
