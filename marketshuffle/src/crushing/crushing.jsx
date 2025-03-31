@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { Box } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 
 const stats = [
     { name: "AP", sink: 100 },
@@ -55,63 +55,126 @@ const stats = [
 export default function Crushing() {
     const [text, setText] = useState("");
     const [parsedStats, setParsedStats] = useState([]);
-
+  
     const handleKeyDown = (event) => {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            parseText(text);
-        }
+      if (event.key === "Enter") {
+        event.preventDefault();
+        parseText(text);
+      }
     };
-
+  
     const parseText = (htmlString) => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlString, "text/html");
-    
-        // Select all <li> elements
-        const listItems = doc.querySelectorAll("li");
-    
-        const parsedData = Array.from(listItems).map((li, index) => {
-            // Extract min and max values with optional '%' and stat name
-            const match = li.textContent.match(/(\d+)~(\d+)%?\s+(.*)/);
-            if (!match) return null; // Skip invalid formats
-    
-            const [, minValue, maxValue, statName] = match;
-    
-            // Normalize the stat name: check for '%' at the end
-            let normalizedStatName = statName.trim();
-            if (normalizedStatName.includes('%')) {
-                normalizedStatName = normalizedStatName.replace('%', '').trim();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlString, "text/html");
+  
+      // Select all <li> elements
+      const listItems = doc.querySelectorAll("li");
+  
+      const parsedData = Array.from(listItems).map((li, index) => {
+        // Extract min and max values with optional '%' and stat name
+        const match = li.textContent.match(/(\d+)~(\d+)%?\s+(.*)/);
+        if (!match) return null; // Skip invalid formats
+  
+        const [, minValue, maxValue, statName] = match;
+  
+        // Normalize the stat name: check for '%' at the end
+        let normalizedStatName = statName.trim();
+        if (normalizedStatName.includes('%')) {
+          normalizedStatName = normalizedStatName.replace('%', '').trim();
+        }
+  
+        // Find the stat from the predefined list, handle % in name properly
+        const matchedStat = stats.find(
+          (s) =>
+            s.name === normalizedStatName ||
+            s.name === `% ${normalizedStatName}` // Check for '%' version as well
+        );
+  
+        return matchedStat
+          ? {
+              index,
+              stat: statName.trim(),
+              sink: matchedStat.sink,
+              minValue: parseInt(minValue),
+              maxValue: parseInt(maxValue),
+              cost: "", // New attribute for kamas/sink ratio
             }
-    
-            // Find the stat from the predefined list, handle % in name properly
-            const matchedStat = stats.find(s => 
-                s.name === normalizedStatName || 
-                s.name === `% ${normalizedStatName}` // Check for '%' version as well
-            );
-    
-            return matchedStat ? {
-                index,
-                stat: statName.trim(),
-                sink: matchedStat.sink,
-                minValue: parseInt(minValue),
-                maxValue: parseInt(maxValue),
-            } : null;
-        }).filter(Boolean); // Remove null entries if any
-    
-        setParsedStats(parsedData);
-        console.log(parsedData);
+          : null;
+      }).filter(Boolean); // Remove null entries if any
+  
+      setParsedStats(parsedData);
+      console.log(parsedData);
     };
-
+  
+    const handleKamasPerSinkChange = (index, value) => {
+      const updatedStats = [...parsedStats];
+      updatedStats[index].kamasPerSink = value;
+      setParsedStats(updatedStats);
+    };
+  
     return (
-        <Box sx={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: 2, marginTop: 5, marginBottom: 10 }}>
-            <ReactQuill
-                value={text}
-                onChange={setText}
-                onKeyDown={handleKeyDown}
-                modules={{ toolbar: false }}
-                style={{ width: "700px", height: "100px" }}
-            />
-            <pre>{JSON.stringify(parsedStats, null, 2)}</pre>
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 2,
+            marginTop: 5,
+            marginBottom: 10,
+          }}
+        >
+          <ReactQuill
+            value={text}
+            onChange={setText}
+            onKeyDown={handleKeyDown}
+            modules={{ toolbar: false }}
+            style={{ width: "700px", height: "100px" }}
+          />
+          {parsedStats.length > 0 && (
+            <Box sx={{ width: "95%", marginTop: 2}}>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 2,
+                  width: "100%",
+                }}
+              >
+                {parsedStats.map((stat, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                    display: "flex",
+                      border: "1px solid #ddd",
+                      padding: 2,
+                      borderRadius: 2,
+                      width: "100%",
+                      gap: 3,
+                      alignItems: "center"
+                    }}
+                  >
+                    <Typography variant="h6">{stat.stat}</Typography>
+                    <Typography>
+                      {stat.minValue} - {stat.maxValue}
+                    </Typography>
+                    <Typography>Sink: {stat.sink}</Typography>
+                    <TextField
+                      label="cost"
+                      variant="outlined"
+                      size="small"
+                      value={stat.kamasPerSink}
+                      onChange={(e) => handleKamasPerSinkChange(index, e.target.value)}
+                      type="number"
+                      sx={{ marginTop: 1 }}
+                    />
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          )}
+          <pre>{JSON.stringify(parsedStats, null, 2)}</pre>
         </Box>
-    );
-}
+      );
+    }
