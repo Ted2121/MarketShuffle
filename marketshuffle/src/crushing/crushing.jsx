@@ -68,36 +68,39 @@ export default function Crushing() {
     const parseText = (htmlString) => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlString, "text/html");
-
+    
         const listItems = doc.querySelectorAll("li");
-
+    
         const parsedData = Array.from(listItems).map((li, index) => {
-            const match = li.textContent.match(/(\d+)~(\d+)%?\s+(.*)/);
+            const match = li.textContent.match(/(\d+)~?(\d+)?%?\s+(.*)/);
             if (!match) return null;
-
-            const [, minValue, maxValue, statName] = match;
-
+    
+            let [, minValue, maxValue, statName] = match;
+    
+            minValue = parseInt(minValue);
+            maxValue = maxValue ? parseInt(maxValue) : parseInt(minValue); // Default maxValue
+    
             let normalizedStatName = statName.trim();
             if (normalizedStatName.includes('%')) {
                 normalizedStatName = normalizedStatName.replace('%', '').trim();
             }
-
+    
             const matchedStat = stats.find(
                 (s) => s.name === normalizedStatName || s.name === `% ${normalizedStatName}`
             );
-
+    
             return matchedStat
                 ? {
                     index,
                     stat: statName.trim(),
                     sink: matchedStat.sink,
-                    minValue: parseInt(minValue),
-                    maxValue: parseInt(maxValue),
+                    minValue,
+                    maxValue,
                     cost: "",
                 }
                 : null;
         }).filter(Boolean);
-
+    
         setParsedStats(parsedData);
     };
 
