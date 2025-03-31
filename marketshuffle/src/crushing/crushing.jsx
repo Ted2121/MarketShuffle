@@ -116,12 +116,12 @@ export default function Crushing() {
     const runesGeneratedMax = stat.maxValue / stat.sink;
     
     // Apply multipliers: static 0.5 and global dynamic multiplier
-    const minRunesWithMultipliers = runesGeneratedMin * 0.5 * globalMultiplier;
-    const maxRunesWithMultipliers = runesGeneratedMax * 0.5 * globalMultiplier;
+    const minRunesWithMultipliers = runesGeneratedMin * globalMultiplier;
+    const maxRunesWithMultipliers = runesGeneratedMax * globalMultiplier;
     
     // Calculate total cost
-    const totalMinCost = minRunesWithMultipliers * stat.cost;
-    const totalMaxCost = maxRunesWithMultipliers * stat.cost;
+    const totalMinCost = (minRunesWithMultipliers * stat.cost).toFixed(2); // Format to 2 decimals
+    const totalMaxCost = (maxRunesWithMultipliers * stat.cost).toFixed(2); // Format to 2 decimals
     
     return { totalMinCost, totalMaxCost };
   };
