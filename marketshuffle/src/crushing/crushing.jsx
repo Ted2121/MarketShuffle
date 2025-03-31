@@ -117,6 +117,10 @@ export default function Crushing() {
     return (parseFloat(cost) / sink).toFixed(2); // Round to 2 decimal places
   };
 
+  // Calculate total min and max sink values
+  const totalMinSink = parsedStats.reduce((total, stat) => total + stat.minValue, 0);
+  const totalMaxSink = parsedStats.reduce((total, stat) => total + stat.maxValue, 0);
+
   return (
     <Box
       sx={{
@@ -138,6 +142,11 @@ export default function Crushing() {
       />
       {parsedStats.length > 0 && (
         <Box sx={{ width: "95%", marginTop: 2 }}>
+          {/* Display Total Min and Max Sink */}
+          <Typography variant="h6" sx={{ marginBottom: 2 }}>
+            {totalMinSink} - {totalMaxSink}
+          </Typography>
+
           <Box
             sx={{
               display: "flex",
